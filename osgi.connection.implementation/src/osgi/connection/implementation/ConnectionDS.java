@@ -9,7 +9,7 @@ import org.osgi.service.component.annotations.Modified;
 
 @Component(
 		service=ConnectionDS.class,
-		name="ConnectionDS",
+		name="osgi.connection.implementation.ConnectionDS",
 		property = {
 				"description=declarative service connection",
 				"description=declarative service connection"

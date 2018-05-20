@@ -10,7 +10,7 @@ import conn.interfaces.ISession;
 
 @Component(
 		service=Session.class,
-		name="Session"
+		name="osgi.connection.implementation.Session"
 		)
 public class Session implements ISession {
 	private Connection connection;

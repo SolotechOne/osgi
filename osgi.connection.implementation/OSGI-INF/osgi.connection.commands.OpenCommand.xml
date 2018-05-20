@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" modified="modified" name="osgi.connection.commands.OpenCommand">
+   <property name="osgi.command.scope" value="automic"/>
+   <property name="osgi.command.function" value="open"/>
+   <service>
+      <provide interface="osgi.connection.commands.OpenCommand"/>
+   </service>
+   <reference bind="setConnection" interface="osgi.connection.implementation.Connection" name="Connection"/>
+   <implementation class="osgi.connection.commands.OpenCommand"/>
+</scr:component>
