@@ -1,6 +1,5 @@
 package conn.interfaces;
 
-
 public interface IConnection {
 	public void open(String servername, int port);
 	
