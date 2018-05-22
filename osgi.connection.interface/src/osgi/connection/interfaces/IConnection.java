@@ -1,4 +1,4 @@
-package conn.interfaces;
+package osgi.connection.interfaces;
 
 public interface IConnection {
 	public void open(String servername, int port);
