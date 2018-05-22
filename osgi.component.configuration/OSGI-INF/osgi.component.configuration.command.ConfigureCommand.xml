@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="osgi.component.configuration.command.ConfigureCommand">
+   <property name="osgi.command.scope" value="test"/>
+   <property name="osgi.command.function" value="configure"/>
+   <service>
+      <provide interface="osgi.component.configuration.command.ConfigureCommand"/>
+   </service>
+   <reference bind="setConfigurationAdmin" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin"/>
+   <implementation class="osgi.component.configuration.command.ConfigureCommand"/>
+</scr:component>

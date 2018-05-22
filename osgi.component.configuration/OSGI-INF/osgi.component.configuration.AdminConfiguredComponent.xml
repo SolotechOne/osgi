@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.2.0" activate="activate" configuration-pid="AdminConfiguredComponent" configuration-policy="require" deactivate="deactivate" modified="modified" name="osgi.component.configuration.AdminConfiguredComponent">
+   <service>
+      <provide interface="osgi.component.configuration.AdminConfiguredComponent"/>
+   </service>
+   <implementation class="osgi.component.configuration.AdminConfiguredComponent"/>
+</scr:component>

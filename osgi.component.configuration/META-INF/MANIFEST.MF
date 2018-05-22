@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Configuration
+Bundle-SymbolicName: osgi.component.configuration
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: osgi.component.configuration
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Service-Component: OSGI-INF/osgi.component.configuration.StaticConfiguredComponent.xml,
+ OSGI-INF/osgi.component.configuration.FileConfiguredComponent.xml,
+ OSGI-INF/osgi.component.configuration.AdminConfiguredComponent.xml,
+ OSGI-INF/osgi.component.configuration.command.ConfigureCommand.xml
+Bundle-ActivationPolicy: lazy
+Import-Package: org.osgi.service.cm;version="1.5.0",
+ org.osgi.service.component.annotations;version="1.3.0";resolution:=optional

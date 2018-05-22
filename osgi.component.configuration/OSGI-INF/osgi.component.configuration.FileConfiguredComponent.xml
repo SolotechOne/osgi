@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" modified="modified" name="osgi.component.configuration.FileConfiguredComponent">
+   <properties entry="OSGI-INF/config.properties"/>
+   <implementation class="osgi.component.configuration.FileConfiguredComponent"/>
+</scr:component>
