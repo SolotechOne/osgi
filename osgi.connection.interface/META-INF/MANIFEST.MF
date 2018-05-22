@@ -5,4 +5,4 @@ Bundle-SymbolicName: osgi.connection.interface
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: osgi.connection.interface
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: conn.interfaces
+Export-Package: osgi.connection.interfaces

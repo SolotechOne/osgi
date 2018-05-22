@@ -6,7 +6,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
-import conn.interfaces.ISession;
+import osgi.connection.interfaces.ISession;
 
 @Component(
 		service=Session.class,

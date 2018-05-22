@@ -1,6 +1,6 @@
 package osgi.connection.implementation;
 
-import conn.interfaces.IConnection;
+import osgi.connection.interfaces.IConnection;
 
 public class Connection implements IConnection {
 	private String name;

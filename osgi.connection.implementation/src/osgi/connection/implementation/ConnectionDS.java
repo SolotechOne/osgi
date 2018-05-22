@@ -1,11 +1,11 @@
 package osgi.connection.implementation;
 
-import conn.interfaces.IConnection;
-
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
+
+import osgi.connection.interfaces.IConnection;
 
 @Component(
 		service=ConnectionDS.class,
