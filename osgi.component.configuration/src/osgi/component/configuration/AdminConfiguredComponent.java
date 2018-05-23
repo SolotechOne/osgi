@@ -29,7 +29,7 @@ public class AdminConfiguredComponent {
     }
 
     @Deactivate
-        void deactivate() {
+    void deactivate() {
         System.out.println("AdminConfiguredComponent deactivated");
         System.out.println();
     }
