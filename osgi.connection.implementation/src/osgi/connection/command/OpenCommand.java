@@ -1,4 +1,4 @@
-package osgi.connection.commands;
+package osgi.connection.command;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
