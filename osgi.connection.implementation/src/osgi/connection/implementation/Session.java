@@ -13,6 +13,7 @@ import osgi.connection.interfaces.ISession;
 		name="osgi.connection.implementation.Session"
 		)
 public class Session implements ISession {
+	@SuppressWarnings("unused")
 	private Connection connection;
 	
 	@Override
