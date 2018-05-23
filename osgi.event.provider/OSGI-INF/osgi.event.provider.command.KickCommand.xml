@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="osgi.event.provider.command.KickCommand">
+   <property name="osgi.command.scope" value="event"/>
+   <property name="osgi.command.function" value="kick"/>
+   <service>
+      <provide interface="osgi.event.provider.command.KickCommand"/>
+   </service>
+   <reference cardinality="1..1" field="eventAdmin" interface="org.osgi.service.event.EventAdmin" name="eventAdmin"/>
+   <implementation class="osgi.event.provider.command.KickCommand"/>
+</scr:component>
