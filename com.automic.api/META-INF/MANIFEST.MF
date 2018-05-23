@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Automic Automation Engine Java API
+Bundle-SymbolicName: com.automic.api
+Bundle-Version: 12.0.2.1-9032
+Bundle-Vendor: ca technologies
+Automatic-Module-Name: com.automic.api
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
