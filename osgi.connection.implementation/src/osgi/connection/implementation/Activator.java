@@ -36,7 +36,6 @@ public class Activator implements BundleActivator {
 
 		ConnectionFactory factory = new ConnectionFactory("aedev");
 		bundleContext.registerService(Connection.class.getName(), factory, factoryproperties); 
-
 	}
 
 	/*
