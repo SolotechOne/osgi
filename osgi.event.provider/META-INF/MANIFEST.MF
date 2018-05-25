@@ -6,7 +6,11 @@ Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: osgi.event.provider
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.apache.felix.service.command;status=provisional;version="0.10.0",
+ org.osgi.framework;version="1.8.0",
  org.osgi.service.component.annotations;version="1.3.0";resolution:=optional,
- org.osgi.service.event;version="1.3.1"
-Service-Component: OSGI-INF/osgi.event.provider.command.KickCommand.xml
+ org.osgi.service.event;version="1.3.1",
+ osgi.event.consumer,
+ osgi.event.implementation,
+ osgi.event.internal
+Service-Component: OSGI-INF/osgi.event.provider.command.Message.xml
 Bundle-ActivationPolicy: lazy
