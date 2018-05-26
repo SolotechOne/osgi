@@ -8,19 +8,16 @@ import java.util.Map;
 
 import org.apache.felix.service.command.CommandProcessor;
 import org.apache.felix.service.command.Descriptor;
+import org.apache.felix.service.command.Parameter;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 
 import osgi.event.implementation.Messages;
 
-import osgi.event.internal.IMessages;
 import osgi.event.internal.MessageConstants;
 
 @Component(
@@ -50,9 +47,14 @@ public class Message {
 	@Reference
     Messages messages;
 
-	@Descriptor("show messages")
-	public void messages() throws IOException {
-		this.messages.list();
+	@Descriptor("display server messages")
+	public void messages(@Descriptor("reverse messages") @Parameter(names={ "-r", "--reverse" }, presentValue="true", absentValue="false") boolean reverse) throws IOException {
+		if (reverse) {
+			this.messages.reverse();
+		}
+		else {
+			this.messages.list();
+		}
     }
 	
 	@Reference
@@ -67,12 +69,12 @@ public class Message {
         String timestamp = sdfDate.format(now);
         
         Map<String, Object> properties = new HashMap<>();
-        properties.put(MessageConstants.PROPERTY_KEY_MESSAGE_TEXT, timestamp + " aedev I0098273 Job 'JOBS.API@HELLO$WORLD' ended successfully.");
-        properties.put(MessageConstants.PROPERTY_KEY_MESSAGE_TIMESTAMP, timestamp);
+        properties.put(MessageConstants.PROPERTY_KEY_MESSAGE_TEXT, "aedev " + timestamp + " I0098273 Job 'JOBS.API@HELLO$WORLD' ended successfully.");
         properties.put(MessageConstants.PROPERTY_KEY_MESSAGE_SYSTEM, "aedev");
+        properties.put(MessageConstants.PROPERTY_KEY_MESSAGE_TIMESTAMP, timestamp);
         properties.put(MessageConstants.PROPERTY_KEY_MESSAGE_TYPE, "I");
         properties.put(MessageConstants.PROPERTY_KEY_MESSAGE_NUMBER, "0098273");
-        properties.put(MessageConstants.PROPERTY_KEY_MESSAGE_INSERTS, timestamp + "|I|0098273|JOBS.API@HELLO$WORLD");
+        properties.put(MessageConstants.PROPERTY_KEY_MESSAGE_INSERTS, "aedev|" + timestamp + "|I|0098273|JOBS.API@HELLO$WORLD");
                 
 		event = new Event(MessageConstants.TOPIC_MESSAGE, properties);
 		

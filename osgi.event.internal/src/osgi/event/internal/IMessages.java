@@ -6,4 +6,10 @@ public interface IMessages {
 	public void remove();
 	
 	public void list();
+	
+	public void reverse();
+	
+	public int size();
+	
+	public void clear();
 }

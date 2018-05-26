@@ -1,5 +1,6 @@
 package osgi.event.implementation;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ import osgi.event.internal.IMessages;
 
 @Component(
 	    property = {
-	        "limit:Integer=2"
+	        "limit:Integer=3"
 	    },
 	    service=Messages.class
 	)
@@ -27,7 +28,7 @@ public class Messages implements IMessages {
     
 	@Override
 	public void add(String message) {
-		list.addFirst(message);
+		list.add(message);
 		
 		this.remove();
 	}
@@ -35,14 +36,51 @@ public class Messages implements IMessages {
 	@Override
 	public void remove() {
 		if(list.size() > this.limit) {
-			list.removeLast();
+			list.remove();
 		}
 	}
 
 	@Override
 	public void list() {
-		for (String message : this.list) {
-			System.out.println(message);
+//		for (String message : this.list) {
+//			System.out.println(message);
+//		}
+		
+		Iterator<String> iterator = (Iterator<String>) list.iterator();
+		
+		list(iterator);
+	}
+
+	@Override
+	public void reverse() {
+//		int value= 1000;
+//		int end = value>list.size()?list.size():value;
+//		System.out.println(end);
+		
+//		((LinkedList<String>) list.subList(0, end)getClass()).descendingIterator();
+		
+		
+//		List<String> sub = list.subList(0, lines);
+//		Collections.reverse(sub);
+		
+		Iterator<String> iterator = (Iterator<String>) list.descendingIterator();
+		
+		list(iterator);
+	}
+
+	@Override
+	public void clear() {
+		list.clear();
+	}
+
+	@Override
+	public int size() {
+		return list.size();
+	}
+	
+	private void list(Iterator<String> iterator) {
+		while(iterator.hasNext()) {
+			System.out.println(iterator.next());
 		}
 	}
 }

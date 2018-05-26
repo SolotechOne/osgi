@@ -1,19 +1,15 @@
 package osgi.event.consumer;
 
-import osgi.event.implementation.Messages;
-import osgi.event.internal.IMessages;
-import osgi.event.internal.MessageConstants;
-
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
+
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
+
+import osgi.event.implementation.Messages;
+
+import osgi.event.internal.MessageConstants;
 
 @Component(
 	property = EventConstants.EVENT_TOPIC + "=" + MessageConstants.TOPIC_MESSAGE
