@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Offline
+Bundle-SymbolicName: osgi.data.service.offline
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: osgi.data.service.offline
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: osgi.data.service.interfaces
+Service-Component: OSGI-INF/osgi.data.service.offline.OfflineDataService.xml
+Bundle-ActivationPolicy: lazy

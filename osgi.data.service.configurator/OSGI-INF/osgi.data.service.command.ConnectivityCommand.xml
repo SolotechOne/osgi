@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="osgi.data.service.command.ConnectivityCommand">
+   <property name="osgi.command.scope" type="String" value="data"/>
+   <property name="osgi.command.function" type="String" value="toggle"/>
+   <service>
+      <provide interface="osgi.data.service.command.ConnectivityCommand"/>
+   </service>
+   <reference bind="setConfigurationAdmin" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin"/>
+   <implementation class="osgi.data.service.command.ConnectivityCommand"/>
+</scr:component>

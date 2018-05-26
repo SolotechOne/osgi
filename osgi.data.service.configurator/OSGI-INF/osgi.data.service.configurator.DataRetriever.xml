@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="osgi.data.service.configurator.DataRetriever">
+   <property name="osgi.command.scope" type="String" value="data"/>
+   <property name="osgi.command.function" type="String" value="retrieve"/>
+   <service>
+      <provide interface="osgi.data.service.configurator.DataRetriever"/>
+   </service>
+   <reference bind="addDataService" cardinality="0..n" interface="osgi.data.service.interfaces.DataService" name="DataService" policy="dynamic" target="(service.connectivity=online)" unbind="removeDataService"/>
+   <implementation class="osgi.data.service.configurator.DataRetriever"/>
+</scr:component>

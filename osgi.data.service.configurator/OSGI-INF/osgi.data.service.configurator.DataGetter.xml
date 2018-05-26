@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.2.0" name="osgi.data.service.configurator.DataGetter">
+   <property name="osgi.command.scope" type="String" value="data"/>
+   <property name="osgi.command.function" type="String" value="get"/>
+   <service>
+      <provide interface="osgi.data.service.configurator.DataGetter"/>
+   </service>
+   <reference bind="setDataService" interface="osgi.data.service.interfaces.DataService" name="DataService" policy="dynamic" policy-option="greedy" unbind="unsetDataService"/>
+   <implementation class="osgi.data.service.configurator.DataGetter"/>
+</scr:component>

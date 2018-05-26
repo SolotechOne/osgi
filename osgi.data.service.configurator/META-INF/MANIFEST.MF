@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Configurator
+Bundle-SymbolicName: osgi.data.service.configurator
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: osgi.data.service.configurator
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.osgi.service.cm;version="1.5.0",
+ osgi.data.service.interfaces
+Bundle-ActivationPolicy: lazy
+Service-Component: OSGI-INF/osgi.data.service.configurator.DataGetter.xml,
+ OSGI-INF/osgi.data.service.configurator.DataRetriever.xml,
+ OSGI-INF/osgi.data.service.command.ConnectivityCommand.xml,
+ OSGI-INF/osgi.data.service.command.RankingCommand.xml

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Online
+Bundle-SymbolicName: osgi.data.service.online
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: osgi.data.service.online
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: osgi.data.service.interfaces
+Service-Component: OSGI-INF/osgi.data.service.online.OnlineDataService.xml
+Bundle-ActivationPolicy: lazy

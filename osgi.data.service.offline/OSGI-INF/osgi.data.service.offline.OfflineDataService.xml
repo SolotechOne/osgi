@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="osgi.data.service.offline.OfflineDataService">
+   <property name="service.connectivity" value="offline"/>
+   <property name="service.ranking" type="Integer" value="5"/>
+   <property name=".private" value="private configuration"/>
+   <service>
+      <provide interface="osgi.data.service.interfaces.DataService"/>
+   </service>
+   <implementation class="osgi.data.service.offline.OfflineDataService"/>
+</scr:component>

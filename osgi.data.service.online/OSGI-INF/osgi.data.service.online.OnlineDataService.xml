@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="osgi.data.service.online.OnlineDataService">
+   <property name="service.connectivity" value="online"/>
+   <property name="service.ranking" type="Integer" value="7"/>
+   <service>
+      <provide interface="osgi.data.service.interfaces.DataService"/>
+   </service>
+   <implementation class="osgi.data.service.online.OnlineDataService"/>
+</scr:component>
