@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="osgi.shell.core.command.SystemCommand">
+   <property name="osgi.command.scope" type="String" value="system"/>
+   <property name="osgi.command.function" type="String">prompt
+tail
+uname
+   </property>
+   <service>
+      <provide interface="osgi.shell.core.command.SystemCommand"/>
+   </service>
+   <implementation class="osgi.shell.core.command.SystemCommand"/>
+</scr:component>

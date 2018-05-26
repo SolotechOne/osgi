@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.felix.service.command.CommandProcessor;
@@ -48,13 +50,15 @@ public class Message {
     Messages messages;
 
 	@Descriptor("display server messages")
-	public void messages(@Descriptor("reverse messages") @Parameter(names={ "-r", "--reverse" }, presentValue="true", absentValue="false") boolean reverse) throws IOException {
-		if (reverse) {
-			this.messages.reverse();
-		}
-		else {
-			this.messages.list();
-		}
+	public List<String> messages(@Descriptor("reverse messages") @Parameter(names={ "-r", "--reverse" }, presentValue="true", absentValue="false") boolean reverse) throws IOException {
+//		if (reverse) {
+//			this.messages.reverse();
+//		}
+//		else {
+//			this.messages.list();
+//		}
+		
+		return this.messages.llist();
     }
 	
 	@Reference

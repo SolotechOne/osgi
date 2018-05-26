@@ -52,6 +52,11 @@ public class Messages implements IMessages {
 	}
 
 	@Override
+	public LinkedList<String> llist() {
+		return list;
+	}
+
+	@Override
 	public void reverse() {
 //		int value= 1000;
 //		int end = value>list.size()?list.size():value;
