@@ -32,9 +32,9 @@ public class Activator implements BundleActivator {
 		
 //		A simple service factory example
 		Hashtable<String, String> factoryproperties = new Hashtable<String, String>();
-		factoryproperties.put("description", "connection factory for system aedev");
+		factoryproperties.put("description", "connection factory for system aeprd");
 
-		ConnectionFactory factory = new ConnectionFactory("aedev");
+		ConnectionFactory factory = new ConnectionFactory("aeprd");
 		bundleContext.registerService(Connection.class.getName(), factory, factoryproperties); 
 	}
 

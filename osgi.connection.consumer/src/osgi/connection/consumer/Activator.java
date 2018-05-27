@@ -57,7 +57,7 @@ public class Activator implements BundleActivator {
 		
 		//	get single instance of Connection service
 		System.out.println("------ single service reference --------");
-		ServiceReference<Connection> sr = (ServiceReference<Connection>) bundleContext.getServiceReference("conn.implementation.Connection");
+		ServiceReference<Connection> sr = (ServiceReference<Connection>) bundleContext.getServiceReference("osgi.connection.implementation.Connection");
 		System.out.println(sr);
 
 		//	get all instances of Connection service
@@ -72,7 +72,7 @@ public class Activator implements BundleActivator {
 
 		//	get all instances of Connection service with specified filter
 		System.out.println("-------- all instances by filter -------");
-		String filter = "(&(objectclass=osgi.connection.implementation.Connection)(service.id=62))";
+		String filter = "(&(objectclass=osgi.connection.implementation.Connection)(service.id=67))";
 		ServiceReference[] connrefs = bundleContext.getServiceReferences("osgi.connection.implementation.Connection", filter);
 		if (connrefs != null) {
 			for (ServiceReference ref : connrefs) {
