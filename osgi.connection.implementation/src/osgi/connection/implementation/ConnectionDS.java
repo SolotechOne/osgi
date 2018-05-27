@@ -8,13 +8,14 @@ import org.osgi.service.component.annotations.Modified;
 import osgi.connection.interfaces.IConnection;
 
 @Component(
-		service=ConnectionDS.class,
-		name="osgi.connection.implementation.ConnectionDS",
-		property = {
-				"description=declarative service connection",
-				"description=declarative service connection"
-			    }
-		)
+	service=ConnectionDS.class,
+	name="osgi.connection.implementation.Connection",
+	property = {
+		"description=declarative service connection for system aetest",
+		"servername=s1597taeap001.koogrp.globus.net",
+		"port=2211"
+	    }
+)
 public class ConnectionDS implements IConnection{
     @Activate
     void activate() {
@@ -33,8 +34,7 @@ public class ConnectionDS implements IConnection{
 
 	@Override
 	public void open(String servername, int port) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
 
 	@Override

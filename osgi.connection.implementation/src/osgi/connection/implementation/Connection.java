@@ -1,5 +1,9 @@
 package osgi.connection.implementation;
 
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+
 import osgi.connection.interfaces.IConnection;
 
 public class Connection implements IConnection {
@@ -13,6 +17,21 @@ public class Connection implements IConnection {
 	public String getName() {
 		return name;
 	}
+
+    @Activate
+    void activate() {
+        System.out.println("Connection activated");
+    }
+
+    @Modified
+    void modified() {
+        System.out.println("Connection modified");
+    }
+
+    @Deactivate
+        void deactivate() {
+        System.out.println("Connection deactivated");
+    }
 
 	@Override
 	public void open(String servername, int port) {

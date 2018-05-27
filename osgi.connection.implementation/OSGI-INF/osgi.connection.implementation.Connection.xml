@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" modified="modified" name="osgi.connection.implementation.Connection">
+   <property name="description" value="declarative service connection for system aetest"/>
+   <property name="servername" value="s1597taeap001.koogrp.globus.net"/>
+   <property name="port" value="2211"/>
+   <service>
+      <provide interface="osgi.connection.implementation.ConnectionDS"/>
+   </service>
+   <implementation class="osgi.connection.implementation.ConnectionDS"/>
+</scr:component>

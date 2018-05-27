@@ -2,6 +2,7 @@ package osgi.connection.consumer;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
@@ -21,7 +22,7 @@ public class Activator implements BundleActivator {
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
-	public void start(BundleContext bundleContext) throws Exception {
+	public void start(BundleContext bundleContext) throws InvalidSyntaxException {
 		Activator.context = bundleContext;
 		
 		ServiceListener servicelistener = new ServiceListener() {

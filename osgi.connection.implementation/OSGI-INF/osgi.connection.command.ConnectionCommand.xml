@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="activate" name="osgi.connection.command.ConnectionCommand">
+   <property name="osgi.command.scope" type="String" value="conn"/>
+   <property name="osgi.command.function" type="String">open
+close
+scope
+switch
+workspace
+client
+   </property>
+   <service>
+      <provide interface="osgi.connection.command.ConnectionCommand"/>
+   </service>
+   <reference cardinality="1..1" field="connection" interface="osgi.connection.implementation.Connection" name="connection"/>
+   <implementation class="osgi.connection.command.ConnectionCommand"/>
+</scr:component>

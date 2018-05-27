@@ -10,8 +10,10 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: osgi.connection.implementation
 Bundle-ActivationPolicy: lazy
 Export-Package: osgi.connection.implementation
-Import-Package: org.osgi.service.component.annotations;version="1.3.0";resolution:=optional
+Import-Package: org.apache.felix.service.command;status=provisional;version="0.10.0",
+ org.osgi.service.component.annotations;version="1.3.0";resolution:=optional
 Require-Capability: osgi.extender;filter:="(&(osgi.extender=osgi.component)(version>=1.3)(!(version>=2.0)))"
-Service-Component: OSGI-INF/osgi.connection.implementation.ConnectionDS.xml,
- OSGI-INF/osgi.connection.implementation.Session.xml,
- OSGI-INF/osgi.connection.command.OpenCommand.xml
+Service-Component: OSGI-INF/osgi.connection.implementation.Session.xml,
+ OSGI-INF/osgi.connection.command.OpenCommand.xml,
+ OSGI-INF/osgi.connection.command.ConnectionCommand.xml,
+ OSGI-INF/osgi.connection.implementation.Connection.xml

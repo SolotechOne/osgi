@@ -26,6 +26,8 @@ public class Activator implements BundleActivator {
 		
 		Hashtable<String, String> properties = new Hashtable<String, String>();
 		properties.put("description", "connection to aedev");
+		properties.put("servername", "s1597aeap001.koogrp.globus.net");
+		properties.put("port", String.valueOf(2217));
 		
 		bundleContext.registerService(Connection.class.getName(), aedev, properties);
 		
@@ -33,6 +35,8 @@ public class Activator implements BundleActivator {
 //		A simple service factory example
 		Hashtable<String, String> factoryproperties = new Hashtable<String, String>();
 		factoryproperties.put("description", "connection factory for system aeprd");
+		factoryproperties.put("servername", "s1597aeap003.koogrp.globus.net");
+		factoryproperties.put("port", String.valueOf(2220));
 
 		ConnectionFactory factory = new ConnectionFactory("aeprd");
 		bundleContext.registerService(Connection.class.getName(), factory, factoryproperties); 
