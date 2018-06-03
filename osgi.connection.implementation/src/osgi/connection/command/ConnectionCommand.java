@@ -135,5 +135,7 @@ public class ConnectionCommand {
 		else {
 			System.out.println("no connection service with id " + id + " found");
 		}
+		
+		session.getConsole().flush();
 	}
 }
