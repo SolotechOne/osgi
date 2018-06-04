@@ -28,6 +28,10 @@ public class ConfigurationServiceFactory implements ManagedServiceFactory {
 	public void updated(String pid, Dictionary<String, ?> properties) throws ConfigurationException {
 		System.out.println("updated factory " + pid + " -> " + properties);
 		
+//		if(properties != null) {
+//			System.out.println("port = " + properties.get("port"));
+//		}
+		
 		if (m_components.containsKey(pid)) {
 			return;
 		}
