@@ -26,6 +26,8 @@ public class ConfigurationServiceFactory implements ManagedServiceFactory {
 
 	@Override
 	public void updated(String pid, Dictionary<String, ?> properties) throws ConfigurationException {
+		System.out.println("updated factory " + pid + " -> " + properties);
+		
 		if (m_components.containsKey(pid)) {
 			return;
 		}
@@ -40,6 +42,8 @@ public class ConfigurationServiceFactory implements ManagedServiceFactory {
 
 	@Override
 	public void deleted(String pid) {
+		System.out.println("deleting service " + pid);
+		
 		m_dependencyManager.remove(m_components.remove(pid));
 	}
 }
