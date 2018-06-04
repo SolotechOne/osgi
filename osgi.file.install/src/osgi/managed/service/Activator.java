@@ -1,4 +1,4 @@
-package osgi.file.install;
+package osgi.managed.service;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -7,6 +7,7 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceRegistration;
+
 import org.osgi.service.cm.ManagedService;
 
 public class Activator implements BundleActivator {
@@ -29,11 +30,11 @@ public class Activator implements BundleActivator {
 		ConfigurationService service = new ConfigurationService();
 		
 	    Dictionary<String,String> properties = new Hashtable<String,String>();
-	    properties.put(Constants.SERVICE_PID, "configurationservice" );
+	    properties.put(Constants.SERVICE_PID, "configurationservice");
 	    
-	    String[] classes = new String[] { ConfigurationService.class.getName(), ManagedService.class.getName() };
+	    String[] classes = new String[] {ConfigurationService.class.getName(), ManagedService.class.getName()};
 	    
-	    serviceRegistration = bundleContext.registerService( classes, service, properties );
+	    serviceRegistration = bundleContext.registerService(classes, service, properties);
 	}
 
 	/*

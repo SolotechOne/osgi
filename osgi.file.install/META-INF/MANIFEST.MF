@@ -1,11 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Install
-Bundle-SymbolicName: osgi.file.install
+Bundle-SymbolicName: osgi.managed.service
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: osgi.file.install.Activator
+Bundle-Activator: osgi.managed.service.Activator
 Require-Bundle: org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: osgi.file.install
 Bundle-ActivationPolicy: lazy
-Import-Package: org.osgi.service.cm
+Import-Package: org.apache.felix.dm;version="4.4.0",
+ org.osgi.service.cm
+Export-Package: osgi.managed.service

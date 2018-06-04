@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Factory
+Bundle-SymbolicName: osgi.managed.service.factory
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: osgi.managed.service.factory.Activator
+Require-Bundle: org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: osgi.managed.service.factory
+Bundle-ActivationPolicy: lazy
+Import-Package: org.apache.felix.dm,
+ org.osgi.service.cm;version="1.5.0",
+ osgi.managed.service

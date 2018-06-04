@@ -1,4 +1,4 @@
-package osgi.file.install;
+package osgi.managed.service;
 
 import java.util.Dictionary;
 
