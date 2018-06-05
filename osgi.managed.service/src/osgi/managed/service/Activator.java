@@ -34,7 +34,7 @@ public class Activator implements BundleActivator {
 	    
 	    String[] classes = new String[] {ConfigurationService.class.getName(), ManagedService.class.getName()};
 	    
-//	    serviceRegistration = bundleContext.registerService(classes, service, properties);
+	    serviceRegistration = bundleContext.registerService(classes, service, properties);
 	}
 
 	/*

@@ -1,14 +1,19 @@
 package osgi.managed.service.factory;
 
+import java.io.IOException;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.felix.dm.Component;
 import org.apache.felix.dm.DependencyManager;
-
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedServiceFactory;
+
+import org.osgi.service.component.annotations.Reference;
 
 import osgi.managed.service.ConfigurationService;
 
@@ -19,6 +24,13 @@ public class ConfigurationServiceFactory implements ManagedServiceFactory {
 	
 	private final Map<String, Component> m_components = new HashMap<String, Component>();
 	
+	ConfigurationAdmin cm;
+
+    @Reference
+    void setConfigurationAdmin(ConfigurationAdmin cm) {
+        this.cm = cm;
+    }
+    
 	@Override
 	public String getName() {
 		return "configuration service factory";
@@ -33,7 +45,35 @@ public class ConfigurationServiceFactory implements ManagedServiceFactory {
 //		}
 		
 		if (m_components.containsKey(pid)) {
-			return;
+			System.out.println(pid + " already exists");
+			
+			m_dependencyManager.remove(m_components.remove(pid));
+			
+//			try {
+//				for(Configuration conf : cm.listConfigurations(null)) {
+//					System.out.println(conf);
+//				}
+//			} catch (IOException | InvalidSyntaxException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+			
+			
+//			Configuration c;
+//			
+//			try {
+//				c = cm.getConfiguration(pid);
+//
+//				c.update(properties);
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+			
+//			Component comp = m_components.get(pid);
+//			comp.setServiceProperties(properties);
+			
+//			return;
 		}
 
 		Component component = m_dependencyManager.createComponent()
