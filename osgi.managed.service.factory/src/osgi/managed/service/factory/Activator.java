@@ -35,5 +35,17 @@ public class Activator extends DependencyActivatorBase {
 //						.setPid("configurationservice")
 //						)
 //				);
+		
+		
+//		manager.add(createComponent()
+//		        .setInterface(new String[]{
+//		                DeviceDriverManager.class.getName(),
+//		                ManagedService.class.getName()},
+//		            properties)
+//		        .setImplementation(DriverManagerImpl.class)
+//		        .add(createServiceDependency()
+//		            .setService(DirectoryService.class)
+//		            .setRequired(true))
+//		        .add(createConfigurationDependency().setPid(PID)));
 	}
 }

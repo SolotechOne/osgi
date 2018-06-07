@@ -7,8 +7,26 @@ import org.osgi.service.cm.ConfigurationEvent;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ConfigurationListener;
 import org.osgi.service.cm.ManagedService;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Modified;
 
-public class ConfigurationService implements ManagedService, ConfigurationListener {
+public class ConfigurationService implements IConfigurationService, ManagedService, ConfigurationListener {
+	@interface ConfigurationServiceConfig {
+        String system() default "";
+    }
+	
+	private String system;
+	
+	@Activate
+    void activate(ConfigurationServiceConfig config) {
+        this.system = config.system();
+    }
+ 
+    @Modified
+    void modified(ConfigurationServiceConfig config) {
+        this.system = config.system();
+    }
+	
 	@Override
 	public void updated(Dictionary<String, ?> properties) throws ConfigurationException {
 		if(properties != null) {
@@ -30,5 +48,11 @@ public class ConfigurationService implements ManagedService, ConfigurationListen
 				+ " "
 				+ (event.getFactoryPid() != null ? event.getFactoryPid() + "::"
 						: "") + event.getPid());
+	}
+
+	@Override
+	public int getData(int id) {
+		System.out.println(this.system);
+		return id;
 	}
 }

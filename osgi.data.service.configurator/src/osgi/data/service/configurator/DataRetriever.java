@@ -30,6 +30,7 @@ public class DataRetriever {
 		this.dataServices.add(service);
 
 		System.out.println("Added " + service.getClass().getName());
+		
 		properties.forEach((k, v) -> {
 			System.out.println(k+"="+v);
 		});

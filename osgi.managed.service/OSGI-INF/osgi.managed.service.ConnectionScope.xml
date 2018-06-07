@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="osgi.managed.service.ConnectionScope">
+   <property name="osgi.command.scope" type="String" value="connection"/>
+   <property name="osgi.command.function" type="String">scope
+connect
+   </property>
+   <service>
+      <provide interface="osgi.managed.service.ConnectionScope"/>
+   </service>
+   <reference bind="addConfigurationService" cardinality="0..n" interface="osgi.managed.service.ConfigurationService" name="ConfigurationService" policy="dynamic" target="(service.pid=configurationservicefactory)" unbind="removeConfigurationService"/>
+   <reference cardinality="1..1" field="configAdmin" interface="org.osgi.service.cm.ConfigurationAdmin" name="configAdmin"/>
+   <implementation class="osgi.managed.service.ConnectionScope"/>
+</scr:component>
