@@ -2,6 +2,9 @@ package osgi.managed.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -76,6 +79,25 @@ public class ConnectionScope {
 		for (Configuration configuration : configurations) {
 			this.active = (String) configuration.getProperties().get("service.pid");
 		}
+		
+		
+		Configuration config = this.configAdmin.getConfiguration("osgi.managed.service.ConnectionScope");
+		
+		Dictionary<String, Object> props = null;
+		Object target = null;
+		
+		if (config != null && config.getProperties() != null) {
+			props = config.getProperties();
+			target = props.get("ConfigurationService.target");
+			
+			System.out.println(target);
+		} else {
+			props = new Hashtable<String, Object>();
+		}
+		
+		for (Enumeration e = props.elements(); e.hasMoreElements();) {
+	         System.out.println(e.nextElement());
+	      }
 	}
 	
 	
