@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<configuration>
+   <paths>
+      <!--docu type="hh">http://docs.automic.com</docu-->
+      <docu type="wh">C:\Program Files (x86)/Automic/Documentation/12.0.2.114</docu>
+      <!--browser type="Mozilla Firefox">C:\Program Files\Mozilla Firefox\firefox.exe</browser-->
+      <browser type="Internet Explorer">%ProgramFiles%\Internet Explorer\iexplore.exe</browser>
+      <logging count="10">../temp/UCDJ_LOG_##.TXT</logging>
+      <trace count="10" ra="0" tcp="0" xml="0">../temp/UCDJ_TRC_##.TXT</trace>
+      <tcpip_keepalive>1</tcpip_keepalive>
+      <tcp_nodelay>1</tcp_nodelay>
+      <SendBufferSize>1048576</SendBufferSize>
+      <RecvBufferSize>1048576</RecvBufferSize>
+   </paths>
+   <colors>
+      <color b="0" g="0" r="255"/>
+      <color b="0" g="255" r="0"/>
+      <color b="255" g="152" r="42"/>
+      <color b="0" g="255" r="255"/>
+      <color b="14" g="178" r="241"/>
+      <color b="255" g="0" r="255"/>
+      <color b="255" g="255" r="255"/>
+      <color b="149" g="140" r="170"/>
+   </colors>
+   <timeout>60</timeout>
+   <connections>
+      <connection name="AETST" system="AETST">
+         <cp ip="s1597tae001.koogrp.globus.net" port="2217"/>
+         <cp ip="s1597tae002.koogrp.globus.net" port="2218"/>
+         <cp ip="s1597tae001.koogrp.globus.net" port="2219"/>
+         <cp ip="s1597tae002.koogrp.globus.net" port="2220"/>
+         <cp ip="s1597tae001.koogrp.globus.net" port="2221"/>
+      </connection>
+      <connection name="AEDEV" system="AEDEV">
+         <cp ip="s1597aeap001.koogrp.globus.net" port="2217"/>
+         <cp ip="s1597aeap002.koogrp.globus.net" port="2218"/>
+         <cp ip="s1597aeap001.koogrp.globus.net" port="2219"/>
+         <cp ip="s1597aeap002.koogrp.globus.net" port="2220"/>
+         <cp ip="s1597aeap001.koogrp.globus.net" port="2221"/>
+      </connection>
+      <connection name="AEPRD" system="AEPRD">
+         <cp ip="s1597aeap003.koogrp.globus.net" port="2217"/>
+         <cp ip="s1597aeap004.koogrp.globus.net" port="2218"/>
+         <cp ip="s1597aeap003.koogrp.globus.net" port="2219"/>
+         <cp ip="s1597aeap004.koogrp.globus.net" port="2220"/>
+         <cp ip="s1597aeap003.koogrp.globus.net" port="2221"/>
+      </connection>
+   </connections>
+</configuration>
