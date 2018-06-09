@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Interfaces
+Bundle-SymbolicName: osgi.service.factory.interfaces
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: osgi.service.factory.interfaces
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: osgi.service.factory.interfaces

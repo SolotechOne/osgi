@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Provider
+Bundle-SymbolicName: osgi.service.factory.provider
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: osgi.service.factory.provider
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: osgi.service.factory.interfaces;bundle-version="1.0.0"
+Import-Package: org.apache.felix.dm;version="4.4.0",
+ org.osgi.framework;version="1.8.0",
+ org.osgi.service.cm;version="1.5.0",
+ org.osgi.service.component.annotations
+Service-Component: OSGI-INF/osgi.service.factory.provider.Connection.xml
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: osgi.service.factory.provider.Activator
