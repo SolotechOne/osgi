@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Commands
+Bundle-SymbolicName: osgi.service.factory.commands
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: osgi.service.factory.commands
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.apache.felix.service.command;status=provisional;version="0.10.0",
+ org.osgi.framework;version="1.8.0",
+ org.osgi.service.cm;version="1.5.0",
+ org.osgi.service.component.annotations;version="1.3.0";resolution:=optional
+Service-Component: OSGI-INF/osgi.service.factory.commands.CreateCommand.xml,
+ OSGI-INF/osgi.service.factory.commands.OpenCommand.xml,
+ OSGI-INF/osgi.service.factory.commands.ScopeCommand.xml
+Bundle-ActivationPolicy: lazy
+Require-Bundle: osgi.service.factory.interfaces;bundle-version="1.0.0"

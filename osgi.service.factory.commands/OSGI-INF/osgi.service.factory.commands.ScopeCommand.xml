@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="osgi.service.factory.commands.ScopeCommand">
+   <property name="osgi.command.scope" value="ae"/>
+   <property name="osgi.command.function" value="scope"/>
+   <service>
+      <provide interface="osgi.service.factory.commands.ScopeCommand"/>
+   </service>
+   <reference bind="setConfigurationAdmin" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin"/>
+   <implementation class="osgi.service.factory.commands.ScopeCommand"/>
+</scr:component>

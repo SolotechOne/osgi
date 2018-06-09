@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="osgi.service.factory.commands.OpenCommand">
+   <property name="osgi.command.scope" value="ae"/>
+   <property name="osgi.command.function">open
+close
+   </property>
+   <service>
+      <provide interface="osgi.service.factory.commands.OpenCommand"/>
+   </service>
+   <reference cardinality="0..n" field="connections" interface="osgi.service.factory.interfaces.IConnection" name="connections" policy="dynamic" target="(service.factoryPid=connection)"/>
+   <implementation class="osgi.service.factory.commands.OpenCommand"/>
+</scr:component>

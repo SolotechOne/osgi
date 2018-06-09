@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="osgi.service.factory.commands.CreateCommand">
+   <property name="osgi.command.scope" value="ae"/>
+   <property name="osgi.command.function" value="create"/>
+   <service>
+      <provide interface="osgi.service.factory.commands.CreateCommand"/>
+   </service>
+   <reference bind="setConfigAdmin" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigAdmin"/>
+   <implementation class="osgi.service.factory.commands.CreateCommand"/>
+</scr:component>
