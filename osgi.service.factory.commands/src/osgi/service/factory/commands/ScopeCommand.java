@@ -13,11 +13,11 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 @Component(
-		property= {
-			CommandProcessor.COMMAND_SCOPE + "=ae",
-			CommandProcessor.COMMAND_FUNCTION + "=scope"},
-		service=ScopeCommand.class
-	)
+	property= {
+		CommandProcessor.COMMAND_SCOPE + "=ae",
+		CommandProcessor.COMMAND_FUNCTION + "=scope"},
+	service=ScopeCommand.class
+)
 public class ScopeCommand {
 	ConfigurationAdmin admin;
 
@@ -34,7 +34,7 @@ public class ScopeCommand {
 		String filter = "(service.factoryPid=connection)";
 		
 		Configuration[] configurations = this.admin.listConfigurations(filter);
-
+		
 		for (Configuration configuration : configurations) {
 			System.out.println(
 //				((active == configuration.getProperties().get("service.pid")) ? "*" : " ") + 
@@ -45,7 +45,7 @@ public class ScopeCommand {
 	}
 	
 	public void scope(String name) throws IOException {
-		Configuration config = this.admin.getConfiguration("osgi.service.factory.commands.OpenCommand");
+		Configuration config = this.admin.getConfiguration("osgi.service.factory.commands.ConnectionCommands", "?");
 		
 		Dictionary<String, Object> properties = null;
 //		Object target = null;
@@ -56,16 +56,18 @@ public class ScopeCommand {
 		} else {
 			properties = new Hashtable<String, Object>();
 		}
-
+		
 //		boolean isOnline = (target == null || target.toString().contains("online"));
-
+		
 		// toggle the state
 //		StringBuilder filter = new StringBuilder("(service.connectivity=");
 //		filter.append(isOnline ? "offline" : "online").append(")");
 		
 		String filter = "(&(service.factoryPid=connection)(name=" + name + "))";
-
+//		String filter = "(&(service.factoryPid=connection))";
+		
 		properties.put("connections.target", filter);
+		properties.put("connections.cardinality.minimum", 1);
 		
 		config.update(properties);
 	}

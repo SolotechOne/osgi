@@ -19,7 +19,7 @@ public class Activator extends DependencyActivatorBase {
 	
 	@Override
 	public void init(BundleContext context, DependencyManager manager) throws Exception {
-		System.out.println("init()");
+//		System.out.println("init()");
 
 		Properties properties = new Properties();
 		properties.put(Constants.SERVICE_PID, ConnectionFactory.PID);

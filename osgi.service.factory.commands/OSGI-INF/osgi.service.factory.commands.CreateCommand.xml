@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="osgi.service.factory.commands.CreateCommand">
    <property name="osgi.command.scope" value="ae"/>
-   <property name="osgi.command.function" value="create"/>
+   <property name="osgi.command.function">create
+drop
+   </property>
    <service>
       <provide interface="osgi.service.factory.commands.CreateCommand"/>
    </service>

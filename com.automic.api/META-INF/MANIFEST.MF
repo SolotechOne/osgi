@@ -6,3 +6,6 @@ Bundle-Version: 12.0.2.1-9032
 Bundle-Vendor: ca technologies
 Automatic-Module-Name: com.automic.api
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: com.uc4.api,
+ com.uc4.communication,
+ com.uc4.communication.requests

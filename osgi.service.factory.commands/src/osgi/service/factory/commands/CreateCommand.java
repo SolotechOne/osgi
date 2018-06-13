@@ -15,7 +15,8 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	property= {
 		CommandProcessor.COMMAND_SCOPE + "=ae",
-		CommandProcessor.COMMAND_FUNCTION + "=create"},
+		CommandProcessor.COMMAND_FUNCTION + "=create",
+		CommandProcessor.COMMAND_FUNCTION + "=drop"},
 	service=CreateCommand.class
 )
 public class CreateCommand {
@@ -47,9 +48,25 @@ public class CreateCommand {
                 Hashtable<String, Object> map = new Hashtable<>();
                 if (newName == null) {
                     map.put("name", name);
+                    map.put("description", "connection for system aedev");
+                    map.put("system", "AEDEV");
+                    map.put(".ip.0", "s1597aeap001.koogrp.globus.net:2217");
+                    map.put(".ip.1", "s1597aeap002.koogrp.globus.net:2218");
+                    map.put(".ip.2", "s1597aeap001.koogrp.globus.net:2219");
+                    map.put(".ip.3", "s1597aeap002.koogrp.globus.net:2220");
+                    map.put(".ip.4", "s1597aeap001.koogrp.globus.net:2221");
+
                     System.out.println("connection created " + name);
                 } else {
                     map.put("name", newName);
+                    map.put("description", "connection for system aedev");
+                    map.put("system", "AEDEV");
+                    map.put(".ip.0", "s1597aeap001.koogrp.globus.net:2217");
+                    map.put(".ip.1", "s1597aeap002.koogrp.globus.net:2218");
+                    map.put(".ip.2", "s1597aeap001.koogrp.globus.net:2219");
+                    map.put(".ip.3", "s1597aeap002.koogrp.globus.net:2220");
+                    map.put(".ip.4", "s1597aeap001.koogrp.globus.net:2221");
+
                     System.out.println("connection already exists " + name + " renamed to " + newName);
                 }
                 config.update(map);
@@ -59,12 +76,43 @@ public class CreateCommand {
                 // it is guaranteed by listConfigurations() that only
                 // Configuration objects are returned with non-null properties
                 Dictionary<String, Object> map = config.getProperties();
+                
                 map.put("name", newName);
+                map.put("description", "connection for system aedev");
+                map.put("system", "AEDEV");
+                map.put(".ip.0", "s1597aeap001.koogrp.globus.net:2217");
+                map.put(".ip.1", "s1597aeap002.koogrp.globus.net:2218");
+                map.put(".ip.2", "s1597aeap001.koogrp.globus.net:2219");
+                map.put(".ip.3", "s1597aeap002.koogrp.globus.net:2220");
+                map.put(".ip.4", "s1597aeap001.koogrp.globus.net:2221");
+                
                 config.update(map);
                 System.out.println(name + " already exists and renamed to " + newName);
             }
         } catch (IOException | InvalidSyntaxException e1) {
             e1.printStackTrace();
         }
+    }
+    
+    @Descriptor("drops a connection with given name")
+    public void drop(@Descriptor("the name of the connection to be dropped") String name) {
+    	String filter = "(&(name=" + name + ")" + "(service.factoryPid=connection))";
+    	
+        try {
+			Configuration[] configurations = this.configAdmin.listConfigurations(filter);
+			
+			if (!(configurations == null || configurations.length == 0)) {
+				Configuration config = configurations[0];
+				
+				config.delete();
+				
+				System.out.println("connection dropped " + name);
+			} else {
+				System.out.println("connection with name " + name + " does not exist");
+			}
+		} catch (IOException | InvalidSyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }
