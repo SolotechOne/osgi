@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Provider
+Bundle-SymbolicName: osgi.log.service.provider
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: osgi.log.service.provider
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.osgi.framework
+Require-Bundle: osgi.log.service.interface
+Bundle-Activator: osgi.log.service.provider.Activator
