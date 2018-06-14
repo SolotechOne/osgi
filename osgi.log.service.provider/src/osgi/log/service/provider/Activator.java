@@ -16,8 +16,9 @@
 package osgi.log.service.provider;
 
 import org.osgi.framework.*;
-import org.osgi.service.log.LogReaderService;
-import org.osgi.service.log.LogService;
+
+import osgi.log.service.interfaces.LogReaderService;
+import osgi.log.service.interfaces.LogService;
 
 /**
  * Bundle activator which creates and registers a simple implementation of
@@ -157,9 +158,9 @@ public class Activator
                 LogReaderService.class.getName(), this.readerServ, null);
 
         // add the required listeners for framework event logging
-        this.context.addFrameworkListener(this);
-        this.context.addBundleListener(this);
-        this.context.addServiceListener(this);
+//        this.context.addFrameworkListener(this);
+//        this.context.addBundleListener(this);
+//        this.context.addServiceListener(this);
     }
 
 

@@ -17,7 +17,8 @@ package osgi.log.service.provider;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.log.LogEntry;
+
+import osgi.log.service.interfaces.LogEntry;
 
 
 /**

@@ -17,9 +17,8 @@ package osgi.log.service.provider;
 
 import java.util.Enumeration;
 
-import org.osgi.service.log.LogListener;
-import org.osgi.service.log.LogReaderService;
-
+import osgi.log.service.interfaces.LogListener;
+import osgi.log.service.interfaces.LogReaderService;
 
 /**
  * Simple implementation of the OSGi LogReaderService api.

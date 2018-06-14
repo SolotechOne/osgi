@@ -16,7 +16,8 @@
 package osgi.log.service.provider;
 
 import org.osgi.framework.*;
-import org.osgi.service.log.LogService;
+
+import osgi.log.service.interfaces.LogService;
 
 
 /**

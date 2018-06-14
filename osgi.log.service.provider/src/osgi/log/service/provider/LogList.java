@@ -20,8 +20,9 @@ import java.util.Vector;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.log.LogEntry;
-import org.osgi.service.log.LogListener;
+
+import osgi.log.service.interfaces.LogEntry;
+import osgi.log.service.interfaces.LogListener;
 
 /**
  * Simple log implementation as a circular list of log entries
