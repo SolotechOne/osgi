@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.2.0" name="osgi.ldap.service.consumer.SearchCommand">
+   <property name="osgi.command.scope" value="ldap"/>
+   <property name="osgi.command.function" value="search"/>
+   <service>
+      <provide interface="osgi.ldap.service.consumer.SearchCommand"/>
+   </service>
+   <reference bind="setDataService" interface="osgi.ldap.service.interfaces.IConnector" name="DataService" policy="dynamic" policy-option="greedy" target="(component.name=osgi.ldap.service.provider.LdapConnector)" unbind="unsetDataService"/>
+   <implementation class="osgi.ldap.service.consumer.SearchCommand"/>
+</scr:component>

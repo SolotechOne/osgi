@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Interface
+Bundle-SymbolicName: osgi.ldap.service.interface
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: osgi.ldap.service.interface
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: osgi.ldap.service.interfaces

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Provider
+Bundle-SymbolicName: osgi.ldap.service.provider
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: osgi.ldap.service.provider
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: osgi.ldap.service.interfaces
+Service-Component: OSGI-INF/osgi.ldap.service.provider.LdapConnector.xml
+Bundle-ActivationPolicy: lazy
