@@ -1,18 +1,3 @@
-/*
- *                 Common Public License Notice
- *
- * The contents of this file are subject to the Common Public License
- * Version 0.5 (the "License"). You may not use this file except in
- * compliance with the License. A copy of the License should have been
- * provided in the release which contained this file. If none was provided,
- * copies are available at http://www.opensource.org/
- *
- * Copyright (c) 2002 SoftSell Business Systems, LLC.
- *
- * Contact: SoftSell Business Systems LLC (info@softsell.com)
- * Contributor(s):
- *
- */
 package osgi.log.service.provider;
 
 import org.osgi.framework.*;
@@ -35,34 +20,7 @@ import osgi.log.service.interfaces.LogService;
  *     nice in future to extend this to make it support a standard collection
  *     interface such as List.
  */
-public class Activator
-        implements
-                BundleActivator,
-                BundleListener,
-                FrameworkListener,
-                ServiceListener
-
-{
-    //////////////////////////////////////////////////
-    // STATIC VARIABLES
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // STATIC PUBLIC METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // STATIC PROTECTED METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // STATIC PRIVATE METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // INSTANCE VARIABLES
-    //////////////////////////////////////////////////
-
+public class Activator implements BundleActivator, BundleListener, FrameworkListener, ServiceListener {
     /** Standard reference to this bundle's context area */
     private BundleContext context = null;
 
@@ -85,22 +43,6 @@ public class Activator
     /** List of log entries */
     private LogList log;
 
-    //////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // ACCESSOR METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // PUBLIC INSTANCE METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // INTERFACE METHODS - BundleActivator
-    //////////////////////////////////////////////////
-
     /**
      * Standard start method for bundle. Creates the log list and registers
      * the LogServiceFactory and LogReaderService services. Also adds
@@ -109,39 +51,31 @@ public class Activator
      *
      * @param context   reference to our <tt>BundleContext</tt>
      */
-    public void start(BundleContext context)
-            throws Exception
-    {
+    public void start(BundleContext context) throws Exception {
         this.context = context;
 
         //TODO: include better config option handling. These just temp.
         //      Use somethinhg like Configurable or ConfigAdmin.
-        try
-        {
-            String strProp = context.getProperty(
-                    "com.softsell.osgi.log.size");
-            if (strProp != null)
-            {
-                this.logSize = Integer.parseInt(strProp);
-            }
+        try {
+        	String strProp = context.getProperty("osgi.log.service.provider.log.size");
+        	
+        	if (strProp != null) {
+        		this.logSize = Integer.parseInt(strProp);
+        	}
         }
-        catch (NumberFormatException e)
-        {
-            // seems like we should log some form of error, which is tricky!
-            this.logSize = 100;
+        catch (NumberFormatException e) {
+        	// seems like we should log some form of error, which is tricky!
+        	this.logSize = 100;
         }
 
-        try
-        {
-            String strProp = context.getProperty(
-                    "com.softsell.osgi.log.threshold");
-            if (strProp != null)
-            {
+        try {
+        	String strProp = context.getProperty("osgi.log.service.provider.log.threshold");
+        	
+            if (strProp != null) {
                 this.logThreshold = Integer.parseInt(strProp);
             }
         }
-        catch (NumberFormatException e)
-        {
+        catch (NumberFormatException e) {
             // seems like we should log some form of error, which is tricky!
             this.logThreshold = 3;
         }
@@ -152,10 +86,8 @@ public class Activator
         this.readerServ = new LogReaderServiceImpl(this.log);
 
         // register the log and reader services
-        this.logReg = this.context.registerService(
-                LogService.class.getName(), this.logServ, null);
-        this.readerReg = this.context.registerService(
-                LogReaderService.class.getName(), this.readerServ, null);
+        this.logReg = this.context.registerService(LogService.class.getName(), this.logServ, null);
+        this.readerReg = this.context.registerService(LogReaderService.class.getName(), this.readerServ, null);
 
         // add the required listeners for framework event logging
 //        this.context.addFrameworkListener(this);
@@ -169,25 +101,21 @@ public class Activator
      *
      * @param context   reference to our <tt>BundleContext</tt>
      */
-    public void stop(BundleContext context)
-    {
+    public void stop(BundleContext context) {
         // remove listeners
         this.context.removeFrameworkListener(this);
         this.context.removeBundleListener(this);
         this.context.removeServiceListener(this);
 
-        if (this.logReg != null)
-        {
+        if (this.logReg != null) {
             this.logReg.unregister();
         }
 
-        if (this.readerReg != null)
-        {
+        if (this.readerReg != null) {
             this.readerReg.unregister();
         }
 
-        if (this.log != null)
-        {
+        if (this.log != null) {
             this.log.shutdown();
         }
     }
@@ -202,11 +130,10 @@ public class Activator
      *
      * @param event     bundle event which has occured
      */
-    public void bundleChanged(BundleEvent event)
-    {
+    public void bundleChanged(BundleEvent event) {
         String msg = null;
-        switch (event.getType())
-        {
+        
+        switch (event.getType()) {
             case BundleEvent.INSTALLED:
                 msg = "BundleEvent.INSTALLED";
                 break;
@@ -241,10 +168,8 @@ public class Activator
      *
      * @param event     framework event which has occured
      */
-    public void frameworkEvent(FrameworkEvent event)
-    {
-        switch (event.getType())
-        {
+    public void frameworkEvent(FrameworkEvent event) {
+        switch (event.getType()) {
             case FrameworkEvent.ERROR:
                 this.log.log(event.getBundle(), LogService.LOG_ERROR,
                         "FrameworkEvent.ERROR", event.getThrowable(), null);
@@ -268,12 +193,12 @@ public class Activator
      *
      * @param event     service event which has occured
      */
-    public void serviceChanged(ServiceEvent event)
-    {
+    public void serviceChanged(ServiceEvent event) {
         String msg = null;
+        
         int level = LogService.LOG_INFO;
-        switch (event.getType())
-        {
+        
+        switch (event.getType()) {
             case ServiceEvent.MODIFIED:
                 msg = "ServiceEvent.INSTALLED";
                 level = LogService.LOG_DEBUG;
@@ -288,24 +213,6 @@ public class Activator
                 break;
         }
 
-        this.log.log(event.getServiceReference().getBundle(), level, msg, null,
-                event.getServiceReference());
+        this.log.log(event.getServiceReference().getBundle(), level, msg, null, event.getServiceReference());
     }
-
-    //////////////////////////////////////////////////
-    // PROTECTED INSTANCE METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // PRIVATE INSTANCE METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // STATIC INNER CLASSES
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // NON-STATIC INNER CLASSES
-    //////////////////////////////////////////////////
-
 }

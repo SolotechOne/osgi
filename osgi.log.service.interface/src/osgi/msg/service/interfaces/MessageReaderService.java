@@ -1,7 +1,11 @@
 package osgi.msg.service.interfaces;
 
-import osgi.log.service.interfaces.LogReaderService;
+import java.util.Enumeration;
 
-public interface MessageReaderService extends LogReaderService {
-
+public abstract interface MessageReaderService {
+	public abstract void addMessageListener(MessageListener listener);
+	
+	public abstract void removeMessageListener(MessageListener listener);
+	
+	public abstract Enumeration<MessageEntry> getLog();
 }

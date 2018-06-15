@@ -1,18 +1,3 @@
-/*
- *                 Common Public License Notice
- * 
- * The contents of this file are subject to the Common Public License
- * Version 0.5 (the "License"). You may not use this file except in
- * compliance with the License. A copy of the License should have been 
- * provided in the release which contained this file. If none was provided,
- * copies are available at http://www.opensource.org/
- *
- * Copyright (c) 2002 SoftSell Business Systems, LLC.
- *
- * Contact: SoftSell Business Systems LLC (info@softsell.com)
- * Contributor(s):
- *
- */
 package osgi.log.service.provider;
 
 import java.util.ArrayList;
@@ -27,53 +12,24 @@ import osgi.log.service.interfaces.LogListener;
 /**
  * Simple log implementation as a circular list of log entries
  */
-public class LogList
-        extends
-                CircularList
-        implements
-                Runnable
-{
-    //////////////////////////////////////////////////
-    // STATIC VARIABLES
-    //////////////////////////////////////////////////
-
+public class LogList extends CircularList implements Runnable {
     /** Needed whenever log list is copied, so created as a static */
     private static final LogListener[] EMPTY_ARR = new LogListener[0];
-
-    //////////////////////////////////////////////////
-    // STATIC PUBLIC METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // STATIC PROTECTED METHODS
-    //////////////////////////////////////////////////
-    
-    //////////////////////////////////////////////////
-    // STATIC PRIVATE METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // INSTANCE VARIABLES
-    //////////////////////////////////////////////////
     
     /** List of log listeners */
     private Vector listenerList;
 
     /** Queue of logged events awaiting dispatch */
-    private ArrayList   dispatch;
+    private ArrayList dispatch;
 
     /** Flag to indicated whether log is active */
     private boolean stopped;
 
     /** Dispatch thread for logged events */
-    private Thread  thread;
+    private Thread thread;
 
     /** Threshold above which to ignore log events */
     private int threshold;
-
-    //////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////
 
     /**
      * Constructs a log list of the specified size and threshold.
@@ -81,8 +37,7 @@ public class LogList
      * @param size      required capacity of the list
      * @param threshold level of events to log
      */
-    protected LogList(int size, int threshold)
-    {
+    protected LogList(int size, int threshold) {
         super(size);
 
         // create the listener and dispatch lists
@@ -96,14 +51,6 @@ public class LogList
         thread.start();
     }
 
-    //////////////////////////////////////////////////
-    // ACCESSOR METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // PUBLIC INSTANCE METHODS
-    //////////////////////////////////////////////////
-
     /**
      * Utility method to actually create and record a LogEntry
      *
@@ -113,46 +60,39 @@ public class LogList
      * @param ex            exception object to record with log message.
      * @param sr            reference to service logging the message.
      */
-    public void log(Bundle bundle, int level, String msg, 
-            Throwable ex, ServiceReference sr)
-    {
+    public void log(Bundle bundle, int level, String msg, Throwable ex, ServiceReference sr) {
         LogEntry ent = LogEntryImpl.createInstance(bundle, level, msg, ex, sr);
+        
         // ignore if above threshold
-        if (level <= this.threshold)
-        {
+        if (level <= this.threshold) {
             this.add(ent);
         }
+        
         this.fireLoggedEvent(ent);
     }
-
 
     /**
      * Add a listener for log events.
      *
      * @param listener      listener to add 
      */
-    public void addListener(LogListener listener)
-    {
+    public void addListener(LogListener listener) {
         this.listenerList.add(listener);
     }
-
 
     /**
      * Remove a listener for log events.
      *
      * @param listener      listener to remove
      */
-    public void removeListener(LogListener listener)
-    {
+    public void removeListener(LogListener listener) {
         this.listenerList.remove(listener);
     }
-
 
     /**
      * Shutdown the log, stopping the dispatch thread.
      */
-    public void shutdown()
-    {
+    public void shutdown() {
         this.stopped = true;
         this.thread.interrupt();
     }
@@ -165,29 +105,23 @@ public class LogList
      * Standard run method for the dispatch thread. Responsible for performing
      * all actual notification of logged() events to log listeners.
      */
-    public void run()
-    {
-        while (true)
-        {
+    public void run() {
+        while (true) {
             FireRequest fr;
-            synchronized(this.dispatch)
-            {
+            
+            synchronized(this.dispatch) {
                 // Wait for a dispatch request or for a shutdown request.
-                while ((this.dispatch.size() == 0) && (!this.stopped))
-                {
+                while ((this.dispatch.size() == 0) && (!this.stopped)) {
                     // Wait until some signals us for work.
-                    try 
-                    {
+                    try  {
                         this.dispatch.wait();
                     } 
-                    catch (InterruptedException ex) 
-                    {
+                    catch (InterruptedException ex) {
                         // some form of error?
                     }
                 }
 
-                if (this.stopped)
-                {
+                if (this.stopped) {
                     return;
                 }
 
@@ -195,8 +129,7 @@ public class LogList
             }
 
             // Deliver the dispatch request.
-            for (int ix = 0; ix < fr.reqListeners.length; ix++)
-            {
+            for (int ix = 0; ix < fr.reqListeners.length; ix++) {
                 fr.reqListeners[ix].logged(fr.reqEntry);
             }
 
@@ -215,54 +148,33 @@ public class LogList
      *
      * @param ent   entry to notify listeners of
      */
-    protected void fireLoggedEvent(LogEntry ent)
-    {
+    protected void fireLoggedEvent(LogEntry ent) {
         // copy listener list, so only listeners at time event was logged
         // will be notified
         LogListener[] copy = (LogListener[]) listenerList.toArray(EMPTY_ARR);
 
-        if (copy.length > 0)
-        {
+        if (copy.length > 0) {
             FireRequest fr = FireRequest.alloc(copy, ent);
-            synchronized(this.dispatch)
-            {
+            synchronized(this.dispatch) {
                 this.dispatch.add(fr);
                 this.dispatch.notify();
             }
         }
     }
 
-    //////////////////////////////////////////////////
-    // PRIVATE INSTANCE METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // STATIC INNER CLASSES
-    //////////////////////////////////////////////////
-
     /**
      * Inner class to hold requests for LogEvents needing dispatch to log
      *  listeners
      */
-    private static class FireRequest
-    {
-        //////////////////////////////////////////////////
-        // STATIC PRIVATE METHODS
-        //////////////////////////////////////////////////
-
+    private static class FireRequest {
         //Note: could extend to implement cacheing of free req's in here if 
         //      performance proves an issue
-        private static FireRequest alloc(LogListener[] listeners, LogEntry ent)
-        {
+        private static FireRequest alloc(LogListener[] listeners, LogEntry ent) {
             FireRequest fr = new FireRequest();
             fr.reqListeners = listeners;
             fr.reqEntry = ent;
             return fr;
         }
-
-        //////////////////////////////////////////////////
-        // INSTANCE VARIABLES
-        //////////////////////////////////////////////////
 
         public LogListener[] reqListeners;
         public LogEntry reqEntry;
@@ -271,20 +183,13 @@ public class LogList
         // PRIVATE INSTANCE METHODS
         //////////////////////////////////////////////////
 
-        private void free()
-        {
+        private void free() {
             this.reset();
         }
 
-        private void reset()
-        {
+        private void reset() {
             this.reqListeners = null;
             this.reqEntry = null;
         }
     }
-
-    //////////////////////////////////////////////////
-    // NON-STATIC INNER CLASSES
-    //////////////////////////////////////////////////
-
 }

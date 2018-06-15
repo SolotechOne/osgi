@@ -14,8 +14,7 @@ import org.osgi.framework.ServiceReference;
  * @see LogReaderService#getLog
  * @see LogListener
  */
-public abstract interface LogEntry
-{
+public abstract interface LogEntry {
     /**
      * Returns the bundle that created this <tt>LogEntry</tt> object.
      *

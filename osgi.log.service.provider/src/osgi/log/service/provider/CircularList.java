@@ -1,18 +1,3 @@
-/*
- *                 Common Public License Notice
- * 
- * The contents of this file are subject to the Common Public License
- * Version 0.5 (the "License"). You may not use this file except in
- * compliance with the License. A copy of the License should have been 
- * provided in the release which contained this file. If none was provided,
- * copies are available at http://www.opensource.org/
- *
- * Copyright (c) 2002 SoftSell Business Systems, LLC.
- *
- * Contact: SoftSell Business Systems LLC (info@softsell.com)
- * Contributor(s):
- *
- */
 package osgi.log.service.provider;
 
 /**
@@ -22,26 +7,6 @@ package osgi.log.service.provider;
  */
 public class CircularList
 {
-    //////////////////////////////////////////////////
-    // STATIC VARIABLES
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // STATIC PUBLIC METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // STATIC PROTECTED METHODS
-    //////////////////////////////////////////////////
-    
-    //////////////////////////////////////////////////
-    // STATIC PRIVATE METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // INSTANCE VARIABLES
-    //////////////////////////////////////////////////
-    
     /** Back array containing references to the list of objects */
     private Object[]    list;
 
@@ -54,13 +19,8 @@ public class CircularList
     /** true if the circular list has wrapped back to the beginning */
     private boolean     wrapped;
 
-    //////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////
-
     // prevent instantiation without a size
-    protected CircularList()
-    {
+    protected CircularList() {
         //default to prevent problems with empty list
         this(100);
     }
@@ -70,15 +30,12 @@ public class CircularList
      *
      * @param size  required capacity of the list
      */
-    public CircularList(int size)
-    {
-        if (size <= 0)
-        {
+    public CircularList(int size) {
+        if (size <= 0) {
             //default to prevent problems with empty list
             maxSize = 100;
         }
-        else
-        {
+        else {
             this.maxSize = size;
         }
 
@@ -87,14 +44,6 @@ public class CircularList
         this.wrapped = false;
     }
 
-    //////////////////////////////////////////////////
-    // ACCESSOR METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // PUBLIC INSTANCE METHODS
-    //////////////////////////////////////////////////
-
     /**
      * Add a new object into the list.
      *
@@ -102,17 +51,13 @@ public class CircularList
      * @return  copy of list in supplied array, or new array if insufficient 
      *          capacity
      */
-    public void add(Object o)
-    {
-        if (o == null)  throw new IllegalArgumentException(
-            "null object reference");
+    public void add(Object o) {
+        if (o == null)  throw new IllegalArgumentException("null object reference");
 
-        synchronized(this.list)
-        {
+        synchronized(this.list) {
             this.list[this.next++] = o;
 
-            if (this.next >= this.maxSize)
-            {
+            if (this.next >= this.maxSize) {
                 this.next = 0;
                 this.wrapped = true;
             }
@@ -124,14 +69,11 @@ public class CircularList
      *
      * @return  number of entries in the list.
      */
-    public int size()
-    {
-        if (this.wrapped)
-        {
+    public int size() {
+        if (this.wrapped) {
             return this.maxSize;
         }
-        else
-        {
+        else {
             return this.next;
         }
     }
@@ -141,17 +83,14 @@ public class CircularList
      *
      * @return  new array containing copy of the list
      */
-    public Object[] toArray()
-    {
-        synchronized(this.list)
-        {
+    public Object[] toArray() {
+        synchronized(this.list) {
             Object copy[] = new Object[this.size()];
             this.copyListTo(copy);
             return copy;
         }
     }
 
-    
     /**
      * Get a copy of the list as an array of the specified type, using the
      * supplied array if it has sufficent capacity or creating a new one of
@@ -161,64 +100,41 @@ public class CircularList
      * @return  copy of list in supplied array, or new array if insufficient 
      *          capacity
      */
-    public Object[] toArray(Object[] a)
-    {
-        synchronized(this.list)
-        {
-            int size = size();
-            if (a.length < size)
-            {
-                a = (Object[])java.lang.reflect.Array.newInstance(
-                        a.getClass().getComponentType(), size);
-            }
-            this.copyListTo(a);
-            return a;
-        }
+    public Object[] toArray(Object[] a) {
+    	synchronized(this.list) {
+    		int size = size();
+
+    		if (a.length < size) {
+    			a = (Object[])java.lang.reflect.Array.newInstance(
+    					a.getClass().getComponentType(), size);
+    		}
+
+    		this.copyListTo(a);
+
+    		return a;
+    	}
     }
-
-    //////////////////////////////////////////////////
-    // INTERFACE METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // PROTECTED INSTANCE METHODS
-    //////////////////////////////////////////////////
 
     /**
      * Utility method to copy the list into an array.
      *
      * @param a     array to receive copy of list.
      */
-    protected void copyListTo(Object[] a)
-    {
-        synchronized(this.list)
-        {
-            if (!this.wrapped)
-            {
+    protected void copyListTo(Object[] a) {
+        synchronized(this.list) {
+            if (!this.wrapped) {
                 // log hasn't wrapped, just do simple copy
                 System.arraycopy(this.list, 0, a, 0, this.next);
             }
-            else
-            {
+            else {
                 int len = this.maxSize-this.next;
+                
                 //first copy old entries (next and beyond)
                 System.arraycopy(this.list, this.next, a, 0, len);
+                
                 //then copy newest entries (zero to next)
                 System.arraycopy(this.list, 0, a, len, this.next);
             }
         }
     }
-
-    //////////////////////////////////////////////////
-    // PRIVATE INSTANCE METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // STATIC INNER CLASSES
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // NON-STATIC INNER CLASSES
-    //////////////////////////////////////////////////
-
 }

@@ -1,7 +1,13 @@
 package osgi.msg.service.interfaces;
 
-import osgi.log.service.interfaces.LogEntry;
+public abstract interface MessageEntry {
+	public abstract long getTime();
+	
+	public abstract String getInsert();
 
-public interface MessageEntry extends LogEntry {
+	public abstract int getNumber();
 
+	public abstract String getText();
+
+	public abstract char getType();
 }

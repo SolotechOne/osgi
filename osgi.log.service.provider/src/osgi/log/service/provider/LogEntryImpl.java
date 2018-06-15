@@ -1,18 +1,3 @@
-/*
- *                 Common Public License Notice
- * 
- * The contents of this file are subject to the Common Public License
- * Version 0.5 (the "License"). You may not use this file except in
- * compliance with the License. A copy of the License should have been 
- * provided in the release which contained this file. If none was provided,
- * copies are available at http://www.opensource.org/
- *
- * Copyright (c) 2002 SoftSell Business Systems, LLC.
- *
- * Contact: SoftSell Business Systems LLC (info@softsell.com)
- * Contributor(s):
- *
- */
 package osgi.log.service.provider;
 
 import org.osgi.framework.Bundle;
@@ -20,22 +5,10 @@ import org.osgi.framework.ServiceReference;
 
 import osgi.log.service.interfaces.LogEntry;
 
-
 /**
  * Simple implementation of the OSGi LogEntry api.
  **/
-public class LogEntryImpl 
-        implements 
-                LogEntry
-{
-    //////////////////////////////////////////////////
-    // STATIC VARIABLES
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // STATIC PUBLIC METHODS
-    //////////////////////////////////////////////////
-
+public class LogEntryImpl implements LogEntry {
     /**
      * Static factory method for creation of log entries.
      *
@@ -45,23 +18,9 @@ public class LogEntryImpl
      * @param ex        optional exception associated with the entry
      * @param svcRef    optional reference to service which logged the entry
      */
-    public static LogEntry createInstance(Bundle bundle, int level, String msg, 
-            Throwable ex, ServiceReference svcRef)
-    {
+    public static LogEntry createInstance(Bundle bundle, int level, String msg, Throwable ex, ServiceReference svcRef) {
         return new LogEntryImpl(bundle, level, msg, ex, svcRef);
     }
-
-    //////////////////////////////////////////////////
-    // STATIC PROTECTED METHODS
-    //////////////////////////////////////////////////
-    
-    //////////////////////////////////////////////////
-    // STATIC PRIVATE METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // INSTANCE VARIABLES
-    //////////////////////////////////////////////////
 
     /** Bundle logging the entry */
     private final Bundle              bundle;
@@ -76,10 +35,6 @@ public class LogEntryImpl
     /** Time in milliseconds the entry was logged */
     private final long                time;
 
-    //////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////
-
     /**
      * Constructor to create a new log entry. Protected to prevent external    
      * instantiation, creation is preferred through static method.
@@ -90,9 +45,7 @@ public class LogEntryImpl
      * @param ex        optional exception associated with the entry
      * @param svcRef    optional reference to service which logged the entry
      */
-    protected LogEntryImpl(Bundle bundle, int level, String msg,
-            Throwable ex, ServiceReference svcRef)
-    {
+    protected LogEntryImpl(Bundle bundle, int level, String msg, Throwable ex, ServiceReference svcRef) {
         this.bundle     = bundle;
         this.ex         = ex;
         this.level      = level;
@@ -101,25 +54,12 @@ public class LogEntryImpl
         this.time       = System.currentTimeMillis();
     }
 
-    //////////////////////////////////////////////////
-    // ACCESSOR METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // PUBLIC INSTANCE METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // INTERFACE METHODS - LogEntry
-    //////////////////////////////////////////////////
-
     /**
      * Standard OSGi method to get bundle which logged the entry.
      *
      * @return      logging bundle 
      */
-    public Bundle getBundle()
-    {
+    public Bundle getBundle() {
         return this.bundle;
     }
 
@@ -128,8 +68,7 @@ public class LogEntryImpl
      *
      * @return  exception, or null if none supplied
      */
-    public Throwable getException()
-    {
+    public Throwable getException() {
         return this.ex;
     }
 
@@ -138,8 +77,7 @@ public class LogEntryImpl
      *
      * @return  log entry level
      */
-    public int getLevel()
-    {
+    public int getLevel() {
         return this.level;
     }
 
@@ -148,8 +86,7 @@ public class LogEntryImpl
      *
      * @return  log message text
      */
-    public String getMessage()
-    {
+    public String getMessage() {
         return this.msg;
     }
 
@@ -158,8 +95,7 @@ public class LogEntryImpl
      *
      * @return  service reference which logged the entry, null if none supplied
      */
-    public ServiceReference getServiceReference()
-    {
+    public ServiceReference getServiceReference() {
         return this.svcRef;
     }
 
@@ -168,25 +104,7 @@ public class LogEntryImpl
      *
      * @return  time in milliseconds entry was logged
      */
-    public long getTime()
-    {
+    public long getTime() {
         return this.time;
     }
-
-    //////////////////////////////////////////////////
-    // PROTECTED INSTANCE METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // PRIVATE INSTANCE METHODS
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // STATIC INNER CLASSES
-    //////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////
-    // NON-STATIC INNER CLASSES
-    //////////////////////////////////////////////////
-
 }

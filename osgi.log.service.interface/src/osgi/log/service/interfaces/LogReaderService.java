@@ -21,9 +21,7 @@ import osgi.log.service.interfaces.LogListener;
  * @see LogListener
  * @see LogListener#logged(LogEntry)
  */
-public abstract interface LogReaderService
-{
-
+public abstract interface LogReaderService {
     /**
      * Subscribes to <tt>LogEntry</tt> objects.
      *

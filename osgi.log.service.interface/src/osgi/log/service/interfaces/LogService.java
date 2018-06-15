@@ -20,8 +20,7 @@ import org.osgi.framework.ServiceReference;
  * @version $Revision: 1.7 $
  * @author Open Services Gateway Initiative
  */
-public abstract interface LogService
-{
+public abstract interface LogService {
     /**
      * An error message (Value 1).
      *
@@ -102,7 +101,6 @@ public abstract interface LogService
      */
     public abstract void log(ServiceReference sr, int level, String message);
 
-
     /**
      * Logs a message with an exception associated and a <tt>ServiceReference</tt> object.
      *
@@ -118,6 +116,5 @@ public abstract interface LogService
      * @see #LOG_INFO
      * @see #LOG_DEBUG
      */
-    public abstract void log(ServiceReference sr, int level, String message,
-                Throwable exception);
+    public abstract void log(ServiceReference sr, int level, String message, Throwable exception);
 }

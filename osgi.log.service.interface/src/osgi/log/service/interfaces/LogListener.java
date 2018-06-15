@@ -23,8 +23,7 @@ import osgi.log.service.interfaces.LogReaderService;
  * @see LogReaderService#addLogListener(LogListener)
  * @see LogReaderService#removeLogListener(LogListener)
  */
-public abstract interface LogListener extends EventListener
-{
+public abstract interface LogListener extends EventListener {
     /**
      * Listener method called for each LogEntry object created.
      *
