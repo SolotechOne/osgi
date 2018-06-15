@@ -8,3 +8,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: osgi.ldap.service.interfaces
 Service-Component: OSGI-INF/osgi.ldap.service.provider.LdapConnector.xml
 Bundle-ActivationPolicy: lazy
+Export-Package: osgi.ldap.service.provider

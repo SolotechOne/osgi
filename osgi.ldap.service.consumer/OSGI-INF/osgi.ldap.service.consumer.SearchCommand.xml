@@ -5,6 +5,6 @@
    <service>
       <provide interface="osgi.ldap.service.consumer.SearchCommand"/>
    </service>
-   <reference bind="setDataService" interface="osgi.ldap.service.interfaces.IConnector" name="DataService" policy="dynamic" policy-option="greedy" target="(component.name=osgi.ldap.service.provider.LdapConnector)" unbind="unsetDataService"/>
+   <reference bind="setConnector" interface="osgi.ldap.service.provider.LdapConnector" name="Connector" policy="dynamic" policy-option="greedy" target="(component.name=osgi.ldap.service.provider.LdapConnector)" unbind="unsetConnector"/>
    <implementation class="osgi.ldap.service.consumer.SearchCommand"/>
 </scr:component>
