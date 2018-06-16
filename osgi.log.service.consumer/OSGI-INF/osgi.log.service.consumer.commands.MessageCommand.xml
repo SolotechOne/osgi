@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="osgi.log.service.consumer.commands.MessageCommand">
+   <property name="osgi.command.scope" value="log"/>
+   <property name="osgi.command.function" value="messages"/>
+   <service>
+      <provide interface="osgi.log.service.consumer.commands.MessageCommand"/>
+   </service>
+   <reference bind="addMessageReaderService" interface="osgi.msg.service.interfaces.MessageReaderService" name="MessageReaderService" unbind="removeMessageReaderService"/>
+   <implementation class="osgi.log.service.consumer.commands.MessageCommand"/>
+</scr:component>
