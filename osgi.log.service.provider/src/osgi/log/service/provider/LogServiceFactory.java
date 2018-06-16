@@ -8,7 +8,7 @@ import osgi.log.service.interfaces.LogService;
  * Service factory that will be invoked by the OSGi framework to get LogService  * objects for bundles which request a LogService.
  *
  */
-public class LogServiceFactory implements  ServiceFactory {
+public class LogServiceFactory implements ServiceFactory {
     /** Reference to the list of log entries */
     private LogList log;
 

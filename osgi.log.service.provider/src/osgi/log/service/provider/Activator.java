@@ -42,7 +42,7 @@ public class Activator implements BundleActivator, BundleListener, FrameworkList
 
     /** List of log entries */
     private LogList log;
-
+    
     /**
      * Standard start method for bundle. Creates the log list and registers
      * the LogServiceFactory and LogReaderService services. Also adds
@@ -89,6 +89,7 @@ public class Activator implements BundleActivator, BundleListener, FrameworkList
         this.logReg = this.context.registerService(LogService.class.getName(), this.logServ, null);
         this.readerReg = this.context.registerService(LogReaderService.class.getName(), this.readerServ, null);
 
+        
         // add the required listeners for framework event logging
 //        this.context.addFrameworkListener(this);
 //        this.context.addBundleListener(this);

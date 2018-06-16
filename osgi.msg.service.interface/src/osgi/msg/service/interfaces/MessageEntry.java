@@ -1,6 +1,8 @@
 package osgi.msg.service.interfaces;
 
 public abstract interface MessageEntry {
+	public abstract String getSystem();
+	
 	public abstract long getTime();
 	
 	public abstract String getInsert();
@@ -9,5 +11,5 @@ public abstract interface MessageEntry {
 
 	public abstract String getText();
 
-	public abstract char getType();
+	public abstract int getType();
 }

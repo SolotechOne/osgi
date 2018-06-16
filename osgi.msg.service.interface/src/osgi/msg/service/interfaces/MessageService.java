@@ -13,5 +13,5 @@ public abstract interface MessageService {
 	
 	public static final int MESSAGE_TYPE_CAPTION = 6;
 	
-	public abstract void log(int level, int number, String text, String insert);
+	public abstract void log(String system, int level, int number, String text, String insert);
 }

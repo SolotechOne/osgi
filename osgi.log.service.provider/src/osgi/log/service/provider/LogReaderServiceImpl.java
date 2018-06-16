@@ -8,7 +8,7 @@ import osgi.log.service.interfaces.LogReaderService;
 /**
  * Simple implementation of the OSGi LogReaderService api.
  */
-public class LogReaderServiceImpl implements  LogReaderService {
+public class LogReaderServiceImpl implements LogReaderService {
     /** Reference to the list of log entries */
     private LogList log;
 
