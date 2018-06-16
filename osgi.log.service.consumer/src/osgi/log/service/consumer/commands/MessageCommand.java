@@ -1,6 +1,11 @@
 package osgi.log.service.consumer.commands;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 import java.util.Iterator;
 import java.util.Map;
 
@@ -22,27 +27,17 @@ import osgi.msg.service.interfaces.MessageReaderService;
 	service=MessageCommand.class
 )
 public class MessageCommand {
-	private MessageReaderService messageReader;
-	
 	private MessageListener listener;
 
+	private MessageReaderService messageReader;
+	
 	@Reference
 	void addMessageReaderService(MessageReaderService service, Map<String, Object> properties) {
-		this.messageReader = service;
-
-//		System.out.println("Added " + service.getClass().getName());
-//		
-//		properties.forEach((k, v) -> {
-//			System.out.println(k+"="+v);
-//		});
-//		
-//		System.out.println();
+		this.messageReader=service;
 	}
 
 	void removeMessageReaderService(MessageReaderService service) {
 		this.messageReader=null;
-		
-		System.out.println("Removed " + service.getClass().getName());
 	}
 
 	@Descriptor("show messages")
@@ -67,15 +62,22 @@ public class MessageCommand {
 				
 				this.listener=null;
 			}
-			break;
 			
+			break;
 		default:
 			Iterator<MessageEntry> iterator = this.messageReader.getLog();
 			
 			while(iterator.hasNext()) {
 				MessageEntry entry = iterator.next();
 				
-				System.out.println(entry.getTime() + " " + entry.getText());
+				Instant instant = Instant.ofEpochMilli(entry.getTime());
+				ZonedDateTime date = ZonedDateTime.ofInstant(instant, ZoneOffset.systemDefault());
+
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm:ss");
+				
+//				System.out.println(formatter.format(date) + " [" + entry.getSystem() + "] " + entry.getType() + "-" + entry.getNumber() + " " + entry.getText() + " (" + entry.getInsert() + ")");
+
+				System.out.printf("%s [%s] %s%07d %s (%s)\n", formatter.format(date), entry.getSystem(), entry.getType(), entry.getNumber(), entry.getText(), entry.getInsert());
 			}
 			
 			break;

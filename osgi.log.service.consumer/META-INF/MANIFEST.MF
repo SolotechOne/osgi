@@ -7,10 +7,12 @@ Automatic-Module-Name: osgi.log.service.consumer
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.apache.felix.service.command;status=provisional;version="0.10.0",
  org.osgi.framework,
+ org.osgi.service.event;version="1.3.1",
  org.osgi.service.log;version="1.3.0",
  osgi.log.service.interfaces,
  osgi.msg.service.interfaces
 Bundle-Activator: osgi.log.service.consumer.Activator
 Require-Bundle: org.eclipse.osgi
-Service-Component: OSGI-INF/osgi.log.service.consumer.commands.MessageCommand.xml
+Service-Component: OSGI-INF/osgi.log.service.consumer.commands.MessageCommand.xml,
+ OSGI-INF/osgi.log.service.consumer.MessageEventHandler.xml
 Bundle-ActivationPolicy: lazy
