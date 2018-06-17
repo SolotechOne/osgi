@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Consumer
+Bundle-SymbolicName: osgi.slf4j.service.consumer
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: osgi.slf4j.service.consumer.Activator
+Require-Bundle: org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: osgi.slf4j.service.consumer
+Bundle-ActivationPolicy: lazy
+Import-Package: org.apache.log4j

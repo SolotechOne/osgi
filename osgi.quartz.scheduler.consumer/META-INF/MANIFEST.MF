@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Consumer
+Bundle-SymbolicName: osgi.quartz.scheduler.consumer
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: osgi.quartz.scheduler.consumer.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ org.quartz.scheduler;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: osgi.quartz.scheduler.consumer
+Bundle-ActivationPolicy: lazy
