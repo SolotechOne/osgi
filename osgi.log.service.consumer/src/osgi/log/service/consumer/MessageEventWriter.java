@@ -40,6 +40,7 @@ public class MessageEventWriter implements MessageListener {
     	this.context=context;
         
         ServiceReference ref = context.getServiceReference(EventAdmin.class.getName());
+        
         if (ref != null) {
         	this.eventAdmin = (EventAdmin) context.getService(ref);
         }
