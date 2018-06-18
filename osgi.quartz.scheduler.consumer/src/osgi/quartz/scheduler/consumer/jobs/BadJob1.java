@@ -13,7 +13,6 @@ import org.quartz.JobKey;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.PersistJobDataAfterExecution;
 
-
 /**
  * <p>
  * A job dumb job that will throw a job execution exception

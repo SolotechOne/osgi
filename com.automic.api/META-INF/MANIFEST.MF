@@ -6,6 +6,19 @@ Bundle-Version: 12.0.2.1-9032
 Bundle-Vendor: ca technologies
 Automatic-Module-Name: com.automic.api
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: com.uc4.api,
+Export-Package: com.automic.network.api,
+ com.automic.protocol,
+ com.automic.protocol.generated,
+ com.automic.server.api.data,
+ com.uc4,
+ com.uc4.api,
+ com.uc4.api.objects,
+ com.uc4.api.prompt,
+ com.uc4.api.servicefulfillment,
+ com.uc4.api.systemoverview,
  com.uc4.communication,
- com.uc4.communication.requests
+ com.uc4.communication.requests,
+ com.uc4.jgssapi,
+ com.uc4.keymgr,
+ com.uc4.translate,
+ com.uc4.util

@@ -32,8 +32,8 @@ public class MessageThread extends Thread {
 
     		try {
     			Thread.sleep(5000);
-    		} catch (Exception e) {
-    			System.out.println("Thread interrupted " + e.getMessage());
+    		} catch (Exception exception) {
+    			System.out.println("Thread interrupted " + exception.getMessage());
     		}
     	}
     }

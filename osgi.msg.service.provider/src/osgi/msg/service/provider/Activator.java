@@ -77,7 +77,6 @@ public class Activator implements BundleActivator {
         this.messagereaderReg = this.context.registerService(MessageReaderService.class.getName(), this.messagereaderServ, null);
     }
 
-
     /**
      * Standard stop method for bundle. Basically reverses steps taken in start.
      *
