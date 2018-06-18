@@ -10,6 +10,8 @@ import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 
 import org.quartz.impl.StdSchedulerFactory;
 
+import osgi.quartz.scheduler.consumer.jobs.HelloWorldJob;
+
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerMetaData;
@@ -28,14 +30,16 @@ public class Activator implements BundleActivator {
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
 		
+		Date startTime;
+		
 		Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
 		
-		// define the job and tie it to our HelloJob class
-		JobDetail job = newJob(HelloJob.class).withIdentity("job1", "group1").build();
-		// Trigger the job to run now, and then repeat every 40 seconds
-		Trigger trigger = newTrigger().withIdentity("trigger1", "group1").startNow().withSchedule(simpleSchedule().withIntervalInSeconds(40).repeatForever()).build();
+		// define the job and tie it to our HelloWorldJob class
+		JobDetail job = newJob(HelloWorldJob.class).withIdentity("job1", "group1").build();
+		// Trigger the job to run now, and then repeat every 20 seconds
+		Trigger trigger = newTrigger().withIdentity("trigger1", "group1").startNow().withSchedule(simpleSchedule().withIntervalInSeconds(20).repeatForever()).build();
 		// Tell quartz to schedule the job using our trigger
-		scheduler.scheduleJob(job, trigger);
+		startTime = scheduler.scheduleJob(job, trigger);
 		
 		
 		// computer a time that is on the next round minute
@@ -43,13 +47,13 @@ public class Activator implements BundleActivator {
 		// Trigger the job to run on the next round minute
 		Trigger roundMinute = newTrigger().withIdentity("trigger2", "group1").startAt(runTime).forJob(job).build();
 		// Tell quartz to schedule the job using our trigger
-		scheduler.scheduleJob(roundMinute);
+		startTime = scheduler.scheduleJob(roundMinute);
 		
 		
 		scheduler.start();
 		
 		
-		Thread.sleep(65L * 1000L);
+		Thread.sleep(65l * 1000l);
 		
 		
 		scheduler.shutdown();
