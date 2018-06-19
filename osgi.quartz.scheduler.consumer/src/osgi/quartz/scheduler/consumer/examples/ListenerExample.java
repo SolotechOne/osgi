@@ -67,17 +67,6 @@ public class ListenerExample extends Thread {
 			this.scheduler.start();
 
 			this.logger.info("------- Started Scheduler -----------------");
-
-			// wait long enough so that the scheduler as an opportunity to run the job!
-//			this.logger.info("------- Waiting 30 seconds... -------------");
-//
-//			try {
-//				// wait 30 seconds to show job
-//				Thread.sleep(30l*1000l);
-//				// executing...
-//			} catch (Exception exception) {
-//				//
-//			}
 		} catch (SchedulerException exception) {
 			exception.printStackTrace();
 		}

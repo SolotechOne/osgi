@@ -3,6 +3,7 @@ package osgi.quartz.scheduler.consumer;
 import osgi.quartz.scheduler.consumer.examples.CalendarExample;
 import osgi.quartz.scheduler.consumer.examples.InterruptExample;
 import osgi.quartz.scheduler.consumer.examples.ListenerExample;
+import osgi.quartz.scheduler.consumer.examples.PriorityExample;
 import osgi.quartz.scheduler.consumer.examples.SimpleExample;
 import osgi.quartz.scheduler.consumer.examples.SimpleTriggerExample;
 
@@ -13,6 +14,8 @@ public class Activator implements BundleActivator {
 	private static BundleContext context;
 	
 	private ListenerExample listenerExample;
+	
+	private PriorityExample priorityExample;
 
 	static BundleContext getContext() {
 		return context;
@@ -37,13 +40,19 @@ public class Activator implements BundleActivator {
 //		interruptExample.run();
 
 	
-		this.listenerExample = new ListenerExample();
-		this.listenerExample.start();
+//		this.listenerExample = new ListenerExample();
+//		this.listenerExample.start();
+		
+		this.priorityExample = new PriorityExample();
+		this.priorityExample.start();
 	}
 
-	public void stop(BundleContext bundleContext) throws Exception {		
-		this.listenerExample.stopThread();
-		this.listenerExample.join();
+	public void stop(BundleContext bundleContext) throws Exception {
+		this.priorityExample.stopThread();
+		this.priorityExample.join();
+		
+//		this.listenerExample.stopThread();
+//		this.listenerExample.join();
 		
 		Activator.context = null;
 	}
