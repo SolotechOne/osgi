@@ -47,8 +47,7 @@ public class DelayJob implements Job {
 		
 		try {
 			Thread.sleep(delayTime);
-		} catch (Exception e) {
-			//
+		} catch (Exception exception) {
 		}
 
 		logger.info("Finished Executing job: " + jobKey + " at " + new Date());

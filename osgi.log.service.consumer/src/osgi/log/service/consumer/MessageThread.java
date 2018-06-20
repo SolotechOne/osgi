@@ -17,7 +17,7 @@ public class MessageThread extends Thread {
     
     public void run() {
     	while (active) {
-    		ServiceTracker messageServiceTracker = new ServiceTracker(context, osgi.msg.service.interfaces.MessageService.class.getName(), null);
+    		ServiceTracker messageServiceTracker = new ServiceTracker(context, MessageService.class.getName(), null);
 
     		messageServiceTracker.open();
 

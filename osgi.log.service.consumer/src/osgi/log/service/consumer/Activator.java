@@ -37,10 +37,10 @@ public class Activator implements BundleActivator {
 		}
 
 		
-		ServiceReference messagereadref = context.getServiceReference(osgi.msg.service.interfaces.MessageReaderService.class.getName());
+		ServiceReference msgref = context.getServiceReference(osgi.msg.service.interfaces.MessageReaderService.class.getName());
 		
-		if (messagereadref != null) {
-			MessageReaderService message = (MessageReaderService) context.getService(messagereadref);
+		if (msgref != null) {
+			MessageReaderService message = (MessageReaderService) context.getService(msgref);
 //		    message.addMessageListener(new MessageWriter());
 		    message.addMessageListener(new MessageEventWriter(context));
 		}

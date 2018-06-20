@@ -13,7 +13,6 @@ import org.quartz.DateBuilder.IntervalUnit;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
 import org.quartz.SchedulerMetaData;
 import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;

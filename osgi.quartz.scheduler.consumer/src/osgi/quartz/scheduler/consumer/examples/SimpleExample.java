@@ -11,73 +11,78 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.quartz.SchedulerMetaData;
 import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
 
 import osgi.quartz.scheduler.consumer.jobs.HelloWorldJob;
 
-public class SimpleExample {
-	public void run() throws Exception {
-		Logger logger = Logger.getLogger(SimpleExample.class);
+public class SimpleExample extends Thread {
+	private Logger logger = Logger.getLogger(JobStateExample.class);
 
-		logger.info("------- Initializing ----------------------");
+	private Scheduler scheduler;
 
-		// First we must get a reference to a scheduler
-		Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+	@SuppressWarnings("unused")
+	private volatile boolean active = true;
 
-		logger.info("------- Initialization Complete -----------");
-
-		Date nextStartTime;
-
-		logger.info("------- Scheduling Job  -------------------");
-
-		// define the job and tie it to our HelloWorldJob class
-		JobDetail helloworldjob = newJob(HelloWorldJob.class).withIdentity("job.1", "group.1").build();
-		// Trigger the job to run now, and then repeat every 20 seconds
-		Trigger trigger = newTrigger().withIdentity("trigger.1", "group.1").startNow().withSchedule(simpleSchedule().withIntervalInSeconds(20).repeatForever()).build();
-		// Tell quartz to schedule the job using our trigger
-		nextStartTime = scheduler.scheduleJob(helloworldjob, trigger);
-
-		logger.info(helloworldjob.getKey() + " will run at: " + nextStartTime);
-
-
-		// computer a time that is on the next round minute
-		Date runTime = evenMinuteDate(new Date());
-		// Trigger the job to run on the next round minute
-		Trigger roundMinute = newTrigger().withIdentity("trigger.2", "group.1").startAt(runTime).forJob(helloworldjob).build();
-		// Tell quartz to schedule the job using our trigger
-		nextStartTime = scheduler.scheduleJob(roundMinute);
-
-		logger.info(helloworldjob.getKey() + " will run at: " + nextStartTime);
-
-
-		// Start up the scheduler (nothing can actually run until the scheduler has been started)
-		scheduler.start();
-
-		logger.info("------- Started Scheduler -----------------");
-
-		// wait long enough so that the scheduler as an opportunity to run the job!
-		logger.info("------- Waiting 65 seconds... -------------");
-
+	public void run() {
 		try {
-			// wait 65 seconds to show job
-			Thread.sleep(65l*1000l);
-			// executing...
-		} catch (Exception e) {
-			//
+			this.scheduler = StdSchedulerFactory.getDefaultScheduler();
+
+			this.logger.info("------- Initialization Complete --------");
+
+			Date nextStartTime;
+
+			this.logger.info("------- Scheduling Jobs ----------------");
+
+
+			// define the job and tie it to our HelloWorldJob class
+			JobDetail helloworldjob = newJob(HelloWorldJob.class).withIdentity("job.1", "group.1").build();
+			// Trigger the job to run now, and then repeat every 20 seconds
+			Trigger trigger = newTrigger().withIdentity("trigger.1", "group.1").startNow().withSchedule(simpleSchedule().withIntervalInSeconds(20).repeatForever()).build();
+			// Tell quartz to schedule the job using our trigger
+			nextStartTime = this.scheduler.scheduleJob(helloworldjob, trigger);
+
+			this.logger.info(helloworldjob.getKey() + " will run at: " + nextStartTime);
+
+
+			// computer a time that is on the next round minute
+			Date runTime = evenMinuteDate(new Date());
+			// Trigger the job to run on the next round minute
+			Trigger roundMinute = newTrigger().withIdentity("trigger.2", "group.1").startAt(runTime).forJob(helloworldjob).build();
+			// Tell quartz to schedule the job using our trigger
+			nextStartTime = this.scheduler.scheduleJob(roundMinute);
+
+			this.logger.info(helloworldjob.getKey() + " will run at: " + nextStartTime);
+
+
+			// Start up the scheduler (nothing can actually run until the scheduler has been started)
+			this.scheduler.start();
+
+			this.logger.info("------- Started Scheduler -----------------");
+		} catch (SchedulerException exception) {
+			exception.printStackTrace();
 		}
+	}
+
+	public void stopThread() {
+		this.active = false;
 
 		// shut down the scheduler
-		logger.info("------- Shutting Down ---------------------");
+		this.logger.info("------- Shutting Down ---------------------");
 
-		scheduler.shutdown(true);
+		try {
+			this.scheduler.shutdown(true);
 
-		logger.info("------- Shutdown Complete -----------------");
+			this.logger.info("------- Shutdown Complete -----------------");
 
+			// display some stats about the schedule that just ran
+			SchedulerMetaData metaData = this.scheduler.getMetaData();
 
-		// display some stats about the schedule that just ran
-		SchedulerMetaData metaData = scheduler.getMetaData();
-		System.out.println("Executed " + metaData.getNumberOfJobsExecuted() + " jobs.");
+			this.logger.info("Executed " + metaData.getNumberOfJobsExecuted() + " jobs.");
+		} catch (SchedulerException exception) {
+			exception.printStackTrace();
+		}
 	}
 }
