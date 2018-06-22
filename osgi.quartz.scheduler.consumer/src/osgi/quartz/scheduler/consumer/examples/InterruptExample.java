@@ -11,6 +11,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.quartz.SchedulerMetaData;
 import org.quartz.SimpleTrigger;
 import org.quartz.impl.StdSchedulerFactory;
@@ -34,61 +35,79 @@ import osgi.quartz.scheduler.consumer.jobs.DumbInterruptableJob;
  * 
  * @author <a href="mailto:bonhamcm@thirdeyeconsulting.com">Chris Bonham</a>
  */
-public class InterruptExample {
-	public void run() throws Exception {
-		Logger logger = Logger.getLogger(InterruptExample.class);
+public class InterruptExample extends Thread {
+	private Logger logger = Logger.getLogger(InterruptExample.class);
 
-		logger.info("------- Initializing ----------------------");
+	private Scheduler scheduler;
 
-		Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+	@SuppressWarnings("unused")
+	private volatile boolean active = true;
 
-		logger.info("------- Initialization Complete -----------");
+	public void run() {
+		this.logger.info("------- Initializing ----------------------");
 
-		Date nextStartTime;
+		try {
+			this.scheduler = StdSchedulerFactory.getDefaultScheduler();
 
-		logger.info("------- Scheduling Job  -------------------");
+			this.logger.info("------- Initialization Complete -----------");
 
-		// get a "nice round" time a few seconds in the future...
-		Date runTime = nextGivenSecondDate(null, 15);
+			Date nextStartTime;
 
-		JobDetail job = newJob(DumbInterruptableJob.class).withIdentity("interruptableJob1", "group1").build();
-
-		SimpleTrigger trigger = newTrigger().withIdentity("trigger1", "group1").startAt(runTime)
-				.withSchedule(simpleSchedule().withIntervalInSeconds(5).repeatForever()).build();
-
-		nextStartTime = scheduler.scheduleJob(job, trigger);
-
-		logger.info(job.getKey() + " will run at: " + nextStartTime + " and repeat: " + trigger.getRepeatCount() + " times, every "
-				+ trigger.getRepeatInterval() / 1000 + " seconds");
+			this.logger.info("------- Scheduling Job  -------------------");
 
 
-		// Start up the scheduler (nothing can actually run until the scheduler has been started)
-		scheduler.start();
+			// get a "nice round" time a few seconds in the future...
+			Date runTime = nextGivenSecondDate(null, 15);
 
-		logger.info("------- Started Scheduler -----------------");
+			JobDetail job = newJob(DumbInterruptableJob.class).withIdentity("interruptableJob1", "group1").build();
 
-		logger.info("------- Starting loop to interrupt job every 7 seconds ----------");
+			SimpleTrigger trigger = newTrigger().withIdentity("trigger1", "group1").startAt(runTime)
+					.withSchedule(simpleSchedule().withIntervalInSeconds(5).repeatForever()).build();
 
-		for (int i = 0; i < 5; i++) {
-			try {
-				Thread.sleep(7000L);
-				// tell the scheduler to interrupt our job
-				scheduler.interrupt(job.getKey());
-			} catch (Exception e) {
-				//
+			nextStartTime = scheduler.scheduleJob(job, trigger);
+
+			this.logger.info(job.getKey() + " will run at: " + nextStartTime + " and repeat: " + trigger.getRepeatCount() + " times, every "
+					+ trigger.getRepeatInterval() / 1000 + " seconds");
+
+
+			// Start up the scheduler (nothing can actually run until the scheduler has been started)
+			this.scheduler.start();
+
+			this.logger.info("------- Started Scheduler -----------------");
+
+			this.logger.info("------- Starting loop to interrupt job every 7 seconds ----------");
+
+			for (int i=0; i<5; i++) {
+				try {
+					Thread.sleep(7000L);
+					
+					// tell the scheduler to interrupt our job
+					this.scheduler.interrupt(job.getKey());
+				} catch (Exception exception) {
+				}
 			}
+		} catch (SchedulerException exception) {
+			exception.printStackTrace();
 		}
+	}
+
+	public void stopThread() {
+		this.active = false;
 
 		// shut down the scheduler
-		logger.info("------- Shutting Down ---------------------");
+		this.logger.info("------- Shutting Down ---------------------");
 
-		scheduler.shutdown(true);
+		try {
+			this.scheduler.shutdown(true);
 
-		logger.info("------- Shutdown Complete -----------------");
+			this.logger.info("------- Shutdown Complete -----------------");
 
+			// display some stats about the schedule that just ran
+			SchedulerMetaData metaData = this.scheduler.getMetaData();
 
-		// display some stats about the schedule that just ran
-		SchedulerMetaData metaData = scheduler.getMetaData();
-		System.out.println("Executed " + metaData.getNumberOfJobsExecuted() + " jobs.");
+			this.logger.info("Executed " + metaData.getNumberOfJobsExecuted() + " jobs.");
+		} catch (SchedulerException exception) {
+			exception.printStackTrace();
+		}
 	}
 }

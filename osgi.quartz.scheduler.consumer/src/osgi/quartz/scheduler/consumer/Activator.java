@@ -1,6 +1,7 @@
 package osgi.quartz.scheduler.consumer;
 
 import osgi.quartz.scheduler.consumer.examples.CalendarExample;
+import osgi.quartz.scheduler.consumer.examples.CronExample;
 import osgi.quartz.scheduler.consumer.examples.ExceptionExample;
 import osgi.quartz.scheduler.consumer.examples.InterruptExample;
 import osgi.quartz.scheduler.consumer.examples.JobStateExample;
@@ -26,6 +27,12 @@ public class Activator implements BundleActivator {
 	private ExceptionExample exceptionExample;
 	
 	private JobStateExample jobStateExample;
+	
+	private CalendarExample calendarExample;
+	
+	private InterruptExample interruptExample;
+	
+	private CronExample cronExample;
 
 	static BundleContext getContext() {
 		return context;
@@ -34,39 +41,44 @@ public class Activator implements BundleActivator {
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
 		
-		this.simpleExample = new SimpleExample();
-		this.simpleExample.run();
-		
+//		this.simpleExample = new SimpleExample();
+//		this.simpleExample.run();
 		
 //		this.triggerExample = new TriggerExample();
 //		this.triggerExample.run();
 		
-		
 //		this.listenerExample = new ListenerExample();
 //		this.listenerExample.start();
-		
 
 //		this.priorityExample = new PriorityExample();
 //		this.priorityExample.start();
 
-	
 //		this.exceptionExample = new ExceptionExample();
 //		this.exceptionExample.run();
 
-	
 //		this.jobStateExample = new JobStateExample();
 //		this.jobStateExample.run();
 
-		
-//		CalendarExample calendarExample = new CalendarExample();
-//		calendarExample.run();
+//		this.calendarExample = new CalendarExample();
+//		this.calendarExample.run();
 
-	
-//		InterruptExample interruptExample = new InterruptExample();
-//		interruptExample.run();
-}
+//		this.interruptExample = new InterruptExample();
+//		this.interruptExample.run();
+		
+		this.cronExample = new CronExample();
+		this.cronExample.run();
+	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
+		this.cronExample.stopThread();
+		this.cronExample.join();
+		
+//		this.interruptExample.stopThread();
+//		this.interruptExample.join();
+
+//		this.calendarExample.stopThread();
+//		this.calendarExample.join();
+		
 //		this.jobStateExample.stopThread();
 //		this.jobStateExample.join();
 
@@ -82,9 +94,9 @@ public class Activator implements BundleActivator {
 //		this.triggerExample.stopThread();
 //		this.triggerExample.join();
 
-		this.simpleExample.stopThread();
-		this.simpleExample.join();
-
+//		this.simpleExample.stopThread();
+//		this.simpleExample.join();
+		
 		Activator.context = null;
 	}
 }

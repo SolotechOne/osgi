@@ -27,7 +27,7 @@ import osgi.quartz.scheduler.consumer.listener.Job1Listener;
  * trigger another job after one job succesfully executes.
  */
 public class ListenerExample extends Thread {
-	private Logger logger = Logger.getLogger(SimpleExample.class);
+	private Logger logger = Logger.getLogger(ListenerExample.class);
 	
 	private Scheduler scheduler;
 	
