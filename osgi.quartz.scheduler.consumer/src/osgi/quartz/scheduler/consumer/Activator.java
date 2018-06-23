@@ -6,6 +6,7 @@ import osgi.quartz.scheduler.consumer.examples.ExceptionExample;
 import osgi.quartz.scheduler.consumer.examples.InterruptExample;
 import osgi.quartz.scheduler.consumer.examples.JobStateExample;
 import osgi.quartz.scheduler.consumer.examples.ListenerExample;
+import osgi.quartz.scheduler.consumer.examples.MsgExample;
 import osgi.quartz.scheduler.consumer.examples.PriorityExample;
 import osgi.quartz.scheduler.consumer.examples.SimpleExample;
 import osgi.quartz.scheduler.consumer.examples.TriggerExample;
@@ -14,26 +15,20 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 public class Activator implements BundleActivator {
+	private SimpleExample simpleExample;
+	private TriggerExample simpleTriggerExample;
+	private ListenerExample listenerExample;
+	private PriorityExample priorityExample;
+	private ExceptionExample exceptionExample;
+	private JobStateExample jobStateExample;
+	private CalendarExample calendarExample;
+	private InterruptExample interruptExample;
+	private CronExample cronExample;
+	
+	private MsgExample msgExample;
+
 	private static BundleContext context;
 	
-	private SimpleExample simpleExample;
-	
-	private TriggerExample simpleTriggerExample;
-	
-	private ListenerExample listenerExample;
-	
-	private PriorityExample priorityExample;
-	
-	private ExceptionExample exceptionExample;
-	
-	private JobStateExample jobStateExample;
-	
-	private CalendarExample calendarExample;
-	
-	private InterruptExample interruptExample;
-	
-	private CronExample cronExample;
-
 	static BundleContext getContext() {
 		return context;
 	}
@@ -65,13 +60,19 @@ public class Activator implements BundleActivator {
 //		this.interruptExample = new InterruptExample();
 //		this.interruptExample.run();
 		
-		this.cronExample = new CronExample();
-		this.cronExample.run();
+//		this.cronExample = new CronExample();
+//		this.cronExample.run();
+		
+		this.msgExample = new MsgExample(bundleContext);
+		this.msgExample.run();
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
-		this.cronExample.stopThread();
-		this.cronExample.join();
+		this.msgExample.stopThread();
+		this.msgExample.join();
+		
+//		this.cronExample.stopThread();
+//		this.cronExample.join();
 		
 //		this.interruptExample.stopThread();
 //		this.interruptExample.join();

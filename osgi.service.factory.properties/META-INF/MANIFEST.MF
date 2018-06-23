@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Properties
+Bundle-SymbolicName: osgi.service.factory.properties
+Bundle-Version: 1.0.0.qualifier
+Fragment-Host: osgi.service.factory.provider;bundle-version="1.0.0"
+Automatic-Module-Name: osgi.service.factory.properties
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

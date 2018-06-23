@@ -19,8 +19,10 @@ public class Activator extends DependencyActivatorBase {
 	
 	@Override
 	public void init(BundleContext context, DependencyManager manager) throws Exception {
-//		System.out.println("init()");
+//		System.out.println(System.getProperty("felix.fileinstall.dir"));	// :C:\Users\Carsten\git\osgi\osgi.service.factory.provider\OSGI-INF
 
+//		System.out.println(System.getProperty("felix.fileinstall.filter"));
+		
 		Properties properties = new Properties();
 		properties.put(Constants.SERVICE_PID, ConnectionFactory.PID);
 
