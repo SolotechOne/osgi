@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Sensor
+Bundle-SymbolicName: osgi.dependency.manager.sensor
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: osgi.dependency.manager.sensor
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.osgi.framework
+Export-Package: osgi.dependency.manager.sensor.interfaces
+Bundle-Activator: osgi.dependency.manager.sensor.Activator

@@ -20,19 +20,19 @@ import osgi.msg.service.interfaces.MessageService;
 public class MsgJob implements Job {
     private static Logger logger = Logger.getLogger(MsgJob.class);
 
-    @Reference
-    private BundleContext bundleContext;
+//    @Reference
+//    private BundleContext bundleContext;
     
-    private MessageService messageservice;
+//    private MessageService messageservice;
     
     public MsgJob() {
-    	ServiceTracker messageServiceTracker = new ServiceTracker(bundleContext, MessageService.class.getName(), null);
-
-		messageServiceTracker.open();
-
-		messageservice = (MessageService) messageServiceTracker.getService();
-
-		messageServiceTracker.close();
+//    	ServiceTracker messageServiceTracker = new ServiceTracker(bundleContext, MessageService.class.getName(), null);
+//
+//		messageServiceTracker.open();
+//
+//		messageservice = (MessageService) messageServiceTracker.getService();
+//
+//		messageServiceTracker.close();
     }
 
     @Override
@@ -42,9 +42,9 @@ public class MsgJob implements Job {
 	    logger.info("SimpleJob1 says: " + jobKey + " executing at " + new Date());
 	    
 	    
-		if (messageservice != null)
-			messageservice.log("aedev", MessageService.MESSAGE_TYPE_INFO, 98273, "Job 'JOBS.API@HELLO$WORLD' ended successfully.", "|I|0098273|JOBS.API@HELLO$WORLD");
-		else
-			System.out.println("no logging service");
+//		if (messageservice != null)
+//			messageservice.log("aedev", MessageService.MESSAGE_TYPE_INFO, 98273, "Job 'JOBS.API@HELLO$WORLD' ended successfully.", "|I|0098273|JOBS.API@HELLO$WORLD");
+//		else
+//			System.out.println("no logging service");
     }
 }

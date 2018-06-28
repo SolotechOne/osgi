@@ -24,6 +24,10 @@ public class MsgExample extends Thread {
 	private Logger logger = Logger.getLogger(MsgExample.class);
 
 	private BundleContext context;
+
+	public BundleContext getContext() {
+		return context;
+	}
 	
 	private Scheduler scheduler;
 
@@ -31,7 +35,7 @@ public class MsgExample extends Thread {
 	private volatile boolean active = true;
 
 	public MsgExample(BundleContext context) {
-		this.context = context;
+		this.context=context;
 	}
 	
 	public void run() {
@@ -67,16 +71,6 @@ public class MsgExample extends Thread {
 			Trigger trigger = newTrigger().withIdentity("trigger.1", "group.1").startNow().withSchedule(simpleSchedule().withIntervalInSeconds(20).repeatForever()).build();
 			// Tell quartz to schedule the job using our trigger
 			nextStartTime = this.scheduler.scheduleJob(msgJob, trigger);
-
-			this.logger.info(msgJob.getKey() + " will run at: " + nextStartTime);
-
-
-			// computer a time that is on the next round minute
-			Date runTime = evenMinuteDate(new Date());
-			// Trigger the job to run on the next round minute
-			Trigger roundMinute = newTrigger().withIdentity("trigger.2", "group.1").startAt(runTime).forJob(msgJob).build();
-			// Tell quartz to schedule the job using our trigger
-			nextStartTime = this.scheduler.scheduleJob(roundMinute);
 
 			this.logger.info(msgJob.getKey() + " will run at: " + nextStartTime);
 

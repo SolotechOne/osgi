@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Display
+Bundle-SymbolicName: osgi.dependency.manager.display
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: osgi.dependency.manager.display.Activator
+Require-Bundle: org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: osgi.dependency.manager.display
+Bundle-ActivationPolicy: lazy
+Import-Package: org.apache.felix.dm;version="4.4.0",
+ osgi.dependency.manager.temperature.interfaces

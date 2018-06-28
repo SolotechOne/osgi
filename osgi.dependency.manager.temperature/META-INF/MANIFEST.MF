@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Temperature
+Bundle-SymbolicName: osgi.dependency.manager.temperature
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: osgi.dependency.manager.temperature.Activator
+Require-Bundle: org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: osgi.dependency.manager.temperature
+Bundle-ActivationPolicy: lazy
+Import-Package: org.apache.felix.dm;version="4.4.0",
+ osgi.dependency.manager.sensor.interfaces
+Export-Package: osgi.dependency.manager.temperature.interfaces
