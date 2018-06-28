@@ -19,7 +19,7 @@ import osgi.managed.service.ConfigurationService;
 
 public class ConfigurationServiceFactory implements ManagedServiceFactory {
 	public static final String PID = "configurationservicefactory";
-	 
+	
 	private volatile DependencyManager m_dependencyManager;
 	
 	private final Map<String, Component> m_components = new HashMap<String, Component>();

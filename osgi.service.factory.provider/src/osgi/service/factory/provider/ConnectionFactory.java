@@ -7,7 +7,7 @@ import org.osgi.service.cm.ManagedServiceFactory;
 
 public class ConnectionFactory implements ManagedServiceFactory {
 	public static final String PID = "connection";
-	
+
 	@Override
 	public String getName() {
 		return "connection service factory";

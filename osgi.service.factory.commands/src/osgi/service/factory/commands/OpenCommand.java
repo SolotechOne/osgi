@@ -29,7 +29,7 @@ public class OpenCommand {
 		target="(service.factoryPid=connection)"
 	)
     private volatile List<IConnection> connections;
- 
+
     public void open() {
         for (ListIterator<IConnection> it = connections.listIterator(connections.size()); it.hasPrevious(); ) {
         	it.previous().open();
@@ -43,9 +43,9 @@ public class OpenCommand {
     }
 
     public void login() {
-    	login(49, "API", "API", "IZNMGOE00EYC3VZA7G8085W6BJ4UFKYR", 'D');
+    	login(4901, "API", "API", "IZNMGOE00EYC3VZA7G8085W6BJ4UFKYR", 'D');
     }
-    
+
     public void login(int client, String user, String department, String password, char language) {
         for (ListIterator<IConnection> it = connections.listIterator(connections.size()); it.hasPrevious(); ) {
         	it.previous().login(client, user, department, password, language);

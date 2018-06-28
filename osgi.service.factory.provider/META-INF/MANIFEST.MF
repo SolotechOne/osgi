@@ -13,6 +13,7 @@ Import-Package: org.apache.felix.service.command;status=provisional;version="0.1
  org.osgi.service.cm;version="1.5.0",
  org.osgi.service.component.annotations
 Service-Component: OSGI-INF/osgi.service.factory.provider.Connection.xml,
- OSGI-INF/osgi.service.factory.commands.JobCommands.xml
+ OSGI-INF/osgi.service.factory.commands.JobCommands.xml,
+ OSGI-INF/osgi.service.factory.commands.ILMCommands.xml
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: osgi.service.factory.provider.Activator

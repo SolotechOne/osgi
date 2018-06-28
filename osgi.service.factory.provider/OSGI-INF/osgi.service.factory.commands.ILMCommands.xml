@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" configuration-pid="osgi.service.factory.commands.ConnectionCommands" configuration-policy="optional" name="osgi.service.factory.commands.ILMCommands">
+   <property name="osgi.command.scope" value="ae"/>
+   <property name="osgi.command.function" value="ilm"/>
+   <service>
+      <provide interface="osgi.service.factory.commands.ILMCommands"/>
+   </service>
+   <reference cardinality="1..n" field="connections" interface="osgi.service.factory.interfaces.IConnection" name="connections" policy="dynamic" target="(service.factoryPid=connection)"/>
+   <implementation class="osgi.service.factory.commands.ILMCommands"/>
+</scr:component>

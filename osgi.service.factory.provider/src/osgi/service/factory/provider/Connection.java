@@ -67,7 +67,7 @@ public class Connection implements IConnection, ManagedService {
 
 		this.name = (String) properties.get("name");
     }
-
+	
 	@Override
 	public void updated(Dictionary<String, ?> properties) throws ConfigurationException {
 		System.out.println("connection " + this.name + " updated");
@@ -128,7 +128,7 @@ public class Connection implements IConnection, ManagedService {
 
 	@Override
 	public void send(XMLRequest request) {
-		System.out.println("sending request " + request + " to connection " + this.connection);
+//		System.out.println("sending request " + request + " to connection " + this.connection);
 		
 		try {
 			this.connection.sendRequestAndWait(request);
