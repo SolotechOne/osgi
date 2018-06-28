@@ -23,11 +23,11 @@ public class Activator extends DependencyActivatorBase {
 
 //		System.out.println(System.getProperty("felix.fileinstall.filter"));
 		
-		Properties properties = new Properties();
-		properties.put(Constants.SERVICE_PID, ConnectionFactory.PID);
-
-		manager.add(createComponent()
-				.setInterface(ManagedServiceFactory.class.getName(), properties)
-				.setImplementation(ConnectionFactory.class));
+//		Properties properties = new Properties();
+//		properties.put(Constants.SERVICE_PID, ConnectionFactory.PID);
+//
+//		manager.add(createComponent()
+//				.setInterface(ManagedServiceFactory.class.getName(), properties)
+//				.setImplementation(ConnectionFactory.class));
 	}
 }
