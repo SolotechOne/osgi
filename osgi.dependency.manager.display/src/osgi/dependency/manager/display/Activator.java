@@ -108,15 +108,13 @@ public class Activator extends DependencyActivatorBase {
 
         contentLabel = new JLabel(empty);
         contentLabel.setPreferredSize(new Dimension(80, contentLabel.getPreferredSize().height));
-        contentLabel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.DARK_GRAY),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+        contentLabel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.DARK_GRAY), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         panel.add(contentLabel);
 
         window = new JFrame("temperature display");
         window.getContentPane().add(panel);
 
         refreshButton.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 updateUI();
