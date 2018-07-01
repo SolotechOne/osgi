@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Swt
+Bundle-SymbolicName: osgi.dependency.manager.display.swt
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: osgi.dependency.manager.display.swt.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.swt;bundle-version="3.106.3"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: osgi.dependency.manager.display.swt
+Bundle-ActivationPolicy: lazy
+Import-Package: org.apache.felix.dm,
+ osgi.dependency.manager.temperature.interfaces

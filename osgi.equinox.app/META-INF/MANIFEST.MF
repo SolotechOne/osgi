@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Application
+Bundle-SymbolicName: osgi.equinox.app;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: osig.swt.widgets
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.equinox.app
+Import-Package: org.eclipse.core.runtime
