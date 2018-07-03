@@ -13,5 +13,17 @@
             </run>
       </application>
    </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="osgi.equinox.app.HelloApp"
+            name="ash">
+         <property
+               name="appName"
+               value="ash">
+         </property>
+      </product>
+   </extension>
 
 </plugin>
