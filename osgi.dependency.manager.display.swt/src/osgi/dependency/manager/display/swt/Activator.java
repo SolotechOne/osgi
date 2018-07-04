@@ -1,7 +1,5 @@
 package osgi.dependency.manager.display.swt;
 
-import javax.inject.Inject;
-
 import org.apache.felix.dm.DependencyActivatorBase;
 import org.apache.felix.dm.DependencyManager;
 
@@ -52,6 +50,8 @@ public class Activator extends DependencyActivatorBase {
 
 	@Override
 	public void init(BundleContext context, DependencyManager manager) throws Exception {
+		createUI();
+
 		manager.add(createComponent()
 				.setImplementation(this)
 				.add(createServiceDependency()
@@ -59,8 +59,12 @@ public class Activator extends DependencyActivatorBase {
 						.setAutoConfig(true)     // Needed because with callbacks, auto config is not enabled by default
 						.setCallbacks("serviceAdded", "serviceRemoved"))
 				);
-
-		createUI();
+		
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
 	}
 	
 	@Override
@@ -72,28 +76,34 @@ public class Activator extends DependencyActivatorBase {
 	private void serviceAdded() {
     	System.out.println("serviceAdded");
     	
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//            	System.out.println("serviceAdded");
-//                enableUI(true);
-//                updateUI();
-//            }
-//        });
+    	display.asyncExec( new Runnable() {
+    		@Override
+    		public void run() {
+    			enableUI(true);
+    		}
+    	} );
     }
 
     @SuppressWarnings("unused")
 	private void serviceRemoved() {
     	System.out.println("serviceRemoved");
     	
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                enableUI(false);
-//            }
-//        });
+    	display.asyncExec( new Runnable() {
+			@Override
+			public void run() {
+				enableUI(false);
+			}
+    	} );
     }
     
+    private void enableUI(boolean on) {
+        if (! on) {
+            text.setText("");
+        }
+        button.setEnabled(on);
+        text.setEnabled(on);
+    }
+
     private void updateUI() {
         int temperature = temperatureService.getTemperature();
 
@@ -121,16 +131,10 @@ public class Activator extends DependencyActivatorBase {
 			}
 		});
 		
-		
 		text = new Text(shell, SWT.NONE);
 		
+		enableUI(false);
 		
 		shell.open();
-
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
     }
 }
