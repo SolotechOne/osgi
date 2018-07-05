@@ -3,7 +3,6 @@
 
 <product name="ash" uid="ash" id="osgi.equinox.app.product" application="osgi.equinox.app.HelloApp" useFeatures="false" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
@@ -17,20 +16,19 @@
 
    <windowImages/>
 
-
    <launcher name="ash">
       <win useIco="false">
          <bmp/>
       </win>
    </launcher>
 
-
    <vm>
    </vm>
 
-
    <plugins>
       <plugin id="com.automic.api"/>
+      <plugin id="org.apache.felix.dependencymanager"/>
+      <plugin id="org.apache.felix.fileinstall"/>
       <plugin id="org.apache.felix.gogo.command"/>
       <plugin id="org.apache.felix.gogo.runtime"/>
       <plugin id="org.apache.felix.gogo.shell"/>
