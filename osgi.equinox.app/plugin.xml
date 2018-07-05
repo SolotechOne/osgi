@@ -6,7 +6,6 @@
          point="org.eclipse.core.runtime.applications">
       <application
             cardinality="singleton-global"
-            thread="any"
             visible="true">
             <run
                   class="osgi.equinox.app.HelloApp">
