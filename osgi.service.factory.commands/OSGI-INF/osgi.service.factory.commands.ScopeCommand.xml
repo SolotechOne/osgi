@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="osgi.service.factory.commands.ScopeCommand">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="osgi.service.factory.commands.ScopeCommand">
    <property name="osgi.command.scope" value="ae"/>
    <property name="osgi.command.function" value="scope"/>
    <service>
