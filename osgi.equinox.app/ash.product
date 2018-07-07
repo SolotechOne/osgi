@@ -26,9 +26,6 @@
    </vm>
 
    <plugins>
-      <plugin id="com.automic.api"/>
-      <plugin id="org.apache.felix.dependencymanager"/>
-      <plugin id="org.apache.felix.fileinstall"/>
       <plugin id="org.apache.felix.gogo.command"/>
       <plugin id="org.apache.felix.gogo.runtime"/>
       <plugin id="org.apache.felix.gogo.shell"/>
@@ -46,12 +43,6 @@
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.osgi.util"/>
       <plugin id="osgi.equinox.app"/>
-      <plugin id="osgi.ldap.service.consumer"/>
-      <plugin id="osgi.ldap.service.interface"/>
-      <plugin id="osgi.ldap.service.provider"/>
-      <plugin id="osgi.service.factory.commands"/>
-      <plugin id="osgi.service.factory.interfaces"/>
-      <plugin id="osgi.service.factory.provider"/>
    </plugins>
 
    <configurations>
