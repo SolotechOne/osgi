@@ -20,16 +20,27 @@ public class ConfigurationService implements IConfigurationService, ManagedServi
 	@Activate
     void activate(ConfigurationServiceConfig config) {
         this.system = config.system();
+        
+        System.out.println("ConfigurationServiceConfig acticated: System = " + config.system());
     }
  
     @Modified
     void modified(ConfigurationServiceConfig config) {
         this.system = config.system();
+        
+        System.out.println("ConfigurationServiceConfig modified: System = " + config.system());
     }
 	
 	@Override
 	public void updated(Dictionary<String, ?> properties) throws ConfigurationException {
 		if(properties != null) {
+			if(properties.get("port").equals("")) {
+				Throwable throwable = new Throwable("port is null");
+//				throwable.fillInStackTrace();
+				throw new ConfigurationException("fuck", "you", throwable);
+//				System.out.println("port = " + properties.get("port"));
+			}
+						
 //			System.out.println("port = " + properties.get("port"));
 			
 			Enumeration<String> e = properties.keys();

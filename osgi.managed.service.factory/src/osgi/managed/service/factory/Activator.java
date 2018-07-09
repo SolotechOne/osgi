@@ -10,6 +10,8 @@ import org.osgi.framework.Constants;
 
 import org.osgi.service.cm.ManagedServiceFactory;
 
+import osgi.managed.service.ConfigurationService;
+
 public class Activator extends DependencyActivatorBase {
 
 	private static BundleContext context;
@@ -25,9 +27,16 @@ public class Activator extends DependencyActivatorBase {
 		Properties props = new Properties();
 		props.put(Constants.SERVICE_PID, ConfigurationServiceFactory.PID);
 
+//		manager.add(createComponent()
+//				.setInterface(ManagedServiceFactory.class.getName(), props)
+//				.setImplementation(ConfigurationServiceFactory.class));
+		Properties properties = new Properties();
+		properties.put(Constants.SERVICE_PID, ConfigurationServiceFactory.PID);
+
 		manager.add(createComponent()
-				.setInterface(ManagedServiceFactory.class.getName(), props)
+				.setInterface(ManagedServiceFactory.class.getName(), properties)
 				.setImplementation(ConfigurationServiceFactory.class));
+		
 		
 //		manager.add(createComponent()
 //				.setImplementation(ConfigurationService.class)

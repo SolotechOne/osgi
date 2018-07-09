@@ -40,9 +40,12 @@ public class ConfigurationServiceFactory implements ManagedServiceFactory {
 	public void updated(String pid, Dictionary<String, ?> properties) throws ConfigurationException {
 		System.out.println("updated factory " + pid + " -> " + properties);
 		
-//		if(properties != null) {
+		if(properties != null) {
+			Throwable throwable = new Throwable("..!..");
+			throwable.fillInStackTrace();
+			throw new ConfigurationException("fuck", "you", throwable);
 //			System.out.println("port = " + properties.get("port"));
-//		}
+		}
 		
 		if (m_components.containsKey(pid)) {
 			System.out.println(pid + " already exists");

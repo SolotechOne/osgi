@@ -108,7 +108,6 @@ public class ScopeCommand {
 				config.update(properties);
 			}
 		} catch (InvalidSyntaxException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
