@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="osgi.managed.service.factory.EchoServiceFactory">
+   <property name="service.pid" type="String" value="osgi.managed.service.factory.EchoServiceFactory"/>
+   <service>
+      <provide interface="org.osgi.service.cm.ManagedServiceFactory"/>
+   </service>
+   <implementation class="osgi.managed.service.factory.EchoServiceFactory"/>
+</scr:component>

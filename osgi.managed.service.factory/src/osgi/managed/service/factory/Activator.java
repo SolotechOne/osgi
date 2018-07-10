@@ -24,18 +24,19 @@ public class Activator extends DependencyActivatorBase {
 	public void init(BundleContext context, DependencyManager manager) throws Exception {
 		System.out.println("init()");
 
-		Properties props = new Properties();
-		props.put(Constants.SERVICE_PID, ConfigurationServiceFactory.PID);
+//		Properties props = new Properties();
+//		props.put(Constants.SERVICE_PID, ConfigurationServiceFactory.PID);
 
 //		manager.add(createComponent()
 //				.setInterface(ManagedServiceFactory.class.getName(), props)
 //				.setImplementation(ConfigurationServiceFactory.class));
+		
 		Properties properties = new Properties();
 		properties.put(Constants.SERVICE_PID, ConfigurationServiceFactory.PID);
 
-		manager.add(createComponent()
-				.setInterface(ManagedServiceFactory.class.getName(), properties)
-				.setImplementation(ConfigurationServiceFactory.class));
+//		manager.add(createComponent()
+//				.setInterface(ManagedServiceFactory.class.getName(), properties)
+//				.setImplementation(ConfigurationServiceFactory.class));
 		
 		
 //		manager.add(createComponent()

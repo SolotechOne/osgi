@@ -6,6 +6,7 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import org.osgi.framework.InvalidSyntaxException;
@@ -26,6 +27,14 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 public class ConnectionScope {
 	@Reference
     ConfigurationAdmin configAdmin;
+	
+	@Reference(
+			cardinality=ReferenceCardinality.AT_LEAST_ONE,
+			policy=ReferencePolicy.DYNAMIC,
+//		    policyOption=ReferencePolicyOption.GREEDY,
+			target="(service.factoryPid=configurationservicefactory)"
+		)
+	private volatile List<Component> connections;
 	
 //	private List<ConfigurationService> configurationServices = new ArrayList<>();
 //
@@ -58,17 +67,21 @@ public class ConnectionScope {
 //			System.out.println(service.getData(id));
 //		}
 		
-		String filter = "(&(service.factoryPid=configurationservicefactory))";
+		for (ListIterator<Component> it = connections.listIterator(connections.size()); it.hasPrevious(); ) {
+        	System.out.println(it.previous().name());
+        }
 		
-		Configuration[] configurations = this.configAdmin.listConfigurations(filter);
-
-		for (Configuration configuration : configurations) {
-			System.out.println(
-				((active == configuration.getProperties().get("service.pid")) ? "*" : " ") + 
-				configuration.getProperties().get("system") + " (" + 
-				configuration.getProperties().get("description") + ")"
-			);
-		}
+//		String filter = "(&(service.factoryPid=configurationservicefactory))";
+//		
+//		Configuration[] configurations = this.configAdmin.listConfigurations(filter);
+//
+//		for (Configuration configuration : configurations) {
+//			System.out.println(
+//				((active == configuration.getProperties().get("service.pid")) ? "*" : " ") + 
+//				configuration.getProperties().get("service.system") + " (" + 
+//				configuration.getProperties().get("service.description") + ")"
+//			);
+//		}
 	}
 	
 	public void scope(String system) throws IOException, InvalidSyntaxException {

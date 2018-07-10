@@ -12,4 +12,5 @@ Import-Package: org.apache.felix.dm,
  org.osgi.service.cm,
  org.osgi.service.component.annotations;version="1.3.0";resolution:=optional
 Export-Package: osgi.managed.service
-Service-Component: OSGI-INF/osgi.managed.service.ConnectionScope.xml
+Service-Component: OSGI-INF/osgi.managed.service.ConnectionScope.xml,
+ OSGI-INF/osgi.managed.service.ConfigurationService.xml

@@ -41,16 +41,41 @@ public class ConfigurationServiceFactory implements ManagedServiceFactory {
 		System.out.println("updated factory " + pid + " -> " + properties);
 		
 		if(properties != null) {
-			Throwable throwable = new Throwable("..!..");
-			throwable.fillInStackTrace();
-			throw new ConfigurationException("fuck", "you", throwable);
+			String _propPort = properties.get("service.port").toString();
+			
+			try {
+				int port = Integer.parseInt(_propPort);
+				
+				System.out.println("creating configuration service on port " + port);
+				
+				Component component = m_dependencyManager.createComponent()
+						.setImplementation(ConfigurationService.class)
+						.add(m_dependencyManager.createConfigurationDependency().setPid(pid));
+
+				m_components.put(pid, component);
+				
+				m_dependencyManager.add(component);
+			} catch (Exception exception) {
+				throw new ConfigurationException("port", "port cannot be null", exception);
+			}
+			
+//			if(properties.get("service.port").equals("")) {
+//				Throwable throwable = new Throwable("port is null");
+//				throwable.fillInStackTrace();
+//				throw new ConfigurationException("fuck", "you", throwable);
+//				System.out.println("port = " + properties.get("port"));
+//			}
 //			System.out.println("port = " + properties.get("port"));
-		}
-		
-		if (m_components.containsKey(pid)) {
+		} else if (m_components.containsKey(pid)) {
 			System.out.println(pid + " already exists");
 			
-			m_dependencyManager.remove(m_components.remove(pid));
+			deleted(pid);
+		}
+		
+//		if (m_components.containsKey(pid)) {
+//			System.out.println(pid + " already exists");
+			
+//			m_dependencyManager.remove(m_components.remove(pid));
 			
 //			try {
 //				for(Configuration conf : cm.listConfigurations(null)) {
@@ -77,20 +102,24 @@ public class ConfigurationServiceFactory implements ManagedServiceFactory {
 //			comp.setServiceProperties(properties);
 			
 //			return;
-		}
+//		}
 
-		Component component = m_dependencyManager.createComponent()
-				.setImplementation(ConfigurationService.class)
-				.add(m_dependencyManager.createConfigurationDependency().setPid(pid));
-
-		m_components.put(pid, component);
-		m_dependencyManager.add(component);
+//		Component component = m_dependencyManager.createComponent()
+//				.setImplementation(ConfigurationService.class)
+//				.add(m_dependencyManager.createConfigurationDependency().setPid(pid));
+//
+//		m_components.put(pid, component);
+//		m_dependencyManager.add(component);
 	}
 
 	@Override
 	public void deleted(String pid) {
 		System.out.println("deleting service " + pid);
 		
-		m_dependencyManager.remove(m_components.remove(pid));
+		Component removed = m_components.remove(pid);
+		
+		if (removed != null) {
+//			m_dependencyManager.remove(m_components.remove(pid));
+		}
 	}
 }

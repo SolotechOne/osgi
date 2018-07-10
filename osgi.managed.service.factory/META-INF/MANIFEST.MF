@@ -11,3 +11,4 @@ Bundle-ActivationPolicy: lazy
 Import-Package: org.apache.felix.dm,
  org.osgi.service.cm;version="1.5.0",
  osgi.managed.service
+Service-Component: OSGI-INF/osgi.managed.service.factory.EchoServiceFactory.xml

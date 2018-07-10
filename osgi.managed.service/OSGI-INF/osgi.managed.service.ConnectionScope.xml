@@ -9,5 +9,6 @@ connect
    </service>
    <reference bind="addConfigurationService" cardinality="0..n" interface="osgi.managed.service.ConfigurationService" name="ConfigurationService" policy="dynamic" target="(service.pid=configurationservicefactory)" unbind="removeConfigurationService"/>
    <reference cardinality="1..1" field="configAdmin" interface="org.osgi.service.cm.ConfigurationAdmin" name="configAdmin"/>
+   <reference cardinality="1..n" field="connections" interface="org.osgi.service.component.annotations.Component" name="connections" policy="dynamic" target="(service.factoryPid=configurationservicefactory)"/>
    <implementation class="osgi.managed.service.ConnectionScope"/>
 </scr:component>
