@@ -12,10 +12,10 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Modified;
 
-@Component(
-		configurationPid="configurationservicefactory",
-		configurationPolicy=ConfigurationPolicy.REQUIRE
-	)
+//@Component(
+//		configurationPid="configurationservicefactory",
+//		configurationPolicy=ConfigurationPolicy.REQUIRE
+//	)
 public class ConfigurationService implements IConfigurationService, ManagedService, ConfigurationListener {
 	@interface ConfigurationServiceConfig {
         String system() default "";

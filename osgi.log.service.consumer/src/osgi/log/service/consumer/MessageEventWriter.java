@@ -15,7 +15,7 @@ import osgi.msg.service.interfaces.MessageService;
 
 public class MessageEventWriter implements MessageListener {
 	// constants for Event topic substring
-	public static final String TOPIC = "osgi/msg/service/provider/LogEntry";
+	public static final String TOPIC = "osgi/msg/service/provider/MessageEntry";
 	public static final char TOPIC_SEPARATOR = '/';
 	// constants for Event types
 	public static final String MESSAGE_TYPE_INFO = "INFO";

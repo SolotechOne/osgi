@@ -12,7 +12,7 @@ import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 
 @Component(
-	property = EventConstants.EVENT_TOPIC + "=osgi/msg/service/provider/LogEntry/*"
+	property = EventConstants.EVENT_TOPIC + "=osgi/msg/service/provider/MessageEntry/*"
 )
 public class MessageEventHandler implements EventHandler {
 	@Override
@@ -24,6 +24,6 @@ public class MessageEventHandler implements EventHandler {
 		
 //		System.out.println(formatter.format(date) + " [" + event.getProperty("system") + "] " + event.getProperty("type") + "-" + event.getProperty("number") + " " + event.getProperty("text") + " (" + event.getProperty("insert") + ")");
 
-		System.out.printf("%s [%s] %s%07d %s (%s)\n", formatter.format(date), event.getProperty("system"), event.getProperty("type"), event.getProperty("number"), event.getProperty("text"), event.getProperty("insert"));
+//		System.out.printf("%s [%s] %s%07d %s (%s)\n", formatter.format(date), event.getProperty("system"), event.getProperty("type"), event.getProperty("number"), event.getProperty("text"), event.getProperty("insert"));
 	}
 }

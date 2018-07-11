@@ -44,7 +44,7 @@ public class Activator implements BundleActivator {
         //TODO: include better config option handling. These just temp.
         //      Use somethinhg like Configurable or ConfigAdmin.
         try {
-        	String strProp = context.getProperty("osgi.log.service.provider.log.size");
+        	String strProp = context.getProperty("osgi.msg.service.provider.log.size");
         	
         	if (strProp != null) {
         		this.logSize = Integer.parseInt(strProp);
@@ -56,7 +56,7 @@ public class Activator implements BundleActivator {
         }
 
         try {
-        	String strProp = context.getProperty("osgi.log.service.provider.log.threshold");
+        	String strProp = context.getProperty("osgi.msg.service.provider.log.threshold");
         	
             if (strProp != null) {
                 this.logThreshold = Integer.parseInt(strProp);

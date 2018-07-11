@@ -1,6 +1,7 @@
 package osgi.managed.service.factory;
 
 import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -10,11 +11,13 @@ import org.osgi.service.component.annotations.Component;
 import osgi.managed.service.EchoServer;
 
 @Component(
-		property= {"service.pid=osgi.managed.service.factory.EchoServiceFactory"},
-		service=org.osgi.service.cm.ManagedServiceFactory.class
-		)
+	property={"service.pid=osgi.managed.service.factory.EchoServiceFactory"},
+	service=org.osgi.service.cm.ManagedServiceFactory.class
+)
 public class EchoServiceFactory implements ManagedServiceFactory {
 	private Map<String, EchoServer> echoServers = new TreeMap<String, EchoServer>();
+	
+	public static String PID = "service.pid=osgi.managed.service.factory.EchoServiceFactory";
 
 	public String getName() {
 		return "Echo service factory";
@@ -22,6 +25,15 @@ public class EchoServiceFactory implements ManagedServiceFactory {
 
 	@Override
 	public void updated(String pid, Dictionary<String, ?> properties) throws ConfigurationException {
+		Enumeration<String> enumeration = properties.keys();
+		
+        while(enumeration.hasMoreElements()) {
+            String k = enumeration.nextElement();
+            System.out.println(k + ": " + properties.get(k));
+        }
+        
+		System.out.println("wtf " + pid);
+		
 		if (properties != null) { 
 			String portString = properties.get("port").toString();
 
@@ -38,6 +50,7 @@ public class EchoServiceFactory implements ManagedServiceFactory {
 		}
 	}
 
+	@Override
 	public void deleted(String pid) {
 		System.out.println("Removing echo server with pid " + pid);
 		EchoServer removed = echoServers.remove(pid);

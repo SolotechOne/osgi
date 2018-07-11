@@ -22,7 +22,7 @@ public class Activator extends DependencyActivatorBase {
 
 	@Override
 	public void init(BundleContext context, DependencyManager manager) throws Exception {
-		System.out.println("init()");
+//		System.out.println("init()");
 
 //		Properties props = new Properties();
 //		props.put(Constants.SERVICE_PID, ConfigurationServiceFactory.PID);
@@ -32,11 +32,11 @@ public class Activator extends DependencyActivatorBase {
 //				.setImplementation(ConfigurationServiceFactory.class));
 		
 		Properties properties = new Properties();
-		properties.put(Constants.SERVICE_PID, ConfigurationServiceFactory.PID);
+		properties.put(Constants.SERVICE_PID, EchoServiceFactory.PID);
 
 //		manager.add(createComponent()
 //				.setInterface(ManagedServiceFactory.class.getName(), properties)
-//				.setImplementation(ConfigurationServiceFactory.class));
+//				.setImplementation(EchoServiceFactory.class));
 		
 		
 //		manager.add(createComponent()

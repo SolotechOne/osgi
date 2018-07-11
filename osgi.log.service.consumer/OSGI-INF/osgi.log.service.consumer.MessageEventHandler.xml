@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="osgi.log.service.consumer.MessageEventHandler">
-   <property name="event.topics" value="osgi/msg/service/provider/LogEntry/*"/>
+   <property name="event.topics" value="osgi/msg/service/provider/MessageEntry/*"/>
    <service>
       <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
