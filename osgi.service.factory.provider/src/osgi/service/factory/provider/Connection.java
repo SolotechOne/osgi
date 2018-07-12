@@ -19,6 +19,7 @@ import com.uc4.communication.TimeoutException;
 import com.uc4.communication.requests.XMLRequest;
 
 import osgi.service.factory.interfaces.IConnection;
+import osgi.service.factory.provider.listener.EventListener;
 
 @Component(
 	configurationPid="connection",
@@ -135,5 +136,10 @@ public class Connection implements IConnection, ManagedService {
 		} catch (TimeoutException | IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void addNotificationListener() {
+		this.connection.addNotificationListener(new EventListener());
 	}
 }

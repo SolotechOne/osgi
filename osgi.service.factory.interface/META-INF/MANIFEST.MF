@@ -6,4 +6,5 @@ Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: osgi.service.factory.interfaces
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: osgi.service.factory.interfaces
-Import-Package: com.uc4.communication.requests
+Import-Package: com.uc4.communication,
+ com.uc4.communication.requests

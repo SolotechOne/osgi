@@ -6,6 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: osgi.msg.service.provider
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: osgi.msg.service.interface;bundle-version="1.0.0"
-Import-Package: org.osgi.framework
+Import-Package: org.apache.felix.service.command;status=provisional;version="0.10.0",
+ org.osgi.framework
 Bundle-Activator: osgi.msg.service.provider.Activator
 Bundle-ActivationPolicy: lazy
+Service-Component: OSGI-INF/osgi.msg.service.provider.commands.MessageCommand.xml

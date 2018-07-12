@@ -4,6 +4,7 @@
    <property name="osgi.command.function">open
 close
 login
+listen
    </property>
    <service>
       <provide interface="osgi.service.factory.commands.OpenCommand"/>

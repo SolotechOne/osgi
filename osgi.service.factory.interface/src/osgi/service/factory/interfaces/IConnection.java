@@ -10,4 +10,6 @@ public interface IConnection {
 	public void login(int client, String user, String department, String password, char language);
 	
 	public void send(XMLRequest request);
+	
+	public void addNotificationListener();
 }

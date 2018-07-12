@@ -18,7 +18,8 @@ import osgi.service.factory.interfaces.IConnection;
 		CommandProcessor.COMMAND_SCOPE + "=ae",
 		CommandProcessor.COMMAND_FUNCTION + "=open",
 		CommandProcessor.COMMAND_FUNCTION + "=close",
-		CommandProcessor.COMMAND_FUNCTION + "=login"},
+		CommandProcessor.COMMAND_FUNCTION + "=login",
+		CommandProcessor.COMMAND_FUNCTION + "=listen"},
 	service=OpenCommand.class
 )
 public class OpenCommand {
@@ -49,6 +50,12 @@ public class OpenCommand {
     public void login(int client, String user, String department, String password, char language) {
         for (ListIterator<IConnection> it = connections.listIterator(connections.size()); it.hasPrevious(); ) {
         	it.previous().login(client, user, department, password, language);
+        }
+    }
+    
+    public void listen() {
+        for (ListIterator<IConnection> it = connections.listIterator(connections.size()); it.hasPrevious(); ) {
+        	it.previous().addNotificationListener();
         }
     }
 }
