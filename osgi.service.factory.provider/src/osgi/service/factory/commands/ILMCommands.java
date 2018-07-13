@@ -23,8 +23,8 @@ import osgi.service.factory.interfaces.IConnection;
 	configurationPid="osgi.service.factory.commands.ConnectionCommands",
 	configurationPolicy=ConfigurationPolicy.OPTIONAL,
 	property= {
-		CommandProcessor.COMMAND_SCOPE + "=ae",
-		CommandProcessor.COMMAND_FUNCTION + "=ilm"},
+		CommandProcessor.COMMAND_SCOPE + "=ilm",
+		CommandProcessor.COMMAND_FUNCTION + "=list"},
 	service=ILMCommands.class
 )
 public class ILMCommands {
@@ -35,8 +35,8 @@ public class ILMCommands {
 	)
     private volatile List<IConnection> connections;
 	
-	@Descriptor("find automic job")
-	public List<String> ilm() {
+	@Descriptor("list ilm partitions")
+	public List<String> list() {
 		ILMList ilm = new ILMList();
 		
 		List<String> lines = new LinkedList<String>();

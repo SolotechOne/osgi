@@ -21,7 +21,7 @@ import osgi.msg.service.provider.listeners.MessageWriter;
 
 @Component(
 	property = {
-		"osgi.command.scope=ae",
+		"osgi.command.scope=msg",
 		"osgi.command.function=messages"},
 	service=MessageCommand.class
 )
@@ -69,14 +69,16 @@ public class MessageCommand {
 			while(iterator.hasNext()) {
 				MessageEntry entry = iterator.next();
 				
-				Instant instant = Instant.ofEpochMilli(entry.getTime());
-				ZonedDateTime date = ZonedDateTime.ofInstant(instant, ZoneOffset.systemDefault());
-
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm:ss");
+				new MessageWriter().logged(entry);
 				
-//				System.out.println(formatter.format(date) + " [" + entry.getSystem() + "] " + entry.getType() + "-" + entry.getNumber() + " " + entry.getText() + " (" + entry.getInsert() + ")");
-
-				System.out.printf("%s [%s] %s%07d %s (%s)\n", formatter.format(date), entry.getSystem(), entry.getType(), entry.getNumber(), entry.getText(), entry.getInsert());
+//				Instant instant = Instant.ofEpochMilli(entry.getTime());
+//				ZonedDateTime date = ZonedDateTime.ofInstant(instant, ZoneOffset.systemDefault());
+//
+//				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm:ss");
+//				
+////				System.out.println(formatter.format(date) + " [" + entry.getSystem() + "] " + entry.getType() + "-" + entry.getNumber() + " " + entry.getText() + " (" + entry.getInsert() + ")");
+//
+//				System.out.printf("%s [%s] %s%07d %s (%s)\n", formatter.format(date), entry.getSystem(), entry.getType(), entry.getNumber(), entry.getText(), entry.getInsert());
 			}
 			
 			break;

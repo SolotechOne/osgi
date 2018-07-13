@@ -12,4 +12,6 @@ public interface IConnection {
 	public void send(XMLRequest request);
 	
 	public void addNotificationListener();
+
+	public void addKickEventListener();
 }

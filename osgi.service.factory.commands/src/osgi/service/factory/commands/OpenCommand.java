@@ -55,7 +55,10 @@ public class OpenCommand {
     
     public void listen() {
         for (ListIterator<IConnection> it = connections.listIterator(connections.size()); it.hasPrevious(); ) {
-        	it.previous().addNotificationListener();
+        	IConnection connection = it.previous();
+        	
+        	connection.addNotificationListener();
+        	connection.addKickEventListener();
         }
     }
 }

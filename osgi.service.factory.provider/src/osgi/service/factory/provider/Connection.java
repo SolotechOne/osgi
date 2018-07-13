@@ -15,11 +15,13 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Modified;
 
+import com.uc4.communication.KickEventType;
 import com.uc4.communication.TimeoutException;
 import com.uc4.communication.requests.XMLRequest;
 
 import osgi.service.factory.interfaces.IConnection;
 import osgi.service.factory.provider.listener.EventListener;
+import osgi.service.factory.provider.listener.KickEventListener;
 
 @Component(
 	configurationPid="connection",
@@ -73,14 +75,14 @@ public class Connection implements IConnection, ManagedService {
 	public void updated(Dictionary<String, ?> properties) throws ConfigurationException {
 		System.out.println("connection " + this.name + " updated");
 
-		if(properties != null) {
-			Enumeration<String> e = properties.keys();
-			
-	        while(e.hasMoreElements()) {
-	            String k = e.nextElement();
-	            System.out.println(k + ": " + properties.get(k));
-	        }
-		}
+//		if(properties != null) {
+//			Enumeration<String> e = properties.keys();
+//			
+//	        while(e.hasMoreElements()) {
+//	            String k = e.nextElement();
+//	            System.out.println(k + ": " + properties.get(k));
+//	        }
+//		}
 	}
 	
 	@Override
@@ -91,6 +93,9 @@ public class Connection implements IConnection, ManagedService {
 			this.connection = com.uc4.communication.Connection.open(cp.getHostName(), cp.getPort());
 
 			System.out.println("connection " + this.name + " opened");
+			
+//			for (KickEventType c : KickEventType.values())
+//			    System.out.println(c);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -110,8 +115,9 @@ public class Connection implements IConnection, ManagedService {
 	@Override
 	public void login(int client, String user, String department, String password, char language) {
 		try {
-			this.session = this.connection.login(client, user, department, password, language);
-
+			this.session = this.connection.login(client, user, department, password, language, "TREE_CHANGED,HIGHEST_CALL_OPERATOR_CHANGED,ACTIVITY_LIST_CHANGED,PROCESSING_STOPPED,PROCESSING_STARTED,PROMPT_INPUT_REQUIRED,HOST_ASSIGNMENT_CHANGED,KICK_UNDEFINED");
+//			this.session = this.connection.login(client, user, department, password, language);
+			
 			if (this.session.isLoginSuccessful()) {
 				System.out.println(session.getWelcomeMessage());
 				
@@ -141,5 +147,10 @@ public class Connection implements IConnection, ManagedService {
 	@Override
 	public void addNotificationListener() {
 		this.connection.addNotificationListener(new EventListener());
+	}
+
+	@Override
+	public void addKickEventListener() {
+		this.connection.addKickEventListener(new KickEventListener());
 	}
 }

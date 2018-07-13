@@ -30,7 +30,7 @@ public class ScopeCommand {
 	}
 	
 	ConfigurationAdmin admin;
-
+	
 	@Reference
 	void setConfigurationAdmin(ConfigurationAdmin admin) {
 		this.admin = admin;
@@ -63,7 +63,7 @@ public class ScopeCommand {
 	
 	public void scope(CommandSession session, String name) throws IOException {
 //		get all instances of Connection service with specified filter
-		System.out.println("-------- all instances by filter -------");
+//		System.out.println("-------- all instances by filter -------");
 		String filter = "(&(service.factoryPid=connection)(name=" + name + "))";
 		ServiceReference[] connrefs;
 		try {
@@ -92,7 +92,7 @@ public class ScopeCommand {
 				this.active = name;
 				
 				session.put("prompt", this.active + "> ");
-
+				
 				//		boolean isOnline = (target == null || target.toString().contains("online"));
 				
 				// toggle the state

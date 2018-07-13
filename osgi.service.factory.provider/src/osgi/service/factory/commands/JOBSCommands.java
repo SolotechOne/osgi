@@ -23,12 +23,12 @@ import osgi.service.factory.requests.SearchObject;
 	configurationPid="osgi.service.factory.commands.ConnectionCommands",
 	configurationPolicy=ConfigurationPolicy.OPTIONAL,
 	property= {
-		CommandProcessor.COMMAND_SCOPE + "=ae",
+		CommandProcessor.COMMAND_SCOPE + "=jobs",
 		CommandProcessor.COMMAND_FUNCTION + "=find",
 		CommandProcessor.COMMAND_FUNCTION + "=edit"},
-	service=JobCommands.class
+	service=JOBSCommands.class
 )
-public class JobCommands {
+public class JOBSCommands {
 	@Reference(
 		cardinality=ReferenceCardinality.AT_LEAST_ONE,
 		policy=ReferencePolicy.DYNAMIC,
@@ -39,7 +39,7 @@ public class JobCommands {
 	@Descriptor("find automic job")
 	public List<String> find(String filter) {
 		SearchObject search = new SearchObject(filter);
-
+		
 		List<String> lines = new LinkedList<String>();
 		
 		for (ListIterator<IConnection> it = connections.listIterator(connections.size()); it.hasPrevious(); ) {
