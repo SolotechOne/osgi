@@ -4,6 +4,8 @@
    <property name="osgi.command.function" type="String">prompt
 tail
 uname
+list
+noop
    </property>
    <service>
       <provide interface="osgi.shell.core.command.SystemCommand"/>

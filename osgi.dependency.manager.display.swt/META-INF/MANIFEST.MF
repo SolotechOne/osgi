@@ -9,4 +9,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: osgi.dependency.manager.display.swt
 Bundle-ActivationPolicy: lazy
 Import-Package: org.apache.felix.dm,
+ org.eclipse.swt,
+ org.eclipse.swt.events,
+ org.eclipse.swt.layout,
+ org.eclipse.swt.widgets,
  osgi.dependency.manager.temperature.interfaces

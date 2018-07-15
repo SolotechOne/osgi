@@ -21,7 +21,7 @@ public class MessageList implements Runnable {
     private Vector<MessageListener> listenerList;
 
     /** Queue of logged events awaiting dispatch */
-    private ArrayList dispatch;
+    private ArrayList<FireRequest> dispatch;
 
     /** Flag to indicated whether log is active */
     private boolean stopped;
@@ -43,7 +43,7 @@ public class MessageList implements Runnable {
 
         // create the listener and dispatch lists
         this.listenerList = new Vector<MessageListener>();
-        this.dispatch = new ArrayList();
+        this.dispatch = new ArrayList<FireRequest>();
         this.threshold = threshold;
 
         // start the dispatch queue
@@ -153,15 +153,15 @@ public class MessageList implements Runnable {
      * for the event. This will be picked up and dispatched to the current list 
      * of listeners by the dispath thread.
      *
-     * @param ent   entry to notify listeners of
+     * @param entry   entry to notify listeners of
      */
-    protected void fireLoggedEvent(MessageEntry ent) {
+    protected void fireLoggedEvent(MessageEntry entry) {
         // copy listener list, so only listeners at time event was logged
         // will be notified
     	MessageListener[] copy = (MessageListener[]) listenerList.toArray(EMPTY_ARR);
 
         if (copy.length > 0) {
-            FireRequest fr = FireRequest.alloc(copy, ent);
+            FireRequest fr = FireRequest.alloc(copy, entry);
             synchronized(this.dispatch) {
                 this.dispatch.add(fr);
                 this.dispatch.notify();
@@ -171,7 +171,7 @@ public class MessageList implements Runnable {
 
     /**
      * Inner class to hold requests for LogEvents needing dispatch to log
-     *  listeners
+     * listeners
      */
     private static class FireRequest {
         //Note: could extend to implement cacheing of free req's in here if 

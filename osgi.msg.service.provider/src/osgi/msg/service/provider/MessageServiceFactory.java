@@ -8,7 +8,7 @@ import osgi.msg.service.interfaces.MessageService;
  * Service factory that will be invoked by the OSGi framework to get LogService  * objects for bundles which request a LogService.
  *
  */
-public class MessageServiceFactory implements ServiceFactory {
+public class MessageServiceFactory implements ServiceFactory<MessageService> {
     /** Reference to the list of log entries */
     private MessageList log;
 
@@ -36,7 +36,7 @@ public class MessageServiceFactory implements ServiceFactory {
      * @param registration  registration object for the service the log service
      * @return              new LogService instance
      */
-    public Object getService(Bundle bundle, ServiceRegistration registration) {
+    public MessageService getService(Bundle bundle, ServiceRegistration<MessageService> registration) {
         return new MessageServiceImpl(bundle);        
     }
 
@@ -47,9 +47,9 @@ public class MessageServiceFactory implements ServiceFactory {
      * @param registration  registration object for the service the log service
      * @param service       service object being released.
      */
-    public void ungetService(Bundle bundle, ServiceRegistration registration, Object service) {
-        // doesn't seem much we need to do in here
-    }
+	public void ungetService(Bundle bundle, ServiceRegistration<MessageService> registration, MessageService service) {
+		// TODO Auto-generated method stub
+	}
 
     /**
      * Inner class to provide LogService implementation.

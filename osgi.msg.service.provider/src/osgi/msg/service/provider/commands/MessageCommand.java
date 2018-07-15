@@ -1,11 +1,6 @@
 package osgi.msg.service.provider.commands;
 
 import java.io.IOException;
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-
 import java.util.Iterator;
 import java.util.Map;
 
@@ -70,15 +65,6 @@ public class MessageCommand {
 				MessageEntry entry = iterator.next();
 				
 				new MessageWriter().logged(entry);
-				
-//				Instant instant = Instant.ofEpochMilli(entry.getTime());
-//				ZonedDateTime date = ZonedDateTime.ofInstant(instant, ZoneOffset.systemDefault());
-//
-//				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm:ss");
-//				
-////				System.out.println(formatter.format(date) + " [" + entry.getSystem() + "] " + entry.getType() + "-" + entry.getNumber() + " " + entry.getText() + " (" + entry.getInsert() + ")");
-//
-//				System.out.printf("%s [%s] %s%07d %s (%s)\n", formatter.format(date), entry.getSystem(), entry.getType(), entry.getNumber(), entry.getText(), entry.getInsert());
 			}
 			
 			break;

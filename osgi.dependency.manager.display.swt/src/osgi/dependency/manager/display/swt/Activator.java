@@ -69,7 +69,7 @@ public class Activator extends DependencyActivatorBase {
 	
 	@Override
     public void destroy(BundleContext bundleContext, DependencyManager dependencyManager) {
-		display.dispose();
+//		display.dispose();
     }
 
     @SuppressWarnings("unused")
