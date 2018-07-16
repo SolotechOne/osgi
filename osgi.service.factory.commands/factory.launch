@@ -6,7 +6,7 @@
 <stringAttribute key="bootstrap" value=""/>
 <stringAttribute key="checked" value="[NONE]"/>
 <booleanAttribute key="clearConfig" value="true"/>
-<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/factory2"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/factory"/>
 <booleanAttribute key="default" value="true"/>
 <booleanAttribute key="default_auto_start" value="true"/>
 <intAttribute key="default_start_level" value="4"/>
@@ -22,5 +22,5 @@
 <booleanAttribute key="tracing" value="false"/>
 <booleanAttribute key="useCustomFeatures" value="false"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
-<stringAttribute key="workspace_bundles" value="com.automic.api@default:default,osgi.service.factory.commands@default:default,osgi.service.factory.interfaces@default:default,osgi.service.factory.properties@default:false,osgi.service.factory.provider@default:default"/>
+<stringAttribute key="workspace_bundles" value="com.automic.api@default:default,osgi.msg.service.interface@default:default,osgi.msg.service.provider@default:default,osgi.service.factory.commands@default:default,osgi.service.factory.interfaces@default:default,osgi.service.factory.properties@default:false,osgi.service.factory.provider@default:default"/>
 </launchConfiguration>
