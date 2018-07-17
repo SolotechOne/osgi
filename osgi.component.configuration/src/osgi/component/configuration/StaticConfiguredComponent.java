@@ -6,7 +6,8 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
 @Component(
-    property = {
+	configurationPid = {"$", "AdminConfiguredComponent"},
+	property = {
         "message=Welcome to the inline configured service",
         "iteration:Integer=3"
     }
