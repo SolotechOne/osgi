@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Other
+Bundle-SymbolicName: osgi.component.configuration.other
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: osgi.component.configuration.other
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.osgi.service.component.annotations;version="1.3.0";resolution:=optional
+Service-Component: OSGI-INF/osgi.component.configuration.other.OtherConfiguredComponent.xml
+Bundle-ActivationPolicy: lazy

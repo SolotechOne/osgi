@@ -16,14 +16,12 @@ import org.osgi.service.component.annotations.Modified;
 public class AdminConfiguredComponent {
     @Activate
     void activate(Map<String, Object> properties) {
-        System.out.println();
         System.out.println("AdminConfiguredComponent activated");
         printMessage(properties);
     }
 
     @Modified
     void modified(Map<String, Object> properties) {
-        System.out.println();
         System.out.println("AdminConfiguredComponent modified");
         printMessage(properties);
     }
@@ -31,7 +29,6 @@ public class AdminConfiguredComponent {
     @Deactivate
     void deactivate() {
         System.out.println("AdminConfiguredComponent deactivated");
-        System.out.println();
     }
 
     private void printMessage(Map<String, Object> properties) {

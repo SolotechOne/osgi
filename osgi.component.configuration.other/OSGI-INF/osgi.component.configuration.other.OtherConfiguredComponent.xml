@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="activate" configuration-pid="AdminConfiguredComponent" configuration-policy="require" deactivate="deactivate" modified="modified" name="osgi.component.configuration.other.OtherConfiguredComponent">
+   <property name="iteration" type="Integer" value="0"/>
+   <property name="message" type="String" value=""/>
+   <implementation class="osgi.component.configuration.other.OtherConfiguredComponent"/>
+</scr:component>

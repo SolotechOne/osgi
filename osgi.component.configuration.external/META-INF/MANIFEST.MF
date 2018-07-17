@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: External
+Bundle-SymbolicName: osgi.component.configuration.external
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: osgi.component.configuration.external
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.osgi.service.cm;version="1.5.0",
+ org.osgi.service.component.annotations;version="1.3.0";resolution:=optional
+Bundle-ActivationPolicy: lazy
+Service-Component: OSGI-INF/osgi.component.configuration.external.ConfCommand.xml
