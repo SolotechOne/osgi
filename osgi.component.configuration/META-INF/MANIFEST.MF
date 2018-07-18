@@ -11,7 +11,8 @@ Service-Component: OSGI-INF/osgi.component.configuration.StaticConfiguredCompone
  OSGI-INF/osgi.component.configuration.command.ConfigureCommand.xml,
  OSGI-INF/osgi.component.configuration.AdminReferencingComponent.xml,
  OSGI-INF/osgi.component.configuration.command.ListCommand.xml,
- OSGI-INF/osgi.component.configuration.command.FactoryCommand.xml
+ OSGI-INF/osgi.component.configuration.command.FactoryCommand.xml,
+ OSGI-INF/factory.xml
 Bundle-ActivationPolicy: lazy
 Import-Package: org.osgi.framework;version="1.8.0",
  org.osgi.service.cm;version="1.5.0",

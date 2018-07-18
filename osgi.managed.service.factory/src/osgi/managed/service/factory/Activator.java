@@ -31,8 +31,8 @@ public class Activator extends DependencyActivatorBase {
 //				.setInterface(ManagedServiceFactory.class.getName(), props)
 //				.setImplementation(ConfigurationServiceFactory.class));
 		
-		Properties properties = new Properties();
-		properties.put(Constants.SERVICE_PID, EchoServiceFactory.PID);
+//		Properties properties = new Properties();
+//		properties.put(Constants.SERVICE_PID, EchoServiceFactory.PID);
 
 //		manager.add(createComponent()
 //				.setInterface(ManagedServiceFactory.class.getName(), properties)

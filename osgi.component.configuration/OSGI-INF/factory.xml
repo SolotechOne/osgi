@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.2.0" configuration-pid="ConnectionServiceFactory" configuration-policy="require" name="factory">
+   <property name="service.pid" value="ConnectionServiceFactory"/>
+   <service>
+      <provide interface="org.osgi.service.cm.ManagedServiceFactory"/>
+   </service>
+   <implementation class="osgi.component.configuration.ConnectionServiceFactory"/>
+</scr:component>

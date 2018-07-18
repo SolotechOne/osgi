@@ -26,7 +26,7 @@ public class FactoryCommand {
     
     public void factory() {
     	try {
-			Configuration config = this.cm.createFactoryConfiguration("AdminConfiguredComponent");
+			Configuration config = this.cm.createFactoryConfiguration("ConnectionServiceFactory");
 			
 			Hashtable<String, Object> props = new Hashtable<>();
 	        props.put("message", "fuck");
