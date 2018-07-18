@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="activate" configuration-pid="osgi.component.configuration.StaticConfiguredComponent AdminConfiguredComponent" name="osgi.component.configuration.StaticConfiguredComponent">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" enabled="false" name="osgi.component.configuration.StaticConfiguredComponent">
    <property name="message" value="Welcome to the inline configured service"/>
    <property name="iteration" type="Integer" value="3"/>
    <implementation class="osgi.component.configuration.StaticConfiguredComponent"/>
