@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="activate" configuration-pid="connection" configuration-policy="require" deactivate="deactivate" modified="modified" name="osgi.automic.shell.core.runtime.ConnectionComponent">
+   <property name="name" type="String" value=""/>
+   <service>
+      <provide interface="osgi.automic.shell.core.runtime.ConnectionComponent"/>
+   </service>
+   <implementation class="osgi.automic.shell.core.runtime.ConnectionComponent"/>
+</scr:component>
