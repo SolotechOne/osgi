@@ -39,8 +39,8 @@ public class SessionComponent {
     @Reference(
     	cardinality=ReferenceCardinality.MANDATORY,
     	policy=ReferencePolicy.DYNAMIC,
-    	policyOption=ReferencePolicyOption.GREEDY,
-    	target="(name=aeprd)"
+    	policyOption=ReferencePolicyOption.GREEDY
+//    	,target="(name=aeprd)"
     )
     void setAdminConfiguredComponent(ConnectionComponent component, Map<String, Object> properties) {
         System.out.println("Session: set connection " + properties.get("name"));

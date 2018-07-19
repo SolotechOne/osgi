@@ -62,7 +62,7 @@ public class RankingCommand {
 				Object rank = configuration.getProperties().get("service.ranking");
 				
 				if (rank != null) {
-					System.out.println(rank);
+//					System.out.println(rank);
 					onlineRanking = (Integer)rank;
 				}
 			}
