@@ -1,6 +1,5 @@
 package osgi.automic.shell.core.runtime;
 
-import java.util.List;
 import java.util.Map;
 
 import org.osgi.service.component.annotations.Activate;
@@ -9,7 +8,6 @@ import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 
@@ -19,7 +17,9 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 )
 public class SessionComponent {
     @SuppressWarnings("unused")
-	private volatile List<ConnectionComponent> component;
+//	private volatile List<ConnectionComponent> component;
+    
+    private ConnectionComponent component;
     
     @Activate
     void activate() {
@@ -37,7 +37,7 @@ public class SessionComponent {
     }
 
     @Reference(
-    	cardinality=ReferenceCardinality.MANDATORY,
+//    	cardinality=ReferenceCardinality.MANDATORY,
     	policy=ReferencePolicy.DYNAMIC,
     	policyOption=ReferencePolicyOption.GREEDY
 //    	,target="(name=aeprd)"

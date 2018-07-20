@@ -25,14 +25,14 @@ public class EchoServiceFactory implements ManagedServiceFactory {
 
 	@Override
 	public void updated(String pid, Dictionary<String, ?> properties) throws ConfigurationException {
+		System.out.println("wtf " + pid);
+
 		Enumeration<String> enumeration = properties.keys();
 		
         while(enumeration.hasMoreElements()) {
             String k = enumeration.nextElement();
             System.out.println(k + ": " + properties.get(k));
         }
-        
-		System.out.println("wtf " + pid);
 		
 		if (properties != null) { 
 			String portString = properties.get("port").toString();
