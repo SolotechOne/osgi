@@ -59,7 +59,7 @@ public class SessionCommands {
     public void list() throws IOException, InvalidSyntaxException {
 		Configuration[] configurations = this.admin.listConfigurations("(service.factoryPid=session)");
 		
-		if (configurations != null) {
+		if (configurations != null && configurations.length > 0) {
 			for (Configuration configuration : configurations) {
 				System.out.println(configuration.getProperties().get("user") + " " + configuration.getProperties().get("service.pid"));
 			}
@@ -70,7 +70,7 @@ public class SessionCommands {
     public void table() throws IOException, InvalidSyntaxException {
     	Configuration[] configurations = this.admin.listConfigurations("(service.factoryPid=session)");
 
-    	if (configurations != null) {
+    	if (configurations != null && configurations.length > 0) {
     		ShellTable table = new ShellTable();
     		table.header.add("user");
     		table.header.add("pid");
