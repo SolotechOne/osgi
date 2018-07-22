@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Interfaces
+Bundle-SymbolicName: osgi.automic.shell.core.service.interfaces
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: osgi.automic.shell.core.runtime.interfaces
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: osgi.automic.shell.core.service.interfaces
