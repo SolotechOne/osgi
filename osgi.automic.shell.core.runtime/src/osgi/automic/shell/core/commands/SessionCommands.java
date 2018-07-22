@@ -1,5 +1,7 @@
 package osgi.automic.shell.core.commands;
 
+// https://bitbucket.org/pjtr/net.luminis.cmc/overview
+
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.List;
