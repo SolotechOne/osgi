@@ -6,10 +6,9 @@ Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: osgi.automic.shell.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGI-INF/osgi.automic.shell.core.runtime.ConnectionComponent.xml,
- OSGI-INF/osgi.automic.shell.core.runtime.SessionComponent.xml,
- OSGI-INF/osgi.automic.shell.core.commands.SessionCommands.xml,
- OSGI-INF/osgi.automic.shell.core.commands.RankingCommand.xml
+Service-Component: OSGI-INF/osgi.automic.shell.core.commands.SessionCommands.xml,
+ OSGI-INF/osgi.automic.shell.core.commands.RankingCommand.xml,
+ OSGI-INF/osgi.automic.shell.core.commands.SessionHolder.xml
 Import-Package: org.apache.felix.service.command;status=provisional;version="0.10.0",
  org.osgi.framework;version="1.8.0",
  org.osgi.service.cm,
