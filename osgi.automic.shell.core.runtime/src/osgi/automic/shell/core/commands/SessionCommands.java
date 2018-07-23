@@ -1,6 +1,10 @@
 package osgi.automic.shell.core.commands;
 
 // https://bitbucket.org/pjtr/net.luminis.cmc/overview
+// https://github.com/snefru/org.apache.felix.scr/blob/master/src/main/java/org/apache/felix/scr/impl/ScrCommand.java
+// https://access.redhat.com/documentation/en-us/red_hat_jboss_a-mq/6.3/html/console_reference/consoleconfig#ConsoleconfigCancel
+// https://osgi.org/javadoc/r6/enterprise/index.html?org/osgi/service/component/runtime/dto/ComponentDescriptionDTO.html
+// https://github.com/snefru/org.apache.felix.scr/blob/master/src/main/java/org/apache/felix/scr/impl/runtime/ServiceComponentRuntimeImpl.java
 
 import java.io.IOException;
 import java.util.Hashtable;
