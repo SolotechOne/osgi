@@ -26,7 +26,7 @@ import org.osgi.service.component.annotations.Reference;
 		CommandProcessor.COMMAND_FUNCTION + ":String=table",
 		CommandProcessor.COMMAND_FUNCTION + ":String=remove"
 	},
-	service=SessionCommands.class
+	service = SessionCommands.class
 )
 public class SessionCommands {
 	ConfigurationAdmin admin;

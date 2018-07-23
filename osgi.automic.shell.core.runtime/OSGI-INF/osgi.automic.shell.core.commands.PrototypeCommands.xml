@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="osgi.automic.shell.core.commands.PrototypeCommands">
+   <property name="osgi.command.scope" type="String" value="session"/>
+   <property name="osgi.command.function" type="String" value="proto"/>
+   <service>
+      <provide interface="osgi.automic.shell.core.commands.PrototypeCommands"/>
+   </service>
+   <reference bind="setSessionComponent" interface="osgi.automic.shell.core.service.provider.SessionComponent" name="SessionComponent" policy="static" scope="prototype_required" unbind="unsetSessionComponent" updated="updatedSessionComponent"/>
+   <implementation class="osgi.automic.shell.core.commands.PrototypeCommands"/>
+</scr:component>

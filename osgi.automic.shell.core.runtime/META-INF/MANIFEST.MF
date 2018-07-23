@@ -8,8 +8,11 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/osgi.automic.shell.core.commands.SessionCommands.xml,
  OSGI-INF/osgi.automic.shell.core.commands.RankingCommand.xml,
- OSGI-INF/osgi.automic.shell.core.commands.SessionHolder.xml
+ OSGI-INF/osgi.automic.shell.core.commands.SessionHolder.xml,
+ OSGI-INF/osgi.automic.shell.core.commands.PrototypeCommands.xml
 Import-Package: org.apache.felix.service.command;status=provisional;version="0.10.0",
  org.osgi.framework;version="1.8.0",
  org.osgi.service.cm,
- org.osgi.service.component.annotations;version="1.3.0";resolution:=optional
+ org.osgi.service.component;version="1.3.0",
+ org.osgi.service.component.annotations;version="1.3.0";resolution:=optional,
+ osgi.automic.shell.core.service.provider

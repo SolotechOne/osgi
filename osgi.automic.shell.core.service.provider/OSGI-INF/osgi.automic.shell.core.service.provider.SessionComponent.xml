@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="activate" configuration-pid="session" configuration-policy="require" deactivate="deactivate" modified="modified" name="osgi.automic.shell.core.service.provider.SessionComponent">
    <property name="user" type="String" value=""/>
-   <reference bind="setConnectionComponent" cardinality="1..1" interface="osgi.automic.shell.core.service.provider.ConnectionComponent" name="ConnectionComponent" policy="dynamic" policy-option="reluctant" target="(service.factoryPid=connection)" unbind="unsetConnectionComponent" updated="updatedConnectionComponent"/>
+   <service scope="prototype">
+      <provide interface="osgi.automic.shell.core.service.provider.SessionComponent"/>
+   </service>
+   <reference bind="setConnectionComponent" cardinality="1..1" interface="osgi.automic.shell.core.service.provider.ConnectionComponent" name="ConnectionComponent" policy="dynamic" policy-option="reluctant" unbind="unsetConnectionComponent" updated="updatedConnectionComponent"/>
    <implementation class="osgi.automic.shell.core.service.provider.SessionComponent"/>
 </scr:component>

@@ -14,3 +14,4 @@ Import-Package: org.apache.felix.service.command;status=provisional;version="0.1
  org.osgi.service.cm,
  org.osgi.service.component.annotations;version="1.3.0";resolution:=optional,
  osgi.automic.shell.core.service.interfaces
+Export-Package: osgi.automic.shell.core.service.provider
