@@ -9,7 +9,8 @@ Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/osgi.automic.shell.core.commands.SessionCommands.xml,
  OSGI-INF/osgi.automic.shell.core.commands.RankingCommand.xml,
  OSGI-INF/osgi.automic.shell.core.commands.SessionHolder.xml,
- OSGI-INF/osgi.automic.shell.core.commands.PrototypeCommands.xml
+ OSGI-INF/osgi.automic.shell.core.commands.PrototypeCommands.xml,
+ OSGI-INF/osgi.automic.shell.core.commands.ReadCommands.xml
 Import-Package: org.apache.felix.service.command;status=provisional;version="0.10.0",
  org.osgi.framework;version="1.8.0",
  org.osgi.service.cm,

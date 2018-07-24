@@ -24,7 +24,8 @@ import osgi.service.factory.interfaces.IConnection;
 	configurationPolicy=ConfigurationPolicy.OPTIONAL,
 	property= {
 		CommandProcessor.COMMAND_SCOPE + "=ilm",
-		CommandProcessor.COMMAND_FUNCTION + "=list"},
+		CommandProcessor.COMMAND_FUNCTION + "=list",
+		CommandProcessor.COMMAND_FUNCTION + "=table"},
 	service=ILMCommands.class
 )
 public class ILMCommands {
@@ -62,6 +63,58 @@ public class ILMCommands {
     				lines.add(item.getNumber() + " (" + item.getParent() + ") " + item.getFileGroupTableSpace() + " " + item.getStart() + " " + item.getMinRunID() + " " + item.getMaxRunID() + " ");
 //    				System.out.println(item.getName() + " [" + item.getIcon() + "] (" + item.getFolder() + ")");
     			}
+    		}
+        }
+		
+		return lines;
+	}
+
+	@Descriptor("list ilm partitions as table")
+	public List<String> table() {
+		ILMList ilm = new ILMList();
+		
+		List<String> lines = new LinkedList<String>();
+		
+		for (ListIterator<IConnection> it = connections.listIterator(); it.hasNext(); ) {
+        	it.next().send(ilm);
+        	
+//        	System.out.println(search.getName());
+//        	System.out.println(search.isTypeJOBS());
+        	
+    		if (ilm.getMessageBox() != null) {
+    			System.err.println(ilm.getMessageBox().getType() + " " + ilm.getMessageBox().getNumber() + " " + ilm.getMessageBox().getText().toString().replace("\n", " "));
+    		}
+    		
+			System.out.println(ilm.getStatusText() + " " + ilm.getOnlinePartitions());
+			
+    		Iterator<ILMPartitionItem> result = ilm.partitions();
+    		
+    		if (result != null) {
+    			ShellTable table = new ShellTable();
+        		table.header.add("partition");
+        		table.header.add("parent");
+        		table.header.add("tablespace");
+        		table.header.add("starttime");
+        		table.header.add("runid min");
+        		table.header.add("runid max");
+
+        		while (result.hasNext()) {
+    				ILMPartitionItem item = result.next();
+    				
+    				List<String> row = table.addRow();
+    				
+    				row.add(String.valueOf(item.getNumber()));
+    				row.add(item.getParent());
+    				row.add(item.getFileGroupTableSpace());
+    				row.add(item.getStart().toString());
+    				row.add(String.valueOf(item.getMinRunID()));
+    				row.add(String.valueOf(item.getMaxRunID()));
+    				
+//    				lines.add(item.getNumber() + " (" + item.getParent() + ") " + item.getFileGroupTableSpace() + " " + item.getStart() + " " + item.getMinRunID() + " " + item.getMaxRunID() + " ");
+//    				System.out.println(item.getName() + " [" + item.getIcon() + "] (" + item.getFolder() + ")");
+    			}
+        		
+        		table.print();
     		}
         }
 		

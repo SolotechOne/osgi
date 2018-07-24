@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" enabled="false" name="osgi.automic.shell.core.service.provider.CommandComponent">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="osgi.automic.shell.core.service.provider.CommandComponent">
    <property name="osgi.command.scope" type="String" value="session"/>
    <property name="osgi.command.function" type="String" value="prompt"/>
    <implementation class="osgi.automic.shell.core.service.provider.CommandComponent"/>
