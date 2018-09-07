@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Test
+Bundle-SymbolicName: osgi.sap.test
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: osgi.sap.test
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.apache.felix.service.command;status=provisional;version="0.10.0",
+  org.osgi.service.component.annotations;version="1.3.0";resolution:=optional,
+ com.sap.conn.jco,
+ com.sap.conn.jco.ext
+Bundle-ActivationPolicy: lazy
+Service-Component: OSGI-INF/osgi.sap.test.commands.SAPCommands.xml
