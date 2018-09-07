@@ -23,7 +23,7 @@ import osgi.ldap.service.interfaces.IConnector;
 		"LDAPADSERVER=ldap://de.globusgrp.org:3268",
 		"LDAPSEARCHBASE=dc=globusgrp,dc=org",
 		"LDAPUSERNAME=CN=Carsten Berberich,OU=UsrIntern,OU=UsrAll,OU=1597KooWnd,OU=KOO,DC=de,DC=globusgrp,DC=org",
-		".LDAPPASSWORD=Automic13",
+		".LDAPPASSWORD=Automic14",
 //		"LDAPACCOUNTTOLOOKUP=Hermann Jochum",
 		"SECURITY_AUTHENTICATION=simple",
 		"INITIAL_CONTEXT_FACTORY=com.sun.jndi.ldap.LdapCtxFactory"

@@ -34,7 +34,7 @@ public class SessionHolder implements Function {
             }
         }
         
-		session.put("prompt", "\\#prompt={prompt=\"test> \"}");
+		session.put("prompt", "\\#prompt={prompt=\"fuck> \"}");
 		
 		return null;
 	}

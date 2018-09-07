@@ -4,7 +4,7 @@
    <property name="LDAPADSERVER" value="ldap://de.globusgrp.org:3268"/>
    <property name="LDAPSEARCHBASE" value="dc=globusgrp,dc=org"/>
    <property name="LDAPUSERNAME" value="CN=Carsten Berberich,OU=UsrIntern,OU=UsrAll,OU=1597KooWnd,OU=KOO,DC=de,DC=globusgrp,DC=org"/>
-   <property name=".LDAPPASSWORD" value="Automic13"/>
+   <property name=".LDAPPASSWORD" value="Automic14"/>
    <property name="SECURITY_AUTHENTICATION" value="simple"/>
    <property name="INITIAL_CONTEXT_FACTORY" value="com.sun.jndi.ldap.LdapCtxFactory"/>
    <service>
