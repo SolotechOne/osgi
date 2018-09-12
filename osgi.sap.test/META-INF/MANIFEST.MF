@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Test
-Bundle-SymbolicName: osgi.sap.test
+Bundle-Name: SAP Service Provider
+Bundle-SymbolicName: osgi.sap.service.provider
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: osgi.sap.test
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
@@ -10,4 +10,4 @@ Import-Package: org.apache.felix.service.command;status=provisional;version="0.1
  com.sap.conn.jco,
  com.sap.conn.jco.ext
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGI-INF/osgi.sap.test.commands.SAPCommands.xml
+Service-Component: OSGI-INF/osgi.sap.service.provider.commands.SAPCommands.xml

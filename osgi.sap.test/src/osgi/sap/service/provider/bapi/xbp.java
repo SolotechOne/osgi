@@ -1,232 +1,14 @@
-package osgi.sap.test.commands;
+package osgi.sap.service.provider.bapi;
 
 import com.sap.conn.jco.AbapException;
-import com.sap.conn.jco.JCoContext;
 import com.sap.conn.jco.JCoDestination;
-import com.sap.conn.jco.JCoDestinationManager;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoStructure;
 import com.sap.conn.jco.JCoTable;
-import com.sap.conn.jco.ext.DestinationDataProvider;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
-
-import org.apache.felix.service.command.CommandProcessor;
-import org.apache.felix.service.command.Descriptor;
-
-import org.osgi.service.component.annotations.Component;
-
-@Component(
-	property = {
-		CommandProcessor.COMMAND_SCOPE + ":String=sap",
-		CommandProcessor.COMMAND_FUNCTION + ":String=info",
-		CommandProcessor.COMMAND_FUNCTION + ":String=create",
-		CommandProcessor.COMMAND_FUNCTION + ":String=select"
-	},
-	service = SAPCommands.class
-)
-public class SAPCommands {
-	private final static String SAPApplicationServer = "cirk1.de.globusgrp.org";
-	private final static String SAPSystemNumber = "00";
-	@SuppressWarnings("unused")
-	private final static String SAPSystem = "RK1-KON";
-	@SuppressWarnings("unused")
-	private final static String SAPMessageServer = "ascsrk1.de.globusgrp.org";
-	@SuppressWarnings("unused")
-	private final static String SAPGroup = "public";
-	private final static String SAPClient = "200";
-	private final static String SAPUser = "batch-uc4";
-	private final static String SAPPassword = "uc4amh15";
-	private final static String SAPLanguage = "de";
-	
-    @Descriptor("get variant info")
-    public void info(@Descriptor("Report") String report, @Descriptor("Variant") String variant) throws IOException, JCoException {
-//    	System.out.println("connecting...");
-    	
-        Properties connectProperties = new Properties();
-        connectProperties.setProperty(DestinationDataProvider.JCO_ASHOST, SAPApplicationServer);
-        connectProperties.setProperty(DestinationDataProvider.JCO_SYSNR,  SAPSystemNumber);
-        connectProperties.setProperty(DestinationDataProvider.JCO_CLIENT, SAPClient);
-        connectProperties.setProperty(DestinationDataProvider.JCO_USER,   SAPUser);
-        connectProperties.setProperty(DestinationDataProvider.JCO_PASSWD, SAPPassword);
-        connectProperties.setProperty(DestinationDataProvider.JCO_LANG,   SAPLanguage);
-        
-        createDestinationDataFile("RK1", connectProperties);
-        
-    	JCoDestination destination = JCoDestinationManager.getDestination("RK1");
-    	
-        System.out.println("Attributes:");
-        System.out.println(destination.getAttributes());
-    	
-        
-        JCoContext.begin(destination);
-        
-        
-    	destination.ping();
-    	
-    	JCoFunction function = destination.getRepository().getFunction("STFC_CONNECTION");
-    	
-        if (function == null)
-        	throw new RuntimeException("STFC_CONNECTION not found in SAP.");
-        
-        function.getImportParameterList().setValue("REQUTEXT", "Hello SAP");
-        
-        try {
-            function.execute(destination);
-        }
-        catch (AbapException exception) {
-            System.out.println(exception.toString());
-            
-            return;
-        }
-        
-        System.out.println("STFC_CONNECTION finished:");
-        System.out.println(" Echo: " + function.getExportParameterList().getString("ECHOTEXT"));
-        System.out.println(" Response: " + function.getExportParameterList().getString("RESPTEXT"));
-        System.out.println();
-        
-        bapi_xmi_logon(destination);
-        
-        bapi_xbp_varinfo(destination, report, variant);
-        
-        bapi_xmi_logoff(destination);
-        
-        JCoContext.end(destination);
-    }
-    
-    @Descriptor("create abap job")
-    public void create(@Descriptor("Jobname") String jobname, @Descriptor("Jobklasse") String jobclass) throws IOException, JCoException {
-        Properties connectProperties = new Properties();
-        connectProperties.setProperty(DestinationDataProvider.JCO_ASHOST, SAPApplicationServer);
-        connectProperties.setProperty(DestinationDataProvider.JCO_SYSNR,  SAPSystemNumber);
-        connectProperties.setProperty(DestinationDataProvider.JCO_CLIENT, SAPClient);
-        connectProperties.setProperty(DestinationDataProvider.JCO_USER,   SAPUser);
-        connectProperties.setProperty(DestinationDataProvider.JCO_PASSWD, SAPPassword);
-        connectProperties.setProperty(DestinationDataProvider.JCO_LANG,   SAPLanguage);
-        
-        createDestinationDataFile("RK1", connectProperties);
-        
-    	JCoDestination destination = JCoDestinationManager.getDestination("RK1");
-    	
-    	
-        
-        JCoContext.begin(destination);
-        
-        bapi_xmi_logon(destination);
-        
-        String jobcount = bapi_xbp_job_open(destination, jobname, jobclass);
-        
-        bapi_xbp_job_add_abap_step(destination, jobname, jobcount, "RSPARAM", "");
-        
-        bapi_xbp_job_close(destination, jobname, jobcount);
-        
-        bapi_xbp_job_start_immediately(destination, jobname, jobcount);
-
-//        bapi_xbp_job_delete(destination, jobname, jobcount);
-        
-        bapi_xmi_logoff(destination);
-        
-        JCoContext.end(destination);
-    }
-    
-    @Descriptor("select abap job")
-    public void select(@Descriptor("Report") String report) throws IOException, JCoException {
-        Properties connectProperties = new Properties();
-        connectProperties.setProperty(DestinationDataProvider.JCO_ASHOST, SAPApplicationServer);
-        connectProperties.setProperty(DestinationDataProvider.JCO_SYSNR,  SAPSystemNumber);
-        connectProperties.setProperty(DestinationDataProvider.JCO_CLIENT, SAPClient);
-        connectProperties.setProperty(DestinationDataProvider.JCO_USER,   SAPUser);
-        connectProperties.setProperty(DestinationDataProvider.JCO_PASSWD, SAPPassword);
-        connectProperties.setProperty(DestinationDataProvider.JCO_LANG,   SAPLanguage);
-        
-        createDestinationDataFile("RK1", connectProperties);
-        
-    	JCoDestination destination = JCoDestinationManager.getDestination("RK1");
-    	
-        JCoContext.begin(destination);
-        
-        bapi_xmi_logon(destination);
-        
-        bapi_xbp_job_select(destination, report);
-
-        bapi_xmi_logoff(destination);
-        
-        JCoContext.end(destination);
-    }
-    
-    public void bapi_xmi_logon(JCoDestination destination) throws JCoException {
-    	JCoFunction xmi_logon = destination.getRepository().getFunction("BAPI_XMI_LOGON");
-    	
-        if (xmi_logon == null)
-        	throw new RuntimeException("BAPI_XMI_LOGON not found in SAP.");
-        
-        xmi_logon.getImportParameterList().setValue("EXTCOMPANY", "testcompany");
-        xmi_logon.getImportParameterList().setValue("EXTPRODUCT", "testproduct");
-        xmi_logon.getImportParameterList().setValue("INTERFACE", "XBP");
-        xmi_logon.getImportParameterList().setValue("VERSION", "3.0");
-        
-        xmi_logon.getExportParameterList().setActive("RETURN", true);
-        xmi_logon.getExportParameterList().setActive("SESSIONID", true);
-        
-        try {
-        	xmi_logon.execute(destination);
-        }
-        catch (AbapException e) {
-            System.out.println(e.toString());
-            
-            return;
-        }
-        
-        System.out.println("BAPI_XMI_LOGON finished:");
-
-        JCoStructure returnStructure = xmi_logon.getExportParameterList().getStructure("RETURN");
-        
-        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
-            throw new RuntimeException(returnStructure.getString("MESSAGE"));
-        }
-
-        if ( xmi_logon.getExportParameterList().isActive("SESSIONID")) {
-            System.out.println(" SessionID: " + xmi_logon.getExportParameterList().getString("SESSIONID"));
-        }
-        
-        System.out.println();
-    }
-    
-    public void bapi_xmi_logoff(JCoDestination destination) throws JCoException {
-    	JCoFunction xmi_logoff = destination.getRepository().getFunction("BAPI_XMI_LOGOFF");
-    	
-        if (xmi_logoff == null)
-        	throw new RuntimeException("BAPI_XMI_LOGOFF not found in SAP.");
-        
-        xmi_logoff.getImportParameterList().setValue("INTERFACE", "XBP");
-        
-        xmi_logoff.getExportParameterList().setActive("RETURN", true);
-        
-        try {
-        	xmi_logoff.execute(destination);
-        }
-        catch (AbapException e) {
-            System.out.println(e.toString());
-            
-            return;
-        }
-        
-        System.out.println("BAPI_XMI_LOGOFF finished:");
-
-        JCoStructure returnStructure = xmi_logoff.getExportParameterList().getStructure("RETURN");
-        
-        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
-            throw new RuntimeException(returnStructure.getString("MESSAGE"));
-        }
-
-        System.out.println();
-    }
-    
-    public void bapi_xbp_varinfo(JCoDestination destination, String report, String variant) throws JCoException {
+public class xbp {
+    public static void bapi_xbp_varinfo(JCoDestination destination, String report, String variant) throws JCoException {
     	JCoFunction xbp_varinfo = destination.getRepository().getFunction("BAPI_XBP_VARINFO");
     	
         if (xbp_varinfo == null)
@@ -237,7 +19,7 @@ public class SAPCommands {
         xbp_varinfo.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
         
 //        xbp_varinfo.getExportParameterList().setActive("VARIANT_INFO", true);
-
+        
         try {
         	xbp_varinfo.execute(destination);
         }
@@ -261,10 +43,10 @@ public class SAPCommands {
         JCoTable variant_info = xbp_varinfo.getTableParameterList().getTable("VARIANT_INFO");
         
 //        System.out.println(variant.getNumRows());
-
+        
         for (int i = 0; i < variant_info.getNumRows(); i++) {
             variant_info.setRow(i);
-
+            
             if ( i == 0 )
             	System.out.printf("Report: %s  Variante: %s\n\n", variant_info.getString("REPORT"), variant_info.getString("VARIANT"));
             	
@@ -284,11 +66,11 @@ public class SAPCommands {
 //            + '\t' + variant.getString("PLOW") + '\t' + variant.getString("PHIGH")
 //            );
         }
-
+        
         System.out.println();
     }
     
-    public String bapi_xbp_job_open(JCoDestination destination, String jobname, String jobclass) throws JCoException {
+    public static String bapi_xbp_job_open(JCoDestination destination, String jobname, String jobclass) throws JCoException {
     	JCoFunction xbp_job_open = destination.getRepository().getFunction("BAPI_XBP_JOB_OPEN");
     	
         if (xbp_job_open == null)
@@ -300,7 +82,7 @@ public class SAPCommands {
         
         xbp_job_open.getExportParameterList().setActive("RETURN", true);
         xbp_job_open.getExportParameterList().setActive("JOBCOUNT", true);
-
+        
         try {
         	xbp_job_open.execute(destination);
         }
@@ -324,7 +106,7 @@ public class SAPCommands {
         return xbp_job_open.getExportParameterList().getString("JOBCOUNT");
     }
     
-    public void bapi_xbp_job_close(JCoDestination destination, String jobname, String jobcount) throws JCoException {
+    public static void bapi_xbp_job_close(JCoDestination destination, String jobname, String jobcount) throws JCoException {
     	JCoFunction xbp_job_close = destination.getRepository().getFunction("BAPI_XBP_JOB_CLOSE");
     	
         if (xbp_job_close == null)
@@ -338,7 +120,7 @@ public class SAPCommands {
 //        xbp_job_close.getImportParameterList().setValue("RECIPIENT", "");
         
         xbp_job_close.getExportParameterList().setActive("RETURN", true);
-
+        
         try {
         	xbp_job_close.execute(destination);
         }
@@ -359,7 +141,7 @@ public class SAPCommands {
         System.out.println();
     }
     
-    public void bapi_xbp_job_add_abap_step(JCoDestination destination, String jobname, String jobcount, String report, String variant) throws JCoException {
+    public static void bapi_xbp_job_add_abap_step(JCoDestination destination, String jobname, String jobcount, String report, String variant) throws JCoException {
     	JCoFunction xbp_job_add_step = destination.getRepository().getFunction("BAPI_XBP_JOB_ADD_ABAP_STEP");
     	
         if (xbp_job_add_step == null)
@@ -381,7 +163,7 @@ public class SAPCommands {
         xbp_job_add_step.getExportParameterList().setActive("STEP_NUMBER", true);
         xbp_job_add_step.getExportParameterList().setActive("RETURN", true);
         xbp_job_add_step.getExportParameterList().setActive("TEMP_VARIANT", true);
-
+        
         try {
         	xbp_job_add_step.execute(destination);
         }
@@ -403,7 +185,7 @@ public class SAPCommands {
         System.out.println();
     }
     
-    public void bapi_xbp_job_start_immediately(JCoDestination destination, String jobname, String jobcount) throws JCoException {
+    public static void bapi_xbp_job_start_immediately(JCoDestination destination, String jobname, String jobcount) throws JCoException {
     	JCoFunction xbp_job_start_immediately = destination.getRepository().getFunction("BAPI_XBP_JOB_START_IMMEDIATELY");
     	
         if (xbp_job_start_immediately == null)
@@ -416,7 +198,7 @@ public class SAPCommands {
 //        xbp_job_start_immediately.getImportParameterList().setValue("TARGET_GROUP", "");
         
         xbp_job_start_immediately.getExportParameterList().setActive("RETURN", true);
-
+        
         try {
         	xbp_job_start_immediately.execute(destination);
         }
@@ -437,7 +219,7 @@ public class SAPCommands {
         System.out.println();
     }
     
-    public void bapi_xbp_job_delete(JCoDestination destination, String jobname, String jobcount) throws JCoException {
+    public static void bapi_xbp_job_delete(JCoDestination destination, String jobname, String jobcount) throws JCoException {
     	JCoFunction xbp_job_delete = destination.getRepository().getFunction("BAPI_XBP_JOB_DELETE");
     	
         if (xbp_job_delete == null)
@@ -448,7 +230,7 @@ public class SAPCommands {
         xbp_job_delete.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
         
         xbp_job_delete.getExportParameterList().setActive("RETURN", true);
-
+        
         try {
         	xbp_job_delete.execute(destination);
         }
@@ -469,17 +251,17 @@ public class SAPCommands {
         System.out.println();
     }
     
-    public void bapi_xbp_job_select(JCoDestination destination, String jobname) throws JCoException {
+    public static void bapi_xbp_job_select(JCoDestination destination, String jobname) throws JCoException {
     	JCoFunction xbp_job_select = destination.getRepository().getFunction("BAPI_XBP_JOB_SELECT");
     	
         if (xbp_job_select == null)
         	throw new RuntimeException("BAPI_XBP_JOB_SELECT not found in SAP.");
-
+        
         JCoStructure job_select_param = xbp_job_select.getImportParameterList().getStructure("JOB_SELECT_PARAM");
         
         job_select_param.setValue("JOBNAME", jobname);
         job_select_param.setValue("USERNAME", "*");
-
+        
         
         xbp_job_select.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
         xbp_job_select.getImportParameterList().setValue("JOB_SELECT_PARAM", job_select_param);
@@ -490,7 +272,7 @@ public class SAPCommands {
         
         xbp_job_select.getExportParameterList().setActive("RETURN", true);
         xbp_job_select.getExportParameterList().setActive("ERROR_CODE", true);
-
+        
         try {
         	xbp_job_select.execute(destination);
         }
@@ -525,31 +307,238 @@ public class SAPCommands {
         
         for (int i = 0; i < job_head.getNumRows(); i++) {
         	job_head.setRow(i);
-
+        	
         	System.out.println(job_head.getString("JOBCOUNT") + " " + job_head.getString("JOBNAME")
-        			+ " " + job_head.getString("STRTDATE") + " " + job_head.getString("STRTTIME")
-        			+ " " + job_head.getString("STATUS") + " " + job_head.getString("JOBNAME"));
+        			+ " " + job_head.getString("SDLDATE") + " " + job_head.getString("SDLTIME")
+        			+ " " + job_head.getString("STATUS") + " " + job_head.getString("SDLUNAME"));
         }
-
+        
         
         System.out.println();
     }
     
-    static void createDestinationDataFile(String destinationName, Properties connectProperties) {
-        File destCfg = new File(destinationName+".jcoDestination");
+    public static void bapi_xbp_get_intercepted_jobs(JCoDestination destination) throws JCoException {
+    	JCoFunction xbp_get_intercepted_jobs = destination.getRepository().getFunction("BAPI_XBP_GET_INTERCEPTED_JOBS");
+    	
+        if (xbp_get_intercepted_jobs == null)
+        	throw new RuntimeException("BAPI_XBP_GET_INTERCEPTED_JOBS not found in SAP.");
         
-//        System.out.println(destCfg.getAbsolutePath());
+        xbp_get_intercepted_jobs.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+        
+//        1. ‘AL’ (default) – return all intercepted jobs regardless what confirmation they have.
+//        2. ‘NG’ – return only those intercepted jobs that do NOT have general confirmation.
+//        3. ‘NS’ – return only those intercepted jobs that were NOT confirmed as intercepted.
+//        4. ‘NC’ – return only those intercepted jobs that do NOT have any confirmation.
+        xbp_get_intercepted_jobs.getImportParameterList().setValue("SELECTION", "NS");
+        
+//        xbp_get_intercepted_jobs.getImportParameterList().setValue("CLIENT", "");
+        xbp_get_intercepted_jobs.getImportParameterList().setValue("MORE_INFO", "X");
+        
+        xbp_get_intercepted_jobs.getExportParameterList().setActive("RETURN", true);
         
         try {
-            FileOutputStream fos = new FileOutputStream(destCfg, false);
+        	xbp_get_intercepted_jobs.execute(destination);
+        }
+        catch (AbapException exception) {
+            System.out.println(exception.toString());
             
-            connectProperties.store(fos, "connection properties");
-            
-            fos.close();
+            return;
         }
         
-        catch (Exception e) {
-            throw new RuntimeException("Unable to create the destination files", e);
+        System.out.println("BAPI_XBP_GET_INTERCEPTED_JOBS finished:");
+        
+        JCoStructure returnStructure = xbp_get_intercepted_jobs.getExportParameterList().getStructure("RETURN");
+        
+        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(returnStructure.getString("MESSAGE"));
         }
+        
+        
+//        JCoTable jobinfo = xbp_get_intercepted_jobs.getTableParameterList().getTable("JOBINFO");
+//        
+//        for (int i = 0; i < jobinfo.getNumRows(); i++) {
+//        	jobinfo.setRow(i);
+//
+//        	System.out.println(jobinfo.getString("JOBCOUNT") + " " + jobinfo.getString("JOBNAME"));
+//        }
+        
+        
+        System.out.println();
+        
+        
+        JCoTable jobinfo2 = xbp_get_intercepted_jobs.getTableParameterList().getTable("JOBINFO2");
+        
+        for (int i = 0; i < jobinfo2.getNumRows(); i++) {
+        	jobinfo2.setRow(i);
+        	
+        	System.out.println(jobinfo2.getString("JOBCOUNT") + " " + jobinfo2.getString("JOBNAME")
+        			+ " " + jobinfo2.getString("ICPDATE") + " " + jobinfo2.getString("ICPTIME")
+        			+ " " + jobinfo2.getString("SDLUNAME"));
+        }
+        
+        System.out.println();
+        System.out.println("Jobs selected: " + jobinfo2.getNumRows());
+        System.out.println();
+    }
+    
+    public static void bapi_xbp_special_confirm_job(JCoDestination destination, String jobname, String jobcount) throws JCoException {
+    	JCoFunction xbp_special_confirm_job = destination.getRepository().getFunction("BAPI_XBP_SPECIAL_CONFIRM_JOB");
+    	
+        if (xbp_special_confirm_job == null)
+        	throw new RuntimeException("BAPI_XBP_SPECIAL_CONFIRM_JOB not found in SAP.");
+        
+        JCoTable jobs = xbp_special_confirm_job.getTableParameterList().getTable("JOBS");
+        
+        jobs.appendRow();
+        
+        jobs.setValue("JOBNAME", jobname);
+        jobs.setValue("JOBCOUNT", jobcount);   
+        
+        xbp_special_confirm_job.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+        
+//        1. Confirmation of intercepted jobs: CONFIRMATION = ’i’.
+//        2. Confirmation of child jobs: CONFIRMATION = ’c’.
+        xbp_special_confirm_job.getImportParameterList().setValue("CONFIRMATION", "i");
+        
+        xbp_special_confirm_job.getExportParameterList().setActive("RETURN", true);
+        
+        try {
+        	xbp_special_confirm_job.execute(destination);
+        }
+        catch (AbapException exception) {
+            System.out.println(exception.toString());
+            
+            return;
+        }
+        
+        System.out.println("BAPI_XBP_SPECIAL_CONFIRM_JOB finished:");
+        
+        JCoStructure returnStructure = xbp_special_confirm_job.getExportParameterList().getStructure("RETURN");
+        
+        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(returnStructure.getString("MESSAGE"));
+        }
+        
+        System.out.println();
+    }
+    
+    public static void bapi_xbp_event_raise(JCoDestination destination, String eventid, String eventparm) throws JCoException {
+    	JCoFunction xbp_event_raise = destination.getRepository().getFunction("BAPI_XBP_EVENT_RAISE");
+    	
+        if (xbp_event_raise == null)
+        	throw new RuntimeException("BAPI_XBP_EVENT_RAISE not found in SAP.");
+        
+        xbp_event_raise.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+        xbp_event_raise.getImportParameterList().setValue("EVENTID", eventid);
+        xbp_event_raise.getImportParameterList().setValue("EVENTPARM", eventparm);
+        
+        xbp_event_raise.getExportParameterList().setActive("RETURN", true);
+        
+        try {
+        	xbp_event_raise.execute(destination);
+        }
+        catch (AbapException exception) {
+            System.out.println(exception.toString());
+            
+            return;
+        }
+        
+        System.out.println("BAPI_XBP_EVENT_RAISE finished:");
+        
+        JCoStructure returnStructure = xbp_event_raise.getExportParameterList().getStructure("RETURN");
+        
+        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(returnStructure.getString("MESSAGE"));
+        }
+        
+        System.out.println();
+    }
+    
+    public static void bapi_xbp_btc_evthistory_get(JCoDestination destination, String id, String state, String action) throws JCoException {
+    	JCoFunction xbp_btc_evthistory_get = destination.getRepository().getFunction("BAPI_XBP_BTC_EVTHISTORY_GET");
+    	
+        if (xbp_btc_evthistory_get == null)
+        	throw new RuntimeException("BAPI_XBP_BTC_EVTHISTORY_GET not found in SAP.");
+        
+        xbp_btc_evthistory_get.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+//        xbp_btc_evthistory_get.getImportParameterList().setValue("FROM_TIMESTAMP_UTC", "");
+//        xbp_btc_evthistory_get.getImportParameterList().setValue("TO_TIMESTAMP_UTC", "");
+        xbp_btc_evthistory_get.getImportParameterList().setValue("EVENTIDS", id);
+        xbp_btc_evthistory_get.getImportParameterList().setValue("SELECT_STATE", state);	// Select-Status A=all, N=new (default), C=confirmed
+        xbp_btc_evthistory_get.getImportParameterList().setValue("ACTION", action);			// Operationen an Einträgen: C=confirmation (default), N=do nothing
+//        xbp_btc_evthistory_get.getImportParameterList().setValue("GUIDS", "");
+        xbp_btc_evthistory_get.getImportParameterList().setValue("PARAMS", "*");
+        
+        xbp_btc_evthistory_get.getExportParameterList().setActive("RETURN", true);
+        
+        try {
+        	xbp_btc_evthistory_get.execute(destination);
+        }
+        catch (AbapException exception) {
+            System.out.println(exception.toString());
+            
+            return;
+        }
+        
+        System.out.println("BAPI_XBP_BTC_EVTHISTORY_GET finished:");
+        
+        JCoStructure returnStructure = xbp_btc_evthistory_get.getExportParameterList().getStructure("RETURN");
+        
+        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(returnStructure.getString("MESSAGE"));
+        }
+        
+        
+        JCoTable raised_events = xbp_btc_evthistory_get.getTableParameterList().getTable("RAISED_EVENTS");
+        
+        for (int i = 0; i < raised_events.getNumRows(); i++) {
+        	raised_events.setRow(i);
+        	
+        	System.out.println(raised_events.getString("EVENTGUID") + " " + raised_events.getString("EVENTID")
+        			+ " " + raised_events.getString("EVENTPARM") + " " + raised_events.getString("EVENTSERVER")
+        			+ " " + raised_events.getString("EVTTIMESTAMP") + " " + raised_events.getString("EVENTSTATE")
+        			+ " " + raised_events.getString("PROCESSSTATE") + " " + raised_events.getString("COUNTOFJOBS"));
+        }
+        
+        System.out.println();
+        System.out.println("Events selected: " + raised_events.getNumRows());
+        System.out.println();
+    }
+    
+    public static void bapi_xbp_btc_evthist_confirm(JCoDestination destination, String guid) throws JCoException {
+    	JCoFunction xbp_btc_evthist_confirm = destination.getRepository().getFunction("BAPI_XBP_BTC_EVTHIST_CONFIRM");
+    	
+        if (xbp_btc_evthist_confirm == null)
+        	throw new RuntimeException("BAPI_XBP_BTC_EVTHIST_CONFIRM not found in SAP.");
+        
+        JCoTable jobs = xbp_btc_evthist_confirm.getTableParameterList().getTable("EVTHIST_GUIDS");
+        
+        jobs.appendRow();
+        
+        jobs.setValue("EVENTGUID", guid);
+
+        
+        xbp_btc_evthist_confirm.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+        
+        xbp_btc_evthist_confirm.getExportParameterList().setActive("RETURN", true);
+        
+        try {
+        	xbp_btc_evthist_confirm.execute(destination);
+        }
+        catch (AbapException exception) {
+            System.out.println(exception.toString());
+            
+            return;
+        }
+        
+        System.out.println("BAPI_XBP_BTC_EVTHIST_CONFIRM finished:");
+        
+        JCoStructure returnStructure = xbp_btc_evthist_confirm.getExportParameterList().getStructure("RETURN");
+        
+        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(returnStructure.getString("MESSAGE"));
+        }
+        
+        System.out.println();
     }
 }
