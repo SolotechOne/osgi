@@ -31,10 +31,10 @@ public class xbp {
         
         System.out.println("BAPI_XBP_VARINFO finished:");
         
-        JCoStructure returnStructure = xbp_varinfo.getExportParameterList().getStructure("RETURN");
+        JCoStructure bapiret = xbp_varinfo.getExportParameterList().getStructure("RETURN");
         
-        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
-            throw new RuntimeException(returnStructure.getString("MESSAGE"));
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
         }
         
         System.out.println();
@@ -70,6 +70,69 @@ public class xbp {
         System.out.println();
     }
     
+    public static void bapi_xbp_variant_info_get(JCoDestination destination, String report) throws JCoException {
+    	JCoFunction xbp_variant_info_get = destination.getRepository().getFunction("BAPI_XBP_VARIANT_INFO_GET");
+    	
+        if (xbp_variant_info_get == null)
+        	throw new RuntimeException("BAPI_XBP_VARIANT_INFO_GET not found in SAP.");
+        
+        xbp_variant_info_get.getImportParameterList().setValue("ABAP_PROGRAM_NAME", report);
+        xbp_variant_info_get.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+        
+//        'A' - variants that are available for batch as well as for dialog will be selected
+//        'B' - ‘batch only’ variants will be selected
+//        xbp_varinfo.getImportParameterList().setValue("VARIANT_SELECT_OPTION ", "A");
+        xbp_variant_info_get.getImportParameterList().setValue("MORE_INFO", "X");
+        
+        xbp_variant_info_get.getExportParameterList().setActive("RETURN", true);
+        
+        try {
+        	xbp_variant_info_get.execute(destination);
+        }
+        catch (AbapException exception) {
+            System.out.println(exception.toString());
+            
+            return;
+        }
+        
+        System.out.println("BAPI_XBP_VARIANT_INFO_GET finished:");
+        
+        JCoStructure bapiret = xbp_variant_info_get.getExportParameterList().getStructure("RETURN");
+        
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
+        }
+        
+        System.out.println();
+        
+        
+//        JCoTable abap_variant_table = xbp_variant_info_get.getTableParameterList().getTable("ABAP_VARIANT_TABLE");
+//        
+//        for (int i = 0; i < abap_variant_table.getNumRows(); i++) {
+//            abap_variant_table.setRow(i);
+//            
+//           	System.out.println(abap_variant_table.getString("REPORT") + " " + abap_variant_table.getString("VARIANT"));
+//        }
+        
+        
+        JCoTable variant_info = xbp_variant_info_get.getTableParameterList().getTable("VARIANT_INFO");
+        
+        for (int i = 0; i < variant_info.getNumRows(); i++) {
+            variant_info.setRow(i);
+            
+           	System.out.println(variant_info.getString("REPORT") + " " + variant_info.getString("VARIANT")
+   				+ " " + variant_info.getString("VTEXT") + " " + variant_info.getString("ENVIRONMNT")
+   				+ " " + variant_info.getString("PROTECTED") + " " + variant_info.getString("ENAME")
+   				+ " " + variant_info.getString("EDAT") + " " + variant_info.getString("AENAME")
+   				+ " " + variant_info.getString("AEDAT") + " " + variant_info.getString("MANDT"));
+        }
+        
+        
+        System.out.println();
+        System.out.println("Variants selected: " + variant_info.getNumRows());
+        System.out.println();
+    }
+    
     public static String bapi_xbp_job_open(JCoDestination destination, String jobname, String jobclass) throws JCoException {
     	JCoFunction xbp_job_open = destination.getRepository().getFunction("BAPI_XBP_JOB_OPEN");
     	
@@ -94,10 +157,10 @@ public class xbp {
         
         System.out.println("BAPI_XBP_JOB_OPEN finished:");
         
-        JCoStructure returnStructure = xbp_job_open.getExportParameterList().getStructure("RETURN");
+        JCoStructure bapiret = xbp_job_open.getExportParameterList().getStructure("RETURN");
         
-        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
-            throw new RuntimeException(returnStructure.getString("MESSAGE"));
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
         }
         
         System.out.println(" Jobcount: " + xbp_job_open.getExportParameterList().getString("JOBCOUNT"));
@@ -132,10 +195,10 @@ public class xbp {
         
         System.out.println("BAPI_XBP_JOB_CLOSE finished:");
         
-        JCoStructure returnStructure = xbp_job_close.getExportParameterList().getStructure("RETURN");
+        JCoStructure bapiret = xbp_job_close.getExportParameterList().getStructure("RETURN");
         
-        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
-            throw new RuntimeException(returnStructure.getString("MESSAGE"));
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
         }
         
         System.out.println();
@@ -175,10 +238,10 @@ public class xbp {
         
         System.out.println("BAPI_XBP_JOB_ADD_ABAP_STEP finished:");
         
-        JCoStructure returnStructure = xbp_job_add_step.getExportParameterList().getStructure("RETURN");
+        JCoStructure bapiret = xbp_job_add_step.getExportParameterList().getStructure("RETURN");
         
-        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
-            throw new RuntimeException(returnStructure.getString("MESSAGE"));
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
         }
         
         System.out.println(" StepNumber: " + xbp_job_add_step.getExportParameterList().getString("STEP_NUMBER"));
@@ -210,12 +273,105 @@ public class xbp {
         
         System.out.println("BAPI_XBP_JOB_START_IMMEDIATELY finished:");
         
-        JCoStructure returnStructure = xbp_job_start_immediately.getExportParameterList().getStructure("RETURN");
+        JCoStructure bapiret = xbp_job_start_immediately.getExportParameterList().getStructure("RETURN");
         
-        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
-            throw new RuntimeException(returnStructure.getString("MESSAGE"));
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
         }
         
+        System.out.println();
+    }
+    
+    public static void bapi_xbp_job_start_asap(JCoDestination destination, String jobname, String jobcount) throws JCoException {
+    	JCoFunction xbp_job_start_asap = destination.getRepository().getFunction("BAPI_XBP_JOB_START_ASAP");
+    	
+        if (xbp_job_start_asap == null)
+        	throw new RuntimeException("BAPI_XBP_JOB_START_ASAP not found in SAP.");
+        
+        xbp_job_start_asap.getImportParameterList().setValue("JOBNAME", jobname);
+        xbp_job_start_asap.getImportParameterList().setValue("JOBCOUNT", jobcount);
+        xbp_job_start_asap.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+//        xbp_job_start_immediately.getImportParameterList().setValue("TARGET_SERVER", "");
+//        xbp_job_start_immediately.getImportParameterList().setValue("TARGET_GROUP", "");
+        
+        xbp_job_start_asap.getExportParameterList().setActive("RETURN", true);
+        
+        try {
+        	xbp_job_start_asap.execute(destination);
+        }
+        catch (AbapException exception) {
+            System.out.println(exception.toString());
+            
+            return;
+        }
+        
+        System.out.println("BAPI_XBP_JOB_START_ASAP finished:");
+        
+        JCoStructure bapiret = xbp_job_start_asap.getExportParameterList().getStructure("RETURN");
+        
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
+        }
+        
+        System.out.println();
+    }
+    
+    public static void bapi_xbp_job_status_get(JCoDestination destination, String jobname, String jobcount) throws JCoException {
+    	JCoFunction xbp_job_status_get = destination.getRepository().getFunction("BAPI_XBP_JOB_STATUS_GET");
+    	
+        if (xbp_job_status_get == null)
+        	throw new RuntimeException("BAPI_XBP_JOB_STATUS_GET not found in SAP.");
+        
+        xbp_job_status_get.getImportParameterList().setValue("JOBNAME", jobname);
+        xbp_job_status_get.getImportParameterList().setValue("JOBCOUNT", jobcount);
+        xbp_job_status_get.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+        
+//        STATUS is the status of a job with the following possible values:
+//        'R' - active
+//        'I' - intercepted
+//        'Y' - ready
+//        'P' - scheduled
+//        'S' - released
+//        'A' - cancelled
+//        'F' - finished
+        xbp_job_status_get.getExportParameterList().setActive("STATUS", true);
+        xbp_job_status_get.getExportParameterList().setActive("RETURN", true);
+        
+//        HAS_CHILD Specifies whether a job is a child, a parent, both, or neither.
+//        'P' – job is parent/has children   
+//        'C' – job is child
+//        'B' – ('both') job is parent and child
+//        ' ' - (blank) job is neither parent nor child
+        xbp_job_status_get.getExportParameterList().setActive("HAS_CHILD", true);
+        
+        try {
+        	xbp_job_status_get.execute(destination);
+        }
+        catch (AbapException exception) {
+            System.out.println(exception.toString());
+            
+            return;
+        }
+        
+        System.out.println("BAPI_XBP_JOB_STATUS_GET finished:");
+        
+        JCoStructure bapiret = xbp_job_status_get.getExportParameterList().getStructure("RETURN");
+
+//    	System.out.println(bapiret.getString("TYPE") + "|" + bapiret.getString("ID")
+//    		+ "|" + bapiret.getString("NUMBER") + "|" + bapiret.getString("MESSAGE")
+//    		+ "|" + bapiret.getString("LOG_NO") + "|" + bapiret.getString("LOG_MSG_NO")
+//    		+ "|" + bapiret.getString("MESSAGE_V1") + "|" + bapiret.getString("MESSAGE_V2")
+//    		+ "|" + bapiret.getString("MESSAGE_V3") + "|" + bapiret.getString("MESSAGE_V4")
+//    		+ "|" + bapiret.getString("PARAMETER") + "|" + bapiret.getString("ROW")
+//    		+ "|" + bapiret.getString("FIELD") + "|" + bapiret.getString("SYSTEM")
+//    	);
+        
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
+        }
+        
+        System.out.println();
+        System.out.println("job " + jobname + " state: " + xbp_job_status_get.getExportParameterList().getString("STATUS") + " children: " + xbp_job_status_get.getExportParameterList().getString("HAS_CHILD"));
         System.out.println();
     }
     
@@ -242,10 +398,10 @@ public class xbp {
         
         System.out.println("BAPI_XBP_JOB_DELETE finished:");
         
-        JCoStructure returnStructure = xbp_job_delete.getExportParameterList().getStructure("RETURN");
+        JCoStructure bapiret = xbp_job_delete.getExportParameterList().getStructure("RETURN");
         
-        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
-            throw new RuntimeException(returnStructure.getString("MESSAGE"));
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
         }
         
         System.out.println();
@@ -260,7 +416,23 @@ public class xbp {
         JCoStructure job_select_param = xbp_job_select.getImportParameterList().getStructure("JOB_SELECT_PARAM");
         
         job_select_param.setValue("JOBNAME", jobname);
+//        job_select_param.setValue("JOBCOUNT", "");
+//        job_select_param.setValue("JOBGROUP", "");
         job_select_param.setValue("USERNAME", "*");
+//        job_select_param.setValue("FROM_DATE", "20180911");
+//        job_select_param.setValue("FROM_TIME", "");
+//        job_select_param.setValue("TO_DATE", "20180913");
+//        job_select_param.setValue("TO_TIME", "");
+//        job_select_param.setValue("NO_DATE", "");
+//        job_select_param.setValue("WITH_PRED", "");
+//        job_select_param.setValue("EVENTID", "");
+//        job_select_param.setValue("EVENTPARM", "");
+//        job_select_param.setValue("PRELIM", "X");
+//        job_select_param.setValue("SCHEDUL", "X");
+//        job_select_param.setValue("READY", "X");
+//        job_select_param.setValue("RUNNING", "X");
+//        job_select_param.setValue("FINISHED", "X");
+        job_select_param.setValue("ABORTED", "X");
         
         
         xbp_job_select.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
@@ -268,7 +440,11 @@ public class xbp {
 //        xbp_job_select.getImportParameterList().setValue("ABAPNAME", "");
 //        xbp_job_select.getImportParameterList().setValue("SUSP", "");
 //        xbp_job_select.getImportParameterList().setValue("SYSTEMID", "");
-//        xbp_job_select.getImportParameterList().setValue("SELECTION", "");
+        
+//        1. AL (default) returns all child jobs regardless what confirmation they have.
+//        2. NG returns only those child jobs that do NOT have general confirmation.
+//        3. NC returns only those child jobs that do NOT have any confirmation.
+//        xbp_job_select.getImportParameterList().setValue("SELECTION", "AL");
         
         xbp_job_select.getExportParameterList().setActive("RETURN", true);
         xbp_job_select.getExportParameterList().setActive("ERROR_CODE", true);
@@ -284,10 +460,20 @@ public class xbp {
         
         System.out.println("BAPI_XBP_JOB_SELECT finished:");
         
-        JCoStructure returnStructure = xbp_job_select.getExportParameterList().getStructure("RETURN");
+        JCoStructure bapiret = xbp_job_select.getExportParameterList().getStructure("RETURN");
         
-        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
-            throw new RuntimeException(returnStructure.getString("MESSAGE"));
+        // Meldungstyp: S Success, E Error, W Warning, I Info, A Abort
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+//        	System.out.println(bapiret.getString("TYPE") + "|" + bapiret.getString("ID")
+//	    		+ "|" + bapiret.getString("NUMBER") + "|" + bapiret.getString("MESSAGE")
+//	    		+ "|" + bapiret.getString("LOG_NO") + "|" + bapiret.getString("LOG_MSG_NO")
+//	    		+ "|" + bapiret.getString("MESSAGE_V1") + "|" + bapiret.getString("MESSAGE_V2")
+//	    		+ "|" + bapiret.getString("MESSAGE_V3") + "|" + bapiret.getString("MESSAGE_V4")
+//	    		+ "|" + bapiret.getString("PARAMETER") + "|" + bapiret.getString("ROW")
+//	    		+ "|" + bapiret.getString("FIELD") + "|" + bapiret.getString("SYSTEM")
+//        	);
+        	
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
         }
         
         
@@ -313,7 +499,8 @@ public class xbp {
         			+ " " + job_head.getString("STATUS") + " " + job_head.getString("SDLUNAME"));
         }
         
-        
+        System.out.println();
+        System.out.println("Jobs selected: " + job_head.getNumRows());
         System.out.println();
     }
     
@@ -347,10 +534,10 @@ public class xbp {
         
         System.out.println("BAPI_XBP_GET_INTERCEPTED_JOBS finished:");
         
-        JCoStructure returnStructure = xbp_get_intercepted_jobs.getExportParameterList().getStructure("RETURN");
+        JCoStructure bapiret = xbp_get_intercepted_jobs.getExportParameterList().getStructure("RETURN");
         
-        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
-            throw new RuntimeException(returnStructure.getString("MESSAGE"));
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
         }
         
         
@@ -413,10 +600,10 @@ public class xbp {
         
         System.out.println("BAPI_XBP_SPECIAL_CONFIRM_JOB finished:");
         
-        JCoStructure returnStructure = xbp_special_confirm_job.getExportParameterList().getStructure("RETURN");
+        JCoStructure bapiret = xbp_special_confirm_job.getExportParameterList().getStructure("RETURN");
         
-        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
-            throw new RuntimeException(returnStructure.getString("MESSAGE"));
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
         }
         
         System.out.println();
@@ -445,10 +632,10 @@ public class xbp {
         
         System.out.println("BAPI_XBP_EVENT_RAISE finished:");
         
-        JCoStructure returnStructure = xbp_event_raise.getExportParameterList().getStructure("RETURN");
+        JCoStructure bapiret = xbp_event_raise.getExportParameterList().getStructure("RETURN");
         
-        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
-            throw new RuntimeException(returnStructure.getString("MESSAGE"));
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
         }
         
         System.out.println();
@@ -461,8 +648,8 @@ public class xbp {
         	throw new RuntimeException("BAPI_XBP_BTC_EVTHISTORY_GET not found in SAP.");
         
         xbp_btc_evthistory_get.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
-//        xbp_btc_evthistory_get.getImportParameterList().setValue("FROM_TIMESTAMP_UTC", "");
-//        xbp_btc_evthistory_get.getImportParameterList().setValue("TO_TIMESTAMP_UTC", "");
+//        xbp_btc_evthistory_get.getImportParameterList().setValue("FROM_TIMESTAMP_UTC", "JJJJMMTThhmmss");
+//        xbp_btc_evthistory_get.getImportParameterList().setValue("TO_TIMESTAMP_UTC", "JJJJMMTThhmmss");
         xbp_btc_evthistory_get.getImportParameterList().setValue("EVENTIDS", id);
         xbp_btc_evthistory_get.getImportParameterList().setValue("SELECT_STATE", state);	// Select-Status A=all, N=new (default), C=confirmed
         xbp_btc_evthistory_get.getImportParameterList().setValue("ACTION", action);			// Operationen an Einträgen: C=confirmation (default), N=do nothing
@@ -482,10 +669,10 @@ public class xbp {
         
         System.out.println("BAPI_XBP_BTC_EVTHISTORY_GET finished:");
         
-        JCoStructure returnStructure = xbp_btc_evthistory_get.getExportParameterList().getStructure("RETURN");
+        JCoStructure bapiret = xbp_btc_evthistory_get.getExportParameterList().getStructure("RETURN");
         
-        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
-            throw new RuntimeException(returnStructure.getString("MESSAGE"));
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
         }
         
         
@@ -533,10 +720,52 @@ public class xbp {
         
         System.out.println("BAPI_XBP_BTC_EVTHIST_CONFIRM finished:");
         
-        JCoStructure returnStructure = xbp_btc_evthist_confirm.getExportParameterList().getStructure("RETURN");
+        JCoStructure bapiret = xbp_btc_evthist_confirm.getExportParameterList().getStructure("RETURN");
         
-        if (! (returnStructure.getString("TYPE").equals("") || returnStructure.getString("TYPE").equals("S") || returnStructure.getString("TYPE").equals("W")) ) {
-            throw new RuntimeException(returnStructure.getString("MESSAGE"));
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
+        }
+        
+        System.out.println();
+    }
+    
+    public static void bapi_xbp_get_curr_bp_resources(JCoDestination destination) throws JCoException {
+    	JCoFunction xbp_get_curr_bp_resources = destination.getRepository().getFunction("BAPI_XBP_GET_CURR_BP_RESOURCES");
+    	
+        if (xbp_get_curr_bp_resources == null)
+        	throw new RuntimeException("BAPI_XBP_GET_CURR_BP_RESOURCES not found in SAP.");
+        
+        xbp_get_curr_bp_resources.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+        
+        xbp_get_curr_bp_resources.getExportParameterList().setActive("RETURN", true);
+        
+        try {
+        	xbp_get_curr_bp_resources.execute(destination);
+        }
+        catch (AbapException exception) {
+            System.out.println(exception.toString());
+            
+            return;
+        }
+        
+        System.out.println("BAPI_XBP_GET_CURR_BP_RESOURCES finished:");
+        
+        JCoStructure bapiret = xbp_get_curr_bp_resources.getExportParameterList().getStructure("RETURN");
+        
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
+        }
+        
+        System.out.println();
+
+        JCoTable resource_info = xbp_get_curr_bp_resources.getTableParameterList().getTable("RESOURCE_INFO");
+        
+        for (int i = 0; i < resource_info.getNumRows(); i++) {
+        	resource_info.setRow(i);
+        	
+        	System.out.println(resource_info.getString("SERVER") + " " + resource_info.getString("HOST")
+        			+ " " + resource_info.getString("BTCWPTOTAL") + " " + resource_info.getString("BTCWPFREE")
+        			+ " " + resource_info.getString("BTCWPCLSSA"));
         }
         
         System.out.println();

@@ -27,13 +27,16 @@ import osgi.sap.service.provider.bapi.xmi;
 	property = {
 		CommandProcessor.COMMAND_SCOPE + ":String=sap",
 		CommandProcessor.COMMAND_FUNCTION + ":String=info",
+		CommandProcessor.COMMAND_FUNCTION + ":String=variants",
 		CommandProcessor.COMMAND_FUNCTION + ":String=create",
 		CommandProcessor.COMMAND_FUNCTION + ":String=select",
+		CommandProcessor.COMMAND_FUNCTION + ":String=status",
 		CommandProcessor.COMMAND_FUNCTION + ":String=intercepted",
 		CommandProcessor.COMMAND_FUNCTION + ":String=confirm",
 		CommandProcessor.COMMAND_FUNCTION + ":String=raise",
 		CommandProcessor.COMMAND_FUNCTION + ":String=events",
-		CommandProcessor.COMMAND_FUNCTION + ":String=cevents"
+		CommandProcessor.COMMAND_FUNCTION + ":String=cevents",
+		CommandProcessor.COMMAND_FUNCTION + ":String=resources"
 	},
 	service = SAPCommands.class
 )
@@ -51,9 +54,23 @@ public class SAPCommands {
 	private final static String SAPPassword = "uc4amh15";
 	private final static String SAPLanguage = "de";
 	
+//	private static JCoDestination destination;
+	
 	@Activate
-    void activate() {
+    void activate() throws JCoException {
 //        System.out.println("sap commands activated");
+//		
+//        Properties connectProperties = new Properties();
+//        connectProperties.setProperty(DestinationDataProvider.JCO_ASHOST, SAPApplicationServer);
+//        connectProperties.setProperty(DestinationDataProvider.JCO_SYSNR,  SAPSystemNumber);
+//        connectProperties.setProperty(DestinationDataProvider.JCO_CLIENT, SAPClient);
+//        connectProperties.setProperty(DestinationDataProvider.JCO_USER,   SAPUser);
+//        connectProperties.setProperty(DestinationDataProvider.JCO_PASSWD, SAPPassword);
+//        connectProperties.setProperty(DestinationDataProvider.JCO_LANG,   SAPLanguage);
+//        
+//        createDestinationDataFile("RK1", connectProperties);
+//        
+//    	destination = JCoDestinationManager.getDestination("RK1");
     }
 	
 	@Deactivate
@@ -116,6 +133,31 @@ public class SAPCommands {
         JCoContext.end(destination);
     }
     
+    @Descriptor("list variants of report")
+    public void variants(@Descriptor("Report") String report) throws IOException, JCoException {
+        Properties connectProperties = new Properties();
+        connectProperties.setProperty(DestinationDataProvider.JCO_ASHOST, SAPApplicationServer);
+        connectProperties.setProperty(DestinationDataProvider.JCO_SYSNR,  SAPSystemNumber);
+        connectProperties.setProperty(DestinationDataProvider.JCO_CLIENT, SAPClient);
+        connectProperties.setProperty(DestinationDataProvider.JCO_USER,   SAPUser);
+        connectProperties.setProperty(DestinationDataProvider.JCO_PASSWD, SAPPassword);
+        connectProperties.setProperty(DestinationDataProvider.JCO_LANG,   SAPLanguage);
+        
+        createDestinationDataFile("RK1", connectProperties);
+        
+    	JCoDestination destination = JCoDestinationManager.getDestination("RK1");
+    	
+        JCoContext.begin(destination);
+        
+        xmi.bapi_xmi_logon(destination);
+        
+        xbp.bapi_xbp_variant_info_get(destination, report);
+        
+        xmi.bapi_xmi_logoff(destination);
+        
+        JCoContext.end(destination);
+    }
+    
     @Descriptor("create abap job")
     public void create(@Descriptor("Jobname") String jobname, @Descriptor("Jobklasse") String jobclass) throws IOException, JCoException {
         Properties connectProperties = new Properties();
@@ -142,7 +184,7 @@ public class SAPCommands {
         
         xbp.bapi_xbp_job_close(destination, jobname, jobcount);
         
-        xbp.bapi_xbp_job_start_immediately(destination, jobname, jobcount);
+        xbp.bapi_xbp_job_start_asap(destination, jobname, jobcount);
 
 //        bapi_xbp_job_delete(destination, jobname, jobcount);
         
@@ -152,7 +194,7 @@ public class SAPCommands {
     }
     
     @Descriptor("select abap job")
-    public void select(@Descriptor("Report") String report) throws IOException, JCoException {
+    public void select(@Descriptor("Jobname") String jobname) throws IOException, JCoException {
         Properties connectProperties = new Properties();
         connectProperties.setProperty(DestinationDataProvider.JCO_ASHOST, SAPApplicationServer);
         connectProperties.setProperty(DestinationDataProvider.JCO_SYSNR,  SAPSystemNumber);
@@ -169,7 +211,32 @@ public class SAPCommands {
         
         xmi.bapi_xmi_logon(destination);
         
-        xbp.bapi_xbp_job_select(destination, report);
+        xbp.bapi_xbp_job_select(destination, jobname);
+
+        xmi.bapi_xmi_logoff(destination);
+        
+        JCoContext.end(destination);
+    }
+    
+    @Descriptor("get job status")
+    public void status(@Descriptor("Jobname") String jobname, @Descriptor("Jobcount") String jobcount) throws IOException, JCoException {
+        Properties connectProperties = new Properties();
+        connectProperties.setProperty(DestinationDataProvider.JCO_ASHOST, SAPApplicationServer);
+        connectProperties.setProperty(DestinationDataProvider.JCO_SYSNR,  SAPSystemNumber);
+        connectProperties.setProperty(DestinationDataProvider.JCO_CLIENT, SAPClient);
+        connectProperties.setProperty(DestinationDataProvider.JCO_USER,   SAPUser);
+        connectProperties.setProperty(DestinationDataProvider.JCO_PASSWD, SAPPassword);
+        connectProperties.setProperty(DestinationDataProvider.JCO_LANG,   SAPLanguage);
+        
+        createDestinationDataFile("RK1", connectProperties);
+        
+    	JCoDestination destination = JCoDestinationManager.getDestination("RK1");
+    	
+        JCoContext.begin(destination);
+        
+        xmi.bapi_xmi_logon(destination);
+        
+        xbp.bapi_xbp_job_status_get(destination, jobname, jobcount);
 
         xmi.bapi_xmi_logoff(destination);
         
@@ -203,6 +270,8 @@ public class SAPCommands {
     
     @Descriptor("confirm special abap jobs")
     public void confirm(@Descriptor("Jobname") String jobname, @Descriptor("Jobcount") String jobcount) throws IOException, JCoException {
+    	jobcount = String.format("%08d", Integer.parseInt(jobcount));
+    	
         Properties connectProperties = new Properties();
         connectProperties.setProperty(DestinationDataProvider.JCO_ASHOST, SAPApplicationServer);
         connectProperties.setProperty(DestinationDataProvider.JCO_SYSNR,  SAPSystemNumber);
@@ -250,12 +319,12 @@ public class SAPCommands {
         
         JCoContext.end(destination);
     }
-        
+    
     @Descriptor("select events")
-    public void events(@Parameter(names={"-s","--state"}, absentValue="N") @Descriptor("State") String state, @Parameter(names={"-c","--confirm"}, absentValue="N", presentValue="C") @Descriptor("Confirm") String action, @Descriptor("EventID") String id) throws IOException, JCoException {
-    	System.out.println("state: " + state);
-    	System.out.println("action: " + action);
-    	System.out.println("event: " + id);
+    public void events(@Parameter(names={"-s","--state"}, absentValue="N") @Descriptor("State") String state, @Parameter(names={"-c","--confirm"}, absentValue="N", presentValue="C") @Descriptor("Confirm") String confirm, @Descriptor("EventID") String id) throws IOException, JCoException {
+//    	System.out.println("state: " + state);
+//    	System.out.println("confirm: " + confirm);
+//    	System.out.println("event: " + id);
     	
         Properties connectProperties = new Properties();
         connectProperties.setProperty(DestinationDataProvider.JCO_ASHOST, SAPApplicationServer);
@@ -273,13 +342,13 @@ public class SAPCommands {
         
         xmi.bapi_xmi_logon(destination);
         
-        xbp.bapi_xbp_btc_evthistory_get(destination, id, state, action);
+        xbp.bapi_xbp_btc_evthistory_get(destination, id, state, confirm);
         
         xmi.bapi_xmi_logoff(destination);
         
         JCoContext.end(destination);
     }
-        
+    
     @Descriptor("confirm events")
     public void cevents(@Descriptor("GUID") String guid) throws IOException, JCoException {
         Properties connectProperties = new Properties();
@@ -304,7 +373,32 @@ public class SAPCommands {
         
         JCoContext.end(destination);
     }
+    
+    @Descriptor("get batch resources")
+    public void resources() throws IOException, JCoException {
+        Properties connectProperties = new Properties();
+        connectProperties.setProperty(DestinationDataProvider.JCO_ASHOST, SAPApplicationServer);
+        connectProperties.setProperty(DestinationDataProvider.JCO_SYSNR,  SAPSystemNumber);
+        connectProperties.setProperty(DestinationDataProvider.JCO_CLIENT, SAPClient);
+        connectProperties.setProperty(DestinationDataProvider.JCO_USER,   SAPUser);
+        connectProperties.setProperty(DestinationDataProvider.JCO_PASSWD, SAPPassword);
+        connectProperties.setProperty(DestinationDataProvider.JCO_LANG,   SAPLanguage);
         
+        createDestinationDataFile("RK1", connectProperties);
+        
+    	JCoDestination destination = JCoDestinationManager.getDestination("RK1");
+    	
+        JCoContext.begin(destination);
+        
+        xmi.bapi_xmi_logon(destination);
+        
+        xbp.bapi_xbp_get_curr_bp_resources(destination);
+        
+        xmi.bapi_xmi_logoff(destination);
+        
+        JCoContext.end(destination);
+    }
+    
     static void createDestinationDataFile(String destinationName, Properties connectProperties) {
         File destCfg = new File(destinationName+".jcoDestination");
         
