@@ -729,6 +729,51 @@ public class xbp {
         System.out.println();
     }
     
+    public static void bapi_xbp_btc_statistic_get(JCoDestination destination) throws JCoException {
+    	JCoFunction xbp_get_curr_bp_resources = destination.getRepository().getFunction("BAPI_XBP_BTC_STATISTIC_GET");
+    	
+        if (xbp_get_curr_bp_resources == null)
+        	throw new RuntimeException("BAPI_XBP_BTC_STATISTIC_GET not found in SAP.");
+        
+        xbp_get_curr_bp_resources.getImportParameterList().setValue("I_EXTERNAL_USER_NAME", "AUDIT");
+        xbp_get_curr_bp_resources.getImportParameterList().setValue("I_T_JOBLIST", "AUDIT");
+        
+        xbp_get_curr_bp_resources.getExportParameterList().setActive("LOGHANDLE", true);
+        xbp_get_curr_bp_resources.getExportParameterList().setActive("T_STATDATA", true);
+        xbp_get_curr_bp_resources.getExportParameterList().setActive("RETURN", true);
+        
+        try {
+        	xbp_get_curr_bp_resources.execute(destination);
+        }
+        catch (AbapException exception) {
+            System.out.println(exception.toString());
+            
+            return;
+        }
+        
+        System.out.println("BAPI_XBP_BTC_STATISTIC_GET finished:");
+        
+        JCoStructure bapiret = xbp_get_curr_bp_resources.getExportParameterList().getStructure("RETURN");
+        
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
+        }
+        
+        System.out.println();
+
+        JCoTable resource_info = xbp_get_curr_bp_resources.getTableParameterList().getTable("RESOURCE_INFO");
+        
+        for (int i = 0; i < resource_info.getNumRows(); i++) {
+        	resource_info.setRow(i);
+        	
+        	System.out.println(resource_info.getString("SERVER") + " " + resource_info.getString("HOST")
+        			+ " " + resource_info.getString("BTCWPTOTAL") + " " + resource_info.getString("BTCWPFREE")
+        			+ " " + resource_info.getString("BTCWPCLSSA"));
+        }
+        
+        System.out.println();
+    }
+    
     public static void bapi_xbp_get_curr_bp_resources(JCoDestination destination) throws JCoException {
     	JCoFunction xbp_get_curr_bp_resources = destination.getRepository().getFunction("BAPI_XBP_GET_CURR_BP_RESOURCES");
     	
