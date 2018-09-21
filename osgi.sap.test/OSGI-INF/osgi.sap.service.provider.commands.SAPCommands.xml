@@ -3,7 +3,9 @@
    <property name="osgi.command.scope" type="String" value="sap"/>
    <property name="osgi.command.function" type="String">info
 variants
+search
 create
+joblog
 select
 status
 intercepted
@@ -12,6 +14,8 @@ raise
 events
 cevents
 resources
+statistics
+structure
    </property>
    <service>
       <provide interface="osgi.sap.service.provider.commands.SAPCommands"/>

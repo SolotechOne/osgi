@@ -1,8 +1,11 @@
 package osgi.sap.service.provider.bapi;
 
+import java.util.Iterator;
+
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoException;
+import com.sap.conn.jco.JCoField;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoStructure;
 import com.sap.conn.jco.JCoTable;
@@ -133,6 +136,51 @@ public class xbp {
         System.out.println();
     }
     
+    public static void bapi_xbp_report_search(JCoDestination destination, String report) throws JCoException {
+    	JCoFunction report_search = destination.getRepository().getFunction("BAPI_XBP_REPORT_SEARCH");
+    	
+        if (report_search == null)
+        	throw new RuntimeException("BAPI_XBP_REPORT_SEARCH not found in SAP.");
+        
+        report_search.getImportParameterList().setValue("REPORT", report);
+        report_search.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+//        xbp_varinfo.getImportParameterList().setValue("COUNT", "");
+//        xbp_varinfo.getImportParameterList().setValue("RESET", "");
+        
+        try {
+        	report_search.execute(destination);
+        }
+        catch (AbapException exception) {
+            System.out.println(exception.toString());
+            
+            return;
+        }
+        
+        System.out.println("BAPI_XBP_REPORT_SEARCH finished:");
+        
+        JCoStructure bapiret = report_search.getExportParameterList().getStructure("RETURN");
+        
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
+        }
+        
+        System.out.println();
+        
+        
+        JCoTable reports = report_search.getTableParameterList().getTable("REPORTS");
+        
+        
+        for (int i = 0; i < reports.getNumRows(); i++) {
+            reports.setRow(i);
+            
+           	System.out.printf("%s %s %s\n", reports.getString("NAME"), reports.getString("SPRSL"), reports.getString("TEXT"));
+        }
+        
+        System.out.println();
+        System.out.println("Reports found: " + reports.getNumRows());
+        System.out.println();
+    }
+    
     public static String bapi_xbp_job_open(JCoDestination destination, String jobname, String jobclass) throws JCoException {
     	JCoFunction xbp_job_open = destination.getRepository().getFunction("BAPI_XBP_JOB_OPEN");
     	
@@ -248,6 +296,95 @@ public class xbp {
         System.out.println();
     }
     
+    public static void bapi_xbp_job_header_modify(JCoDestination destination, String jobname, String jobcount) throws JCoException {
+    	JCoFunction xbp_job_header_modify = destination.getRepository().getFunction("BAPI_XBP_JOB_HEADER_MODIFY");
+    	
+        if (xbp_job_header_modify == null)
+        	throw new RuntimeException("BAPI_XBP_JOB_HEADER_MODIFY not found in SAP.");
+        
+        JCoStructure job_header = xbp_job_header_modify.getImportParameterList().getStructure("JOB_HEADER");
+        
+//        job_header.setValue("SDLSTRTDT", "20180922");
+//        job_header.setValue("SDLSTRTTM", "100000");
+//        job_header.setValue("LASTSTRTDT", "");
+//        job_header.setValue("LASTSTRTTM", "");
+//        job_header.setValue("PREDJOB", "");
+//        job_header.setValue("PREDJOBCNT", "");
+//        job_header.setValue("CHECKSTAT", "");
+        job_header.setValue("EVENTID", "SAP_ARCHIVING_DELETE_FINISHED");
+//        job_header.setValue("EVENTPARM", "");
+//        job_header.setValue("PRDMINS", "");
+//        job_header.setValue("PRDHOURS", "");
+//        job_header.setValue("PRDDAYS", "");
+//        job_header.setValue("PRDWEEKS", "");
+//        job_header.setValue("PRDMONTHS", "");
+//        job_header.setValue("PERIODIC", "");
+//        job_header.setValue("CALENDARID", "");
+//        job_header.setValue("IMSTRTPOS", "");
+//        job_header.setValue("PRDBEHAV", "");
+//        job_header.setValue("WDAYNO", "");
+//        job_header.setValue("WDAYCDIR", "");
+//        job_header.setValue("NOTBEFORE", "");
+//        job_header.setValue("OPMODE", "");
+//        job_header.setValue("LOGSYS", "");
+//        job_header.setValue("OBJTYPE", "");
+//        job_header.setValue("OBJKEY", "");
+//        job_header.setValue("DESCRIBE", "");
+//        job_header.setValue("TSERVER", "");
+//        job_header.setValue("THOST", "");
+//        job_header.setValue("TSRVGRP", "");
+        
+        
+        JCoStructure mask = xbp_job_header_modify.getImportParameterList().getStructure("MASK");
+        
+        mask.setValue("STARTCOND", "X");
+//        mask.setValue("THOST", "X");
+//        mask.setValue("TSERVER", "X");
+//        mask.setValue("TSRVGRP", "X");
+//        mask.setValue("RECIPLNT", "X");
+        
+        
+        xbp_job_header_modify.getImportParameterList().setValue("JOBCOUNT", jobcount);
+        xbp_job_header_modify.getImportParameterList().setValue("JOBNAME", jobname);
+        xbp_job_header_modify.getImportParameterList().setValue("JOB_HEADER", job_header);
+        xbp_job_header_modify.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+        xbp_job_header_modify.getImportParameterList().setValue("DONT_RELEASE", "X");
+        xbp_job_header_modify.getImportParameterList().setValue("MASK", mask);
+//        xbp_job_header_modify.getImportParameterList().setValue("JOBCLASS", "");
+//        xbp_job_header_modify.getImportParameterList().setValue("RECIPIENT", "");
+        
+        xbp_job_header_modify.getExportParameterList().setActive("RETURN", true);
+        
+        try {
+        	xbp_job_header_modify.execute(destination);
+        }
+        catch (AbapException exception) {
+            System.out.println(exception.toString());
+            
+            return;
+        }
+        
+        System.out.println("BAPI_XBP_JOB_HEADER_MODIFY finished:");
+        
+        JCoStructure bapiret = xbp_job_header_modify.getExportParameterList().getStructure("RETURN");
+        
+    	System.out.println(bapiret.getString("TYPE") + "|" + bapiret.getString("ID")
+    		+ "|" + bapiret.getString("NUMBER") + "|" + bapiret.getString("MESSAGE")
+    		+ "|" + bapiret.getString("LOG_NO") + "|" + bapiret.getString("LOG_MSG_NO")
+    		+ "|" + bapiret.getString("MESSAGE_V1") + "|" + bapiret.getString("MESSAGE_V2")
+    		+ "|" + bapiret.getString("MESSAGE_V3") + "|" + bapiret.getString("MESSAGE_V4")
+    		+ "|" + bapiret.getString("PARAMETER") + "|" + bapiret.getString("ROW")
+    		+ "|" + bapiret.getString("FIELD") + "|" + bapiret.getString("SYSTEM")
+    	);
+    	
+    	// Meldungstyp: S Success, E Error, W Warning, I Info, A Abort
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
+        }
+        
+        System.out.println();
+    }
+    
     public static void bapi_xbp_job_start_immediately(JCoDestination destination, String jobname, String jobcount) throws JCoException {
     	JCoFunction xbp_job_start_immediately = destination.getRepository().getFunction("BAPI_XBP_JOB_START_IMMEDIATELY");
     	
@@ -334,6 +471,7 @@ public class xbp {
 //        'S' - released
 //        'A' - cancelled
 //        'F' - finished
+//        'X' - actual status cannot be determined
         xbp_job_status_get.getExportParameterList().setActive("STATUS", true);
         xbp_job_status_get.getExportParameterList().setActive("RETURN", true);
         
@@ -397,6 +535,38 @@ public class xbp {
         }
         
         System.out.println("BAPI_XBP_JOB_DELETE finished:");
+        
+        JCoStructure bapiret = xbp_job_delete.getExportParameterList().getStructure("RETURN");
+        
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
+        }
+        
+        System.out.println();
+    }
+    
+    public static void bapi_xbp_deschedule_job(JCoDestination destination, String jobname, String jobcount) throws JCoException {
+    	JCoFunction xbp_job_delete = destination.getRepository().getFunction("BAPI_XBP_DESCHEDULE_JOB");
+    	
+        if (xbp_job_delete == null)
+        	throw new RuntimeException("BAPI_XBP_JOB_BAPI_XBP_DESCHEDULE_JOBDELETE not found in SAP.");
+        
+        xbp_job_delete.getImportParameterList().setValue("JOBNAME", jobname);
+        xbp_job_delete.getImportParameterList().setValue("JOBCOUNT", jobcount);
+        xbp_job_delete.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+        
+        xbp_job_delete.getExportParameterList().setActive("RETURN", true);
+        
+        try {
+        	xbp_job_delete.execute(destination);
+        }
+        catch (AbapException exception) {
+            System.out.println(exception.toString());
+            
+            return;
+        }
+        
+        System.out.println("BAPI_XBP_DESCHEDULE_JOB finished:");
         
         JCoStructure bapiret = xbp_job_delete.getExportParameterList().getStructure("RETURN");
         
@@ -504,6 +674,60 @@ public class xbp {
         System.out.println();
     }
     
+    public static void bapi_xbp_job_joblog_read(JCoDestination destination, String jobname, String jobcount, String direction, String lines) throws JCoException {
+    	JCoFunction xbp_job_joblog_read = destination.getRepository().getFunction("BAPI_XBP_JOB_JOBLOG_READ");
+    	
+        if (xbp_job_joblog_read == null)
+        	throw new RuntimeException("BAPI_XBP_JOB_JOBLOG_READ not found in SAP.");
+        
+        xbp_job_joblog_read.getImportParameterList().setValue("JOBNAME", jobname);
+        xbp_job_joblog_read.getImportParameterList().setValue("JOBCOUNT", jobcount);
+        xbp_job_joblog_read.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+        xbp_job_joblog_read.getImportParameterList().setValue("PROT_NEW", "X");
+        xbp_job_joblog_read.getImportParameterList().setValue("LINES", lines);
+        xbp_job_joblog_read.getImportParameterList().setValue("DIRECTION", direction);	// Leserichtung (B = vom Anfang, E = vom Ende) 
+        
+        xbp_job_joblog_read.getExportParameterList().setActive("RETURN", true);
+        
+        try {
+        	xbp_job_joblog_read.execute(destination);
+        }
+        catch (AbapException exception) {
+            System.out.println(exception.toString());
+            
+            return;
+        }
+        
+        System.out.println("BAPI_XBP_JOB_JOBLOG_READ finished:");
+        
+        JCoStructure bapiret = xbp_job_joblog_read.getExportParameterList().getStructure("RETURN");
+        
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
+        }
+        
+        System.out.println();
+        
+        
+        JCoTable job_protocol = xbp_job_joblog_read.getTableParameterList().getTable("JOB_PROTOCOL_NEW");
+        
+        for (int i = 0; i < job_protocol.getNumRows(); i++) {
+            job_protocol.setRow(i);
+            
+           	System.out.println(job_protocol.getString("ENTERTIME") + " " + job_protocol.getString("ENTERDATE")
+   				+ " " + job_protocol.getString("MSGID") + " " + job_protocol.getString("MSGNO")
+   				+ " " + job_protocol.getString("MSGTYPE") + " " + job_protocol.getString("TEXT")
+   				+ " " + job_protocol.getString("RABAXKEY") + " " + job_protocol.getString("RABAXKEYLN")
+   				+ " " + job_protocol.getString("MSGV1") + " " + job_protocol.getString("MSGV2")
+   				+ " " + job_protocol.getString("MSGV3") + " " + job_protocol.getString("MSGV4")
+   				+ " " + job_protocol.getString("PROGRAM") + " " + job_protocol.getString("PFKEY")
+   				+ " " + job_protocol.getString("DYNPRO"));
+        }
+        
+        
+        System.out.println();
+    }
+    
     public static void bapi_xbp_get_intercepted_jobs(JCoDestination destination) throws JCoException {
     	JCoFunction xbp_get_intercepted_jobs = destination.getRepository().getFunction("BAPI_XBP_GET_INTERCEPTED_JOBS");
     	
@@ -512,10 +736,10 @@ public class xbp {
         
         xbp_get_intercepted_jobs.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
         
-//        1. ‘AL’ (default) – return all intercepted jobs regardless what confirmation they have.
-//        2. ‘NG’ – return only those intercepted jobs that do NOT have general confirmation.
-//        3. ‘NS’ – return only those intercepted jobs that were NOT confirmed as intercepted.
-//        4. ‘NC’ – return only those intercepted jobs that do NOT have any confirmation.
+//        1. 'AL' (default) – return all intercepted jobs regardless what confirmation they have.
+//        2. 'NG' – return only those intercepted jobs that do NOT have general confirmation.
+//        3. 'NS' – return only those intercepted jobs that were NOT confirmed as intercepted.
+//        4. 'NC' – return only those intercepted jobs that do NOT have any confirmation.
         xbp_get_intercepted_jobs.getImportParameterList().setValue("SELECTION", "NS");
         
 //        xbp_get_intercepted_jobs.getImportParameterList().setValue("CLIENT", "");
@@ -729,21 +953,29 @@ public class xbp {
         System.out.println();
     }
     
-    public static void bapi_xbp_btc_statistic_get(JCoDestination destination) throws JCoException {
-    	JCoFunction xbp_get_curr_bp_resources = destination.getRepository().getFunction("BAPI_XBP_BTC_STATISTIC_GET");
+    public static void bapi_xbp_btc_statistic_get(JCoDestination destination, String jobname, String jobcount) throws JCoException {
+    	JCoFunction xbp_btc_statistic_get = destination.getRepository().getFunction("BAPI_XBP_BTC_STATISTIC_GET");
     	
-        if (xbp_get_curr_bp_resources == null)
+        if (xbp_btc_statistic_get == null)
         	throw new RuntimeException("BAPI_XBP_BTC_STATISTIC_GET not found in SAP.");
         
-        xbp_get_curr_bp_resources.getImportParameterList().setValue("I_EXTERNAL_USER_NAME", "AUDIT");
-        xbp_get_curr_bp_resources.getImportParameterList().setValue("I_T_JOBLIST", "AUDIT");
+        JCoTable joblist = xbp_btc_statistic_get.getImportParameterList().getTable("I_T_JOBLIST");
+
+        joblist.appendRow();
+
+        joblist.setValue("JOBNAME", jobname);
+        joblist.setValue("JOBCOUNT", jobcount);
+
         
-        xbp_get_curr_bp_resources.getExportParameterList().setActive("LOGHANDLE", true);
-        xbp_get_curr_bp_resources.getExportParameterList().setActive("T_STATDATA", true);
-        xbp_get_curr_bp_resources.getExportParameterList().setActive("RETURN", true);
+        xbp_btc_statistic_get.getImportParameterList().setValue("I_EXTERNAL_USER_NAME", "AUDIT");
+        xbp_btc_statistic_get.getImportParameterList().setValue("I_T_JOBLIST", joblist);
+        
+        xbp_btc_statistic_get.getExportParameterList().setActive("LOGHANDLE", true);
+        xbp_btc_statistic_get.getExportParameterList().setActive("T_STATDATA", true);
+        xbp_btc_statistic_get.getExportParameterList().setActive("RETURN", true);
         
         try {
-        	xbp_get_curr_bp_resources.execute(destination);
+        	xbp_btc_statistic_get.execute(destination);
         }
         catch (AbapException exception) {
             System.out.println(exception.toString());
@@ -753,25 +985,148 @@ public class xbp {
         
         System.out.println("BAPI_XBP_BTC_STATISTIC_GET finished:");
         
-        JCoStructure bapiret = xbp_get_curr_bp_resources.getExportParameterList().getStructure("RETURN");
+        JCoStructure bapiret = xbp_btc_statistic_get.getExportParameterList().getStructure("RETURN");
         
         if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
-            throw new RuntimeException(bapiret.getString("MESSAGE"));
-        }
-        
-        System.out.println();
+        	System.out.println(bapiret.getString("TYPE") + "|" + bapiret.getString("ID")
+	        	+ "|" + bapiret.getString("NUMBER") + "|" + bapiret.getString("MESSAGE")
+	        	+ "|" + bapiret.getString("LOG_NO") + "|" + bapiret.getString("LOG_MSG_NO")
+	        	+ "|" + bapiret.getString("MESSAGE_V1") + "|" + bapiret.getString("MESSAGE_V2")
+	        	+ "|" + bapiret.getString("MESSAGE_V3") + "|" + bapiret.getString("MESSAGE_V4")
+	        	+ "|" + bapiret.getString("PARAMETER") + "|" + bapiret.getString("ROW")
+	        	+ "|" + bapiret.getString("FIELD") + "|" + bapiret.getString("SYSTEM")
+   			);
 
-        JCoTable resource_info = xbp_get_curr_bp_resources.getTableParameterList().getTable("RESOURCE_INFO");
-        
-        for (int i = 0; i < resource_info.getNumRows(); i++) {
-        	resource_info.setRow(i);
-        	
-        	System.out.println(resource_info.getString("SERVER") + " " + resource_info.getString("HOST")
-        			+ " " + resource_info.getString("BTCWPTOTAL") + " " + resource_info.getString("BTCWPFREE")
-        			+ " " + resource_info.getString("BTCWPCLSSA"));
+        	throw new RuntimeException(bapiret.getString("MESSAGE"));
         }
         
+        
+        JCoTable statistic_details = xbp_btc_statistic_get.getExportParameterList().getTable("T_STATDATA");
+        
+        table(statistic_details);
+        
+        
         System.out.println();
+    }
+    
+    public static void bapi_template(JCoDestination destination, String bapi) throws JCoException {
+    	JCoFunction function = destination.getRepository().getFunction(bapi);
+    	
+        if (function == null)
+        	throw new RuntimeException(bapi + " not found in SAP.");
+        
+        System.out.println("importing");
+        System.out.println();
+        
+        for ( Iterator<JCoField> iterator = function.getImportParameterList().iterator(); iterator.hasNext(); ) {
+        	JCoField field = iterator.next();
+
+        	System.out.println( field.getName() + " " + field.getTypeAsString() + " (" + field.getType() + ")");
+        	
+        	switch (field.getType()) {
+        	case 0:
+        		break;
+        	case 99:
+        		JCoTable table = field.getTable();
+        		
+                for ( Iterator<JCoField> t_iterator = table.iterator(); t_iterator.hasNext(); )  {
+                	JCoField t_field = t_iterator.next();
+
+                	System.out.println( "  " + t_field.getName() + " " + t_field.getTypeAsString() + " (" + t_field.getType() + ")");
+                }
+                	
+        		break;
+        	default:
+        		break;
+        	}
+        	
+        }
+
+        
+        System.out.println();
+        System.out.println("exporting");
+        System.out.println();
+        
+        for ( Iterator<JCoField> exp_iterator = function.getExportParameterList().iterator(); exp_iterator.hasNext(); ) {
+        	JCoField exp_field = exp_iterator.next();
+
+        	System.out.println( exp_field.getName() + " " + exp_field.getTypeAsString() + " (" + exp_field.getType() + ")");
+        	
+//        	switch (exp_field.getType()) {
+//        	case 0:
+//        		break;
+//        	case 99:
+//        		JCoTable table = exp_field.getTable();
+//        		
+//                table(table);
+//                
+//        		break;
+//        	default:
+//        		break;
+//        	}
+        	
+        }
+
+        
+//        System.out.println("vor");
+//        JCoTable joblist = bapi_function.getTableParameterList().getTable("I_T_JOBLIST");
+//        System.out.println("nach");
+
+        
+//        joblist.appendRow();
+//        joblist.setValue("JOBNAME", jobname);
+//
+//        
+//        bapi_function.getImportParameterList().setValue("I_EXTERNAL_USER_NAME", "AUDIT");
+//        bapi_function.getImportParameterList().setValue("I_T_JOBLIST", joblist);
+//        
+//        bapi_function.getExportParameterList().setActive("LOGHANDLE", true);
+//        bapi_function.getExportParameterList().setActive("T_STATDATA", true);
+//        bapi_function.getExportParameterList().setActive("RETURN", true);
+//        
+//        try {
+//        	bapi_function.execute(destination);
+//        }
+//        catch (AbapException exception) {
+//            System.out.println(exception.toString());
+//            
+//            return;
+//        }
+//        
+//        System.out.println("BAPI_XBP_BTC_STATISTIC_GET finished:");
+//        
+//        JCoStructure bapiret = bapi_function.getExportParameterList().getStructure("RETURN");
+//        
+//        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+//            throw new RuntimeException(bapiret.getString("MESSAGE"));
+//        }
+        
+        System.out.println();
+    }
+    
+    private static void table(JCoTable table) {
+    	System.out.println("structure of table " + table.getMetaData().getName());
+    	
+        for ( Iterator<JCoField> t_iterator = table.iterator(); t_iterator.hasNext(); )  {
+        	JCoField t_field = t_iterator.next();
+        	
+        	System.out.println( "  " + t_field.getName() + " " + t_field.getTypeAsString() + " (" + t_field.getType() + ")");
+        	
+        	switch (t_field.getType()) {
+//        	case 0:
+//        		System.out.println( t_field.getString() );
+//        		
+//        		break;
+        	case 99:
+        		JCoTable t_table = t_field.getTable();
+        		
+                table(t_table);
+                
+        		break;
+        	default:
+        		break;
+        	}
+        }
     }
     
     public static void bapi_xbp_get_curr_bp_resources(JCoDestination destination) throws JCoException {
