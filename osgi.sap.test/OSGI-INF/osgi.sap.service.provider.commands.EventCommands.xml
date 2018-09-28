@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" enabled="true" name="osgi.sap.service.provider.commands.EventCommands">
+   <property name="osgi.command.scope" type="String" value="event"/>
+   <property name="osgi.command.function" type="String">raise
+events
+confirm
+defined
+   </property>
+   <service>
+      <provide interface="osgi.sap.service.provider.commands.EventCommands"/>
+   </service>
+   <implementation class="osgi.sap.service.provider.commands.EventCommands"/>
+</scr:component>

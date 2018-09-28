@@ -10,4 +10,6 @@ Import-Package: org.apache.felix.service.command;status=provisional;version="0.1
  com.sap.conn.jco,
  com.sap.conn.jco.ext
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGI-INF/osgi.sap.service.provider.commands.SAPCommands.xml
+Service-Component: OSGI-INF/osgi.sap.service.provider.commands.CriteriaCommands.xml,
+ OSGI-INF/osgi.sap.service.provider.commands.EventCommands.xml,
+ OSGI-INF/osgi.sap.service.provider.commands.JobCommands.xml

@@ -1,0 +1,24 @@
+<!ELEMENT criterion EMPTY>
+<!ATTLIST criterion
+	sign CDATA #REQUIRED
+	opt CDATA #REQUIRED
+	low CDATA #REQUIRED
+	high CDATA #IMPLIED>
+<!ELEMENT field (#PCDATA|criterion)*>
+<!ELEMENT item (field)+>
+<!ATTLIST item 
+	description CDATA #REQUIRED>
+<!ELEMENT node 
+	((item)*,(node)*,(item)*,(node)*,(item)*,(node)*)>
+<!ATTLIST node 
+	type CDATA #REQUIRED>
+<!ELEMENT root ((item)*,(node)*,(item)*,(node)*,(item)*,(node)*)>
+<!ELEMENT profile (root)>
+<!ATTLIST profile 
+	type CDATA #REQUIRED
+	id CDATA #IMPLIED
+	description	CDATA #REQUIRED
+	state CDATA #IMPLIED
+	lastchuser CDATA #IMPLIED
+	lastchtmstmp CDATA #IMPLIED
+	createuser CDATA #IMPLIED>

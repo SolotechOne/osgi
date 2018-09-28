@@ -1,4 +1,4 @@
-package osgi.sap.service.provider.bapi;
+package osgi.sap.service.provider.bapi.xmi;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoDestination;
@@ -30,7 +30,7 @@ public class xmi {
             return;
         }
         
-        System.out.println("BAPI_XMI_LOGON finished:");
+//        System.out.println("BAPI_XMI_LOGON finished:");
         
         JCoStructure returnStructure = xmi_logon.getExportParameterList().getStructure("RETURN");
         
@@ -38,11 +38,11 @@ public class xmi {
             throw new RuntimeException(returnStructure.getString("MESSAGE"));
         }
         
-        if ( xmi_logon.getExportParameterList().isActive("SESSIONID")) {
-            System.out.println(" SessionID: " + xmi_logon.getExportParameterList().getString("SESSIONID"));
-        }
-        
-        System.out.println();
+//        if ( xmi_logon.getExportParameterList().isActive("SESSIONID")) {
+//            System.out.println(" SessionID: " + xmi_logon.getExportParameterList().getString("SESSIONID"));
+//        }
+//        
+//        System.out.println();
     }
     
     public static void bapi_xmi_logoff(JCoDestination destination) throws JCoException {
@@ -64,7 +64,7 @@ public class xmi {
             return;
         }
         
-        System.out.println("BAPI_XMI_LOGOFF finished:");
+//        System.out.println("BAPI_XMI_LOGOFF finished:");
         
         JCoStructure returnStructure = xmi_logoff.getExportParameterList().getStructure("RETURN");
         
@@ -72,6 +72,6 @@ public class xmi {
             throw new RuntimeException(returnStructure.getString("MESSAGE"));
         }
         
-        System.out.println();
+//        System.out.println();
     }
 }

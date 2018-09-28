@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="osgi.sap.service.provider.commands.CriteriaCommands">
+   <property name="osgi.command.scope" type="String" value="criteria"/>
+   <property name="osgi.command.function" type="String">types
+get
+set
+profiles
+create
+activate
+deactivate
+delete
+validate
+   </property>
+   <service>
+      <provide interface="osgi.sap.service.provider.commands.CriteriaCommands"/>
+   </service>
+   <implementation class="osgi.sap.service.provider.commands.CriteriaCommands"/>
+</scr:component>
