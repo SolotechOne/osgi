@@ -10,6 +10,8 @@ activate
 deactivate
 delete
 validate
+marshal
+unmarshal
    </property>
    <service>
       <provide interface="osgi.sap.service.provider.commands.CriteriaCommands"/>

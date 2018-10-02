@@ -27,6 +27,12 @@ import com.sap.conn.jco.ext.DestinationDataProvider;
 import osgi.sap.service.provider.bapi.cm.cm;
 import osgi.sap.service.provider.bapi.cm.profile.EventHistory;
 import osgi.sap.service.provider.bapi.xmi.xmi;
+import osgi.sap.service.provider.criteria.profile.Criterion;
+import osgi.sap.service.provider.criteria.profile.Field;
+import osgi.sap.service.provider.criteria.profile.Item;
+import osgi.sap.service.provider.criteria.profile.Node;
+import osgi.sap.service.provider.criteria.profile.Profile;
+import osgi.sap.service.provider.criteria.profile.Root;
 import osgi.sap.service.provider.util.Util;
 
 @Component(
@@ -40,7 +46,9 @@ import osgi.sap.service.provider.util.Util;
 		CommandProcessor.COMMAND_FUNCTION + ":String=activate",
 		CommandProcessor.COMMAND_FUNCTION + ":String=deactivate",
 		CommandProcessor.COMMAND_FUNCTION + ":String=delete",
-		CommandProcessor.COMMAND_FUNCTION + ":String=validate"
+		CommandProcessor.COMMAND_FUNCTION + ":String=validate",
+		CommandProcessor.COMMAND_FUNCTION + ":String=marshal",
+		CommandProcessor.COMMAND_FUNCTION + ":String=unmarshal"
 	},
 	service = CriteriaCommands.class
 )
@@ -252,5 +260,135 @@ public class CriteriaCommands {
 	@Descriptor("validate criteria profile")
 	public void validate() throws IOException, JCoException {
 		EventHistory.validate();
+	}
+
+	@Descriptor("marshal criteria profile")
+	public void marshal() throws IOException, JCoException {
+		Profile profile = new Profile();
+		profile.setType("EVTHIS");
+		profile.setId("0");
+		profile.setDescription("Eventhistory Profile");
+		profile.setCreateuser("BERBERICH-CA");
+		profile.setLastchtmstmp("20181002135800");
+		profile.setLastchuser("BERBERICH-CA");
+		profile.setState("X");
+		
+		Root root = new Root();
+		
+		profile.setRoot(root);
+
+		Node node = new Node();
+		node.setType("A");
+		
+		root.getItemOrNode().add(node);
+		
+		Item item = new Item();
+		item.setDescription("Log all Events");
+		
+		node.getItemOrNode().add(item);
+		
+		Field eventid = new Field();
+		eventid.setvalue("EVENTID");
+		
+		item.getField().add(eventid);
+		
+		Criterion criterion = new Criterion();
+		criterion.setOpt("EQ");
+		criterion.setSign("I");
+		criterion.setLow("*");
+		criterion.setHigh("");
+
+		Field eventparm = new Field();
+		eventparm.setvalue("EVENTPARM");
+		
+		item.getField().add(eventparm);
+
+		String output = EventHistory.marshal(profile);
+		
+		System.out.println(output);
+	}
+
+	@Descriptor("unmarshal criteria profile")
+	public void unmarshal() throws IOException, JCoException {
+	    String xml = "<?xml version=\"1.0\" encoding=\"utf-16\"?><!DOCTYPE profile SYSTEM \"criteria_profile.dtd\"> <profile type=\"EVTHIS\" id=\"1 \" description=\"\" state=\"\" lastchuser=\"BATCH-UC4\" lastchtmstmp=\"20180925125220 \" createuser=\"BERBERICH-CA\"><root><node type=\"O\"><item description=\"test\"><field>EVENTID<criterion sign=\"I\" opt=\"EQ\" low=\"*\" high=\"\"/></field><field>EVENTPARM</field></item></node></root></profile>";
+
+		Profile profile = EventHistory.unmarshal(xml);
+		
+		recurse(profile);
+	}
+	
+	private void recurse(Object obj) {
+		switch (obj.getClass().getSimpleName()) {
+		case "Profile":
+			osgi.sap.service.provider.criteria.profile.Profile profile = (osgi.sap.service.provider.criteria.profile.Profile) obj;
+
+			System.out.println("type: " + profile.getType()
+				+ " id: " + profile.getId()
+				+ " create user: " + profile.getCreateuser()
+				+ " last changed: " + profile.getLastchtmstmp()
+				+ " last user changed: " + profile.getLastchuser()
+				+ " state: " + profile.getState()
+				+ " description: " + profile.getDescription()
+			);
+			
+			recurse(profile.getRoot());
+			
+			break;
+		case "Root":
+			osgi.sap.service.provider.criteria.profile.Root root = (osgi.sap.service.provider.criteria.profile.Root) obj;
+
+			System.out.println("root");
+			
+			for (Object item: root.getItemOrNode()) {
+				recurse(item);
+			}
+			
+			break;
+		case "Field":
+			osgi.sap.service.provider.criteria.profile.Field field = (osgi.sap.service.provider.criteria.profile.Field) obj;
+
+			System.out.println("field: " + field.getvalue());
+			
+			break;
+		case "Criterion":
+			osgi.sap.service.provider.criteria.profile.Criterion criterion = (osgi.sap.service.provider.criteria.profile.Criterion) obj;
+
+			System.out.println("option: " + criterion.getOpt());
+			System.out.println("sign: " + criterion.getSign());
+			System.out.println("low: " + criterion.getLow());
+			System.out.println("high: " + criterion.getHigh());
+			
+			break;
+		case "Node":
+			osgi.sap.service.provider.criteria.profile.Node node = (osgi.sap.service.provider.criteria.profile.Node) obj;
+
+			System.out.println("node type: " + node.getType());
+
+			for (Object nodes: node.getItemOrNode()) {
+				recurse(nodes);
+			}
+
+			break;
+		case "Item":
+			osgi.sap.service.provider.criteria.profile.Item item = (osgi.sap.service.provider.criteria.profile.Item) obj;
+
+			System.out.println("item: " + item.getDescription());
+			
+			for (Object fields: item.getField()) {
+				recurse(fields);
+			}
+			
+			break;
+		default:
+			throw new IllegalArgumentException(obj.getClass().getSimpleName());
+		}
+		
+
+//			Class clazz = obj.getClass();
+//			System.out.println(clazz.getName() + " " + clazz.getSimpleName());
+
+//			if (obj instanceof osgi.sap.service.provider.criteria.profile.Node) {
+//				System.out.println("its a node");
+//			}
 	}
 }
