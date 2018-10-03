@@ -1,10 +1,12 @@
 package osgi.sap.service.provider.bapi.cm.profile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -23,6 +25,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -301,6 +308,17 @@ public class EventHistory {
 		}
 	}
 	
+	public static void val() {
+		try {
+			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			Schema schema = factory.newSchema(new File("C:\\Users\\Carsten\\git\\osgi\\osgi.sap.test\\criteria_profile.xsd"));
+			Validator validator = schema.newValidator();
+			validator.validate(new StreamSource(new File("C:\\Users\\Carsten\\git\\osgi\\osgi.sap.test\\example.xml")));
+		} catch (IOException | SAXException e) {
+			System.out.println("Exception: "+e.getMessage());
+		}
+	}
+
 	public static String marshal(Profile profile) {
 		try {
 			JAXBContext context = JAXBContext.newInstance(Profile.class);

@@ -259,7 +259,7 @@ public class CriteriaCommands {
 
 	@Descriptor("validate criteria profile")
 	public void validate() throws IOException, JCoException {
-		EventHistory.validate();
+		EventHistory.val();
 	}
 
 	@Descriptor("marshal criteria profile")

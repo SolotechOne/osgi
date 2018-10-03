@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE profile SYSTEM "criteria_profile.dtd">
+<profile type="EVTHIS" id="0" description="Eventhistory Profile" state="X" lastchuser="BERBERICH-CA" lastchtmstmp="20181002135800" createuser="BERBERICH-CA">
+	<root>
+		<node type="A">
+			<item description="Log all Events">
+				<field>EVENT<criterion sign="I" opt="EQ" low="*" high="*"></criterion></field>
+				<field>EVENTPARM</field>
+			</item>
+		</node>
+	</root>
+</profile>
