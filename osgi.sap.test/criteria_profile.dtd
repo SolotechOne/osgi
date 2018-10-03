@@ -2,13 +2,11 @@
 EVENTID and/or EVENTPARM fields. A criterion may contain separate conditions
 for both fields or for just one of the them. -->
 <!ELEMENT criterion EMPTY>
-<!ATTLIST criterion
 <!-- The attribute sign of a criterion specifies the general operation between the
 field (EVENTID or EVENTPARM) and the field values. The possible values for
 sign are:
  I = include.
  E = exclude. -->
-	sign CDATA #REQUIRED
 <!-- The criterion attribute opt specifies the operation between the field and the
 field values. The possible values for opt are:
  BT – between. You can specify a range of values for a field.
@@ -23,11 +21,13 @@ field values. The possible values for opt are:
 The following wildcard patterns are supported: *, and ?.
  NP – no pattern. You can exclude values by using a pattern. The following
 wildcard patterns are supported: *, and ?.--> 
-	opt CDATA #REQUIRED
 <!-- Specifies an exact value, for example, when opt = EQ, or the lowest exact
 value of a range, for example, when opt = GT, or GE --> 
-	low CDATA #REQUIRED
 <!-- Specifies the highest value of a range, for example, when opt = LE or LT -->
+<!ATTLIST criterion
+	sign CDATA #REQUIRED
+	opt CDATA #REQUIRED
+	low CDATA #REQUIRED
 	high CDATA #IMPLIED>
 <!-- The element field specifies the field – EVENTID or EVENTPARM, for which
 the conditions in the criterion apply and is a placeholder for the criterion. --> 
@@ -35,38 +35,37 @@ the conditions in the criterion apply and is a placeholder for the criterion. --
 <!-- The element item is a placeholder for the criteria applicable to the fields
 EVENTID and EVENTPARM. -->
 <!ELEMENT item (field)+>
-<!ATTLIST item 
 <!-- The attribute description provides a description of a criterion. -->
+<!ATTLIST item 
 	description CDATA #REQUIRED>
-<!ELEMENT node 
 <!-- By grouping item elements, the element node groups criteria in the hierarchy
 and imposes a logical relationship between them. Depending on its type, the node
 imposes a logical AND or OR relationship between items. --> 
+<!ELEMENT node 
 	((item)*,(node)*,(item)*,(node)*,(item)*,(node)*)>
-<!ATTLIST node 
 <!-- The attribute type of a node specifies whether the node is an AND or OR
 node and determines the logical relationship which the node imposes on the
 criteria it contains The possible values for type are:
 A = AND. The node of type AND imposes an AND relationship between the
 criteria it contains.
 O = OR. The node of type OR imposes and OR relationship between the criteria
-it contains.
---> 
+it contains. --> 
+<!ATTLIST node 
 	type CDATA #REQUIRED>
-<!ELEMENT root 
 <!-- The element root groups all the nodes in the criteria hierarchy. The root
 always imposes an AND relationship between the nodes it contains. Criteria do not
 need to be grouped in nodes: you can insert criteria directly in the root element. In
 this case, criteria are related by the AND relationship imposed by the root. -->
+<!ELEMENT root 
 	((item)*,(node)*,(item)*,(node)*,(item)*,(node)*)>
 <!-- The element profile is a placeholder for the whole criteria hierarchy. --> 
 <!ELEMENT profile (root)>
-<!ATTLIST profile 
 <!-- The attribute type specifies the type of the criteria type. The value for a
 profile for event history is EVTHIS. -->
+<!-- The attribute description specifies a free-text description of the profile. -->
+<!ATTLIST profile 
 	type CDATA #REQUIRED
 	id CDATA #IMPLIED
-<!-- The attribute description specifies a free-text description of the profile. -->
 	description	CDATA #REQUIRED
 	state CDATA #IMPLIED
 	lastchuser CDATA #IMPLIED
