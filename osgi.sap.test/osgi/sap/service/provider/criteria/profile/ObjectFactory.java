@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.10.04 um 11:39:17 AM CEST 
+// Generiert: 2018.10.04 um 03:16:51 PM CEST 
 //
 
 
@@ -32,7 +32,7 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     private final static QName _Profile_QNAME = new QName("", "profile");
-    private final static QName _FieldTypeCriterion_QNAME = new QName("", "criterion");
+    private final static QName _FieldCriterion_QNAME = new QName("", "criterion");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: osgi.sap.service.provider.criteria.profile
@@ -42,69 +42,69 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ProfileType }
+     * Create an instance of {@link Profile }
      * 
      */
-    public ProfileType createProfileType() {
-        return new ProfileType();
+    public Profile createProfile() {
+        return new Profile();
     }
 
     /**
-     * Create an instance of {@link RootType }
+     * Create an instance of {@link Node }
      * 
      */
-    public RootType createRootType() {
-        return new RootType();
+    public Node createNode() {
+        return new Node();
     }
 
     /**
-     * Create an instance of {@link ItemType }
+     * Create an instance of {@link Item }
      * 
      */
-    public ItemType createItemType() {
-        return new ItemType();
+    public Item createItem() {
+        return new Item();
     }
 
     /**
-     * Create an instance of {@link CriterionType }
+     * Create an instance of {@link Criterion }
      * 
      */
-    public CriterionType createCriterionType() {
-        return new CriterionType();
+    public Criterion createCriterion() {
+        return new Criterion();
     }
 
     /**
-     * Create an instance of {@link NodeType }
+     * Create an instance of {@link Field }
      * 
      */
-    public NodeType createNodeType() {
-        return new NodeType();
+    public Field createField() {
+        return new Field();
     }
 
     /**
-     * Create an instance of {@link FieldType }
+     * Create an instance of {@link Root }
      * 
      */
-    public FieldType createFieldType() {
-        return new FieldType();
+    public Root createRoot() {
+        return new Root();
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link ProfileType }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link Profile }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "profile")
-    public JAXBElement<ProfileType> createProfile(ProfileType value) {
-        return new JAXBElement<ProfileType>(_Profile_QNAME, ProfileType.class, null, value);
+    public JAXBElement<Profile> createProfile(Profile value) {
+        return new JAXBElement<Profile>(_Profile_QNAME, Profile.class, null, value);
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link CriterionType }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link Criterion }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "", name = "criterion", scope = FieldType.class)
-    public JAXBElement<CriterionType> createFieldTypeCriterion(CriterionType value) {
-        return new JAXBElement<CriterionType>(_FieldTypeCriterion_QNAME, CriterionType.class, FieldType.class, value);
+    @XmlElementDecl(namespace = "", name = "criterion", scope = Field.class)
+    public JAXBElement<Criterion> createFieldCriterion(Criterion value) {
+        return new JAXBElement<Criterion>(_FieldCriterion_QNAME, Criterion.class, Field.class, value);
     }
 
 }

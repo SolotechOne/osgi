@@ -8,7 +8,7 @@ import com.sap.conn.jco.JCoStructure;
 import com.sap.conn.jco.JCoTable;
 
 public class cm {
-    public static void bapi_cm_criteria_get(JCoDestination destination, int id, String type) throws JCoException {
+    public static String bapi_cm_criteria_get(JCoDestination destination, int id, String type) throws JCoException {
     	JCoFunction cm_criteria_get = destination.getRepository().getFunction("BAPI_CM_CRITERIA_GET");
     	
         if (cm_criteria_get == null)
@@ -27,7 +27,7 @@ public class cm {
         catch (AbapException exception) {
             System.out.println(exception.toString());
             
-            return;
+            return null;
         }
         
 //        System.out.println("BAPI_CM_CRITERIA_GET finished:");
@@ -40,6 +40,8 @@ public class cm {
         
         System.out.println(cm_criteria_get.getExportParameterList().getString("E_CRITERIA_XML"));
 //        System.out.println();
+        
+		return cm_criteria_get.getExportParameterList().getString("E_CRITERIA_XML");
     }
 
     public static void bapi_cm_criteria_set(JCoDestination destination, int id, String type, String xml) throws JCoException {

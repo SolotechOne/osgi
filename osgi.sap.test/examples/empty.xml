@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <!DOCTYPE profile SYSTEM "criteria_profile.dtd">
-<profile type="EVTHIS" id="<ID>" description="<DESCRIPTION>">
+<profile type="EVTHIS" id="ID" description="DESCRIPTION">
 	<root/>
 </profile>
