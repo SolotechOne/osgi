@@ -38,9 +38,6 @@ public class cm {
             throw new RuntimeException(bapiret.getString("MESSAGE"));
         }
         
-        System.out.println(cm_criteria_get.getExportParameterList().getString("E_CRITERIA_XML"));
-//        System.out.println();
-        
 		return cm_criteria_get.getExportParameterList().getString("E_CRITERIA_XML");
     }
 

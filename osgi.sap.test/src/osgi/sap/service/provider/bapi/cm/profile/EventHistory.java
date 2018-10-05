@@ -8,7 +8,6 @@ import java.io.UnsupportedEncodingException;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.JAXBIntrospector;
 import javax.xml.bind.Marshaller;
@@ -41,7 +40,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import osgi.sap.service.provider.criteria.profile.ProfileType;
+import osgi.sap.service.provider.criteria.profile.ObjectFactory;
+import osgi.sap.service.provider.criteria.profile.Profile;
 
 public class EventHistory {
 	public static String empty() throws TransformerFactoryConfigurationError, TransformerException, ParserConfigurationException {
@@ -310,23 +310,38 @@ public class EventHistory {
 		}
 	}
 	
-	public static void val() {
+	public static boolean val(String input) {
 		try {
+//			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+//			
+//			Schema schema = factory.newSchema(new File("C:\\Daten_Ungesichert\\c.berberich\\git\\osgi\\osgi.sap.test\\criteria_profile.xsd"));
+//			
+//			Validator validator = schema.newValidator();
+//			
+//			validator.validate(new StreamSource(new File("C:\\Daten_Ungesichert\\c.berberich\\git\\osgi\\osgi.sap.test\\examples\\interc.xml")));
+
+		
 			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			
 			Schema schema = factory.newSchema(new File("C:\\Daten_Ungesichert\\c.berberich\\git\\osgi\\osgi.sap.test\\criteria_profile.xsd"));
 			
 			Validator validator = schema.newValidator();
 			
-			validator.validate(new StreamSource(new File("C:\\Daten_Ungesichert\\c.berberich\\git\\osgi\\osgi.sap.test\\interc.xml")));
-		} catch (IOException | SAXException exception) {
-			System.out.println("Exception: " + exception.getMessage());
+			validator.validate(new StreamSource(new java.io.StringReader(input)));
+			
+			return true;
+		} catch (IOException exception) {
+			exception.printStackTrace();
+		} catch (SAXException exception) {
+			exception.printStackTrace();
 		}
+		
+		return false;
 	}
-
-	public static String marshal(ProfileType profile) {
+	
+	public static String marshal(Profile profile) {
 		try {
-			JAXBContext context = JAXBContext.newInstance(ProfileType.class);
+			JAXBContext context = JAXBContext.newInstance(Profile.class);
 			
 			try {
 				Marshaller marshaller = context.createMarshaller();
@@ -336,7 +351,9 @@ public class EventHistory {
 				
 				StringWriter writer = new StringWriter();
 				
-				marshaller.marshal(profile, writer);
+				ObjectFactory factory = new ObjectFactory();
+				
+				marshaller.marshal(factory.createProfile(profile), writer);
 				
 				return writer.toString();
 			} catch (JAXBException exception) {
@@ -349,23 +366,23 @@ public class EventHistory {
 		return null;
 	}
 	
-	public static ProfileType unmarshal(String xml) {
+	public static Profile unmarshal(String input) {
 	    try {
-			JAXBContext context = JAXBContext.newInstance(ProfileType.class);
+			JAXBContext context = JAXBContext.newInstance(Profile.class);
 			
 			XMLInputFactory xif = XMLInputFactory.newFactory();
 //	        xif.setProperty(XMLInputFactory.SUPPORT_DTD, false);
 			
 	        try {
 //				XMLStreamReader xsr = xif.createXMLStreamReader(new StreamSource("input.xml"));
-				XMLStreamReader xsr = xif.createXMLStreamReader(new StringReader(xml));
+				XMLStreamReader xsr = xif.createXMLStreamReader(new StringReader(input));
 				
 				Unmarshaller unmarshaller = context.createUnmarshaller();
 				
-				ProfileType profile = (ProfileType) JAXBIntrospector.getValue(unmarshaller.unmarshal(xsr));
+				Profile profile = (Profile) JAXBIntrospector.getValue(unmarshaller.unmarshal(xsr));
 				
 //				JAXBElement<ProfileType> jaxbElement = (JAXBElement<ProfileType>) unmarshaller.unmarshal(xsr);
-						
+				
 //				ProfileType profile = (ProfileType) unmarshaller.unmarshal(xsr);
 				
 //				ProfileType profile = jaxbElement.getValue();

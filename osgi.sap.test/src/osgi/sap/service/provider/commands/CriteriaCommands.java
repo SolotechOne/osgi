@@ -3,6 +3,7 @@
 package osgi.sap.service.provider.commands;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBElement;
@@ -26,12 +27,13 @@ import com.sap.conn.jco.ext.DestinationDataProvider;
 import osgi.sap.service.provider.bapi.cm.cm;
 import osgi.sap.service.provider.bapi.cm.profile.EventHistory;
 import osgi.sap.service.provider.bapi.xmi.xmi;
-import osgi.sap.service.provider.criteria.profile.CriterionType;
-import osgi.sap.service.provider.criteria.profile.FieldType;
-import osgi.sap.service.provider.criteria.profile.ItemType;
-import osgi.sap.service.provider.criteria.profile.NodeType;
-import osgi.sap.service.provider.criteria.profile.ProfileType;
-import osgi.sap.service.provider.criteria.profile.RootType;
+import osgi.sap.service.provider.criteria.profile.ObjectFactory;
+import osgi.sap.service.provider.criteria.profile.Criterion;
+import osgi.sap.service.provider.criteria.profile.Field;
+import osgi.sap.service.provider.criteria.profile.Item;
+import osgi.sap.service.provider.criteria.profile.Node;
+import osgi.sap.service.provider.criteria.profile.Profile;
+import osgi.sap.service.provider.criteria.profile.Root;
 import osgi.sap.service.provider.util.Util;
 
 @Component(
@@ -258,12 +260,20 @@ public class CriteriaCommands {
 
 	@Descriptor("validate criteria profile")
 	public void validate() throws IOException, JCoException {
-		EventHistory.val();
+		String interc = get("INTERC", 1);
+		
+//		System.out.println(String.format("%040x", new BigInteger(1, interc.substring(0, 10).getBytes("utf-16"))));
+//		System.out.println(new String(interc.getBytes("utf-16")));
+		
+		EventHistory.val(interc.substring(1));
+		
+//		String input = marshal();
+//		EventHistory.val(input);
 	}
 
 	@Descriptor("marshal criteria profile")
-	public void marshal() throws IOException, JCoException {
-		ProfileType profile = new ProfileType();
+	public String marshal() throws IOException, JCoException {
+		Profile profile = new Profile();
 		profile.setType("EVTHIS");
 		profile.setId("0");
 		profile.setDescription("Eventhistory Profile");
@@ -272,56 +282,61 @@ public class CriteriaCommands {
 		profile.setLastchuser("BERBERICH-CA");
 		profile.setState("X");
 		
-		RootType root = new RootType();
+		Root root = new Root();
 		
 		profile.setRoot(root);
 		
-		NodeType node = new NodeType();
+		Node node = new Node();
 		node.setType("A");
 		
 		root.getNode().add(node);
 		
-		ItemType item = new ItemType();
+		Item item = new Item();
 		item.setDescription("Log all Events");
 		
 		node.getItem().add(item);
 		
-		FieldType eventid = new FieldType();
+		Field eventid = new Field();
 		eventid.getContent().add(new String("EVENTID"));
 		
 		item.getField().add(eventid);
 		
-		CriterionType criterion = new CriterionType();
+		Criterion criterion = new Criterion();
 		criterion.setOpt("EQ");
 		criterion.setSign("I");
 		criterion.setLow("*");
 		criterion.setHigh("");
 		
-		FieldType eventparm = new FieldType();
+		ObjectFactory of = new ObjectFactory();
+//		of.createFieldCriterion(criterion);
+		
+		Field eventparm = new Field();
 		eventparm.getContent().add(new String("EVENTPARM"));
+		eventparm.getContent().add(of.createFieldCriterion(criterion));
+//		eventparm.getContent().add(of.createFieldCriterion(criterion));
 		
 		item.getField().add(eventparm);
 		
 		String output = EventHistory.marshal(profile);
 		
-		System.out.print(output);
+//		System.out.print(output);
+		
+		return output;
 	}
 	
 	@Descriptor("unmarshal criteria profile")
 	public void unmarshal() throws IOException, JCoException {
-//	    String xml = "<?xml version=\"1.0\" encoding=\"utf-16\"?><!DOCTYPE profile SYSTEM \"criteria_profile.dtd\"> <profile type=\"EVTHIS\" id=\"1 \" description=\"\" state=\"\" lastchuser=\"BATCH-UC4\" lastchtmstmp=\"20180925125220 \" createuser=\"BERBERICH-CA\"><root><node type=\"O\"><item description=\"test\"><field>EVENTID<criterion sign=\"I\" opt=\"EQ\" low=\"*\" high=\"\"/></field><field>EVENTPARM</field></item></node></root></profile>";
-
 		String xml = get("INTERC", 1);
 		
-		ProfileType profile = EventHistory.unmarshal(xml.substring(1));
+		Profile profile = EventHistory.unmarshal(xml.substring(1));
 		
 		recurse(profile);
 	}
 	
 	private void recurse(Object obj) {
 		switch (obj.getClass().getSimpleName()) {
-		case "ProfileType":
-			ProfileType profile = (ProfileType) obj;
+		case "Profile":
+			Profile profile = (Profile) obj;
 			
 			System.out.println("profile type: " + profile.getType()
 				+ " id: " + profile.getId()
@@ -335,8 +350,8 @@ public class CriteriaCommands {
 			recurse(profile.getRoot());
 			
 			break;
-		case "RootType":
-			RootType root = (RootType) obj;
+		case "Root":
+			Root root = (Root) obj;
 			
 			System.out.println("root");
 			
@@ -349,8 +364,8 @@ public class CriteriaCommands {
 			}
 			
 			break;
-		case "FieldType":
-			FieldType field = (FieldType) obj;
+		case "Field":
+			Field field = (Field) obj;
 			
 			System.out.println("field:");
 			
@@ -359,8 +374,8 @@ public class CriteriaCommands {
 			}
 			
 			break;
-		case "CriterionType":
-			CriterionType criterion = (CriterionType) obj;
+		case "Criterion":
+			Criterion criterion = (Criterion) obj;
 			
 			System.out.println("criterion option: " + criterion.getOpt()
 				+ " sign: " + criterion.getSign()
@@ -368,8 +383,8 @@ public class CriteriaCommands {
 				+ " high: " + criterion.getHigh());
 			
 			break;
-		case "NodeType":
-			NodeType node = (NodeType) obj;
+		case "Node":
+			Node node = (Node) obj;
 			
 			System.out.println("node type: " + node.getType());
 			
@@ -382,8 +397,8 @@ public class CriteriaCommands {
 			}
 			
 			break;
-		case "ItemType":
-			ItemType item = (ItemType) obj;
+		case "Item":
+			Item item = (Item) obj;
 			
 			System.out.println("item: " + item.getDescription());
 			
