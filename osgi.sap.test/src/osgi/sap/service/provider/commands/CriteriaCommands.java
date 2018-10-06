@@ -2,8 +2,12 @@
 
 package osgi.sap.service.provider.commands;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.net.URL;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBElement;
@@ -259,16 +263,20 @@ public class CriteriaCommands {
 	}
 
 	@Descriptor("validate criteria profile")
-	public void validate() throws IOException, JCoException {
-		String interc = get("INTERC", 1);
+	public void validate(String file) throws IOException, JCoException {
+//		String interc = get("INTERC", 1);
 		
 //		System.out.println(String.format("%040x", new BigInteger(1, interc.substring(0, 10).getBytes("utf-16"))));
 //		System.out.println(new String(interc.getBytes("utf-16")));
 		
-		EventHistory.val(interc.substring(1));
+//		EventHistory.val(interc.substring(1));
 		
 //		String input = marshal();
 //		EventHistory.val(input);
+
+		InputStream stream = getClass().getResourceAsStream(file);
+
+		EventHistory.validate(stream);
 	}
 
 	@Descriptor("marshal criteria profile")
@@ -308,7 +316,6 @@ public class CriteriaCommands {
 		criterion.setHigh("");
 		
 		ObjectFactory of = new ObjectFactory();
-//		of.createFieldCriterion(criterion);
 		
 		Field eventparm = new Field();
 		eventparm.getContent().add(new String("EVENTPARM"));
@@ -325,10 +332,23 @@ public class CriteriaCommands {
 	}
 	
 	@Descriptor("unmarshal criteria profile")
-	public void unmarshal() throws IOException, JCoException {
-		String xml = get("INTERC", 1);
+	public void unmarshal(String file) throws IOException, JCoException {
+//		String xml = get("INTERC", 1);
+//		Profile profile = EventHistory.unmarshal(xml.substring(1));
 		
-		Profile profile = EventHistory.unmarshal(xml.substring(1));
+		InputStream stream = getClass().getResourceAsStream(file);
+		
+//			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+//			
+//			String input;
+//
+//			while ((input = reader.readLine()) != null) {
+//				System.out.println("<<<" + input + ">>>");
+//			}
+//
+//			reader.close();
+		
+		Profile profile = EventHistory.unmarshal(stream);
 		
 		recurse(profile);
 	}
@@ -367,7 +387,7 @@ public class CriteriaCommands {
 		case "Field":
 			Field field = (Field) obj;
 			
-			System.out.println("field:");
+//			System.out.println("      field:");
 			
 			for (Object nodes: field.getContent()) {
 				recurse(nodes);
@@ -377,7 +397,7 @@ public class CriteriaCommands {
 		case "Criterion":
 			Criterion criterion = (Criterion) obj;
 			
-			System.out.println("criterion option: " + criterion.getOpt()
+			System.out.println("        criterion option: " + criterion.getOpt()
 				+ " sign: " + criterion.getSign()
 				+ " low: " + criterion.getLow()
 				+ " high: " + criterion.getHigh());
@@ -386,7 +406,7 @@ public class CriteriaCommands {
 		case "Node":
 			Node node = (Node) obj;
 			
-			System.out.println("node type: " + node.getType());
+			System.out.println("  node type: " + node.getType());
 			
 			for (Object nodes: node.getItem()) {
 				recurse(nodes);
@@ -400,7 +420,7 @@ public class CriteriaCommands {
 		case "Item":
 			Item item = (Item) obj;
 			
-			System.out.println("item: " + item.getDescription());
+			System.out.println("    item: " + item.getDescription());
 			
 			for (Object fields: item.getField()) {
 				recurse(fields);
@@ -408,7 +428,7 @@ public class CriteriaCommands {
 			
 			break;
 		case "String":
-			System.out.println("value: " + obj);
+			System.out.println("      field: " + obj);
 			
 			break;
 		case "JAXBElement":

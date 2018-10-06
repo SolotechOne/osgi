@@ -1,7 +1,10 @@
 package osgi.sap.service.provider.bapi.cm.profile;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -323,15 +326,60 @@ public class EventHistory {
 		
 			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			
-			Schema schema = factory.newSchema(new File("C:\\Daten_Ungesichert\\c.berberich\\git\\osgi\\osgi.sap.test\\criteria_profile.xsd"));
-			
-			Validator validator = schema.newValidator();
-			
-			validator.validate(new StreamSource(new java.io.StringReader(input)));
-			
-			return true;
-		} catch (IOException exception) {
+//			load schema from bundle
+
+//			String xsd;
+
+			try {
+//				url = new URL("bundle:/plugin/osgi.sap.test/examples/empty.xml");
+//				InputStream inputStream = url.openConnection().getInputStream();
+
+//				String path = "criteria_profile.dtd";
+				
+				InputStream inputStream = EventHistory.class.getResourceAsStream("/criteria_profile.dtd");
+				
+				BufferedReader xsd = new BufferedReader(new InputStreamReader(inputStream));
+				
+//				while ((xsd = in.readLine()) != null) {
+//					System.out.println(xsd);
+//				}
+//
+//				in.close();
+				
+				Schema schema = factory.newSchema(new StreamSource(xsd));
+				
+				Validator validator = schema.newValidator();
+				
+				validator.validate(new StreamSource(new java.io.StringReader(input)));
+				
+				return true;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (SAXException exception) {
 			exception.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	public static boolean validate(InputStream input) {
+		try {
+			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			
+			try {
+				InputStream inputStream = EventHistory.class.getResourceAsStream("/criteria_profile.dtd");
+								
+				Schema schema = factory.newSchema(new StreamSource(inputStream));
+				
+				Validator validator = schema.newValidator();
+				
+				validator.validate(new StreamSource(input));
+				
+				return true;
+			} catch (IOException exception) {
+				exception.printStackTrace();
+			}
 		} catch (SAXException exception) {
 			exception.printStackTrace();
 		}
@@ -366,7 +414,7 @@ public class EventHistory {
 		return null;
 	}
 	
-	public static Profile unmarshal(String input) {
+	public static Profile unmarshal(InputStream input) {
 	    try {
 			JAXBContext context = JAXBContext.newInstance(Profile.class);
 			
@@ -375,7 +423,12 @@ public class EventHistory {
 			
 	        try {
 //				XMLStreamReader xsr = xif.createXMLStreamReader(new StreamSource("input.xml"));
-				XMLStreamReader xsr = xif.createXMLStreamReader(new StringReader(input));
+	        	
+//	        	System.out.println(input);
+//	        	StringReader reader = new StringReader(input);
+//	        	System.out.println(reader);
+	        	
+				XMLStreamReader xsr = xif.createXMLStreamReader(input);
 				
 				Unmarshaller unmarshaller = context.createUnmarshaller();
 				
