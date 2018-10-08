@@ -369,7 +369,7 @@ public class EventHistory {
 			
 			try {
 				InputStream inputStream = EventHistory.class.getResourceAsStream("/criteria_profile.dtd");
-								
+				
 				Schema schema = factory.newSchema(new StreamSource(inputStream));
 				
 				Validator validator = schema.newValidator();
