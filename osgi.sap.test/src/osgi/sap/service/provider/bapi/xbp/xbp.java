@@ -681,9 +681,92 @@ public class xbp {
         System.out.println();
         System.out.println("Steps selected: " + step_tbl.getNumRows());
         System.out.println();  
+
+    
+        JCoTable spool_attr = xbp_job_definition_get.getTableParameterList().getTable("SPOOL_ATTR");
+        
+        for (int i = 0; i < spool_attr.getNumRows(); i++) {
+        	spool_attr.setRow(i);
+        	
+        	System.out.println(spool_attr.getString("STEPNO") + " " + spool_attr.getString("SPOOLID")
+        			+ " " + spool_attr.getString("CLIENT") + " " + spool_attr.getString("NAME")
+        			+ " " + spool_attr.getString("SUFFIX1") + " " + spool_attr.getString("SUFFIX2")
+        			+ " " + spool_attr.getString("OWNER") + " " + spool_attr.getString("FINAL")
+        			+ " " + spool_attr.getString("CRTIME") + " " + spool_attr.getString("DLTIME")
+        			+ " " + spool_attr.getString("SPOPAGES") + " " + spool_attr.getString("PRINTTIME")
+        			+ " " + spool_attr.getString("DELAFTERPRINT") + " " + spool_attr.getString("DEVICE")
+        			+ " " + spool_attr.getString("COPIES") + " " + spool_attr.getString("PRIORITY")
+        			+ " " + spool_attr.getString("SPOFORMAT") + " " + spool_attr.getString("PJTOTAL")
+        			+ " " + spool_attr.getString("PJDONE") + " " + spool_attr.getString("PJPROBLEM")
+        			+ " " + spool_attr.getString("PJERROR") + " " + spool_attr.getString("WRITER")
+        			+ " " + spool_attr.getString("SPERROR") + " " + spool_attr.getString("TEMSENAME")
+        			+ " " + spool_attr.getString("TEMSEPART") + " " + spool_attr.getString("TEMSECLIENT")
+        			+ " " + spool_attr.getString("TITLE") + " " + spool_attr.getString("SAPCOVER")
+        			+ " " + spool_attr.getString("OSCOVER") + " " + spool_attr.getString("RECEIVER")
+        			+ " " + spool_attr.getString("DIVISION") + " " + spool_attr.getString("AUTHORITY")
+        			+ " " + spool_attr.getString("MODTIME") + " " + spool_attr.getString("DOCTYP")
+        			+ " " + spool_attr.getString("OSNAME") + " " + spool_attr.getString("TMSSIZE")
+        			+ " " + spool_attr.getString("TEMSELOCAT") + " " + spool_attr.getString("LINES")
+        			+ " " + spool_attr.getString("COLUMNS") + " " + spool_attr.getString("LANGU")
+        			+ " " + spool_attr.getString("CODEPAGE") + " " + spool_attr.getString("TMSPARTS")
+        		);
+        }
+        
+        System.out.println();
+        System.out.println("Spools selected: " + spool_attr.getNumRows());
+        System.out.println();  
     }
     
-    public static void bapi_xbp_job_header_modify(JCoDestination destination, String jobname, String jobcount) throws JCoException {
+    public static void bapi_xbp_job_read_single_spool(JCoDestination destination, String spool) throws JCoException {
+		JCoFunction xbp_job_read_single_spool = destination.getRepository().getFunction("BAPI_XBP_JOB_READ_SINGLE_SPOOL");
+		
+	    if (xbp_job_read_single_spool == null)
+	    	throw new RuntimeException("BAPI_XBP_JOB_READ_SINGLE_SPOOL not found in SAP.");
+	    
+	    xbp_job_read_single_spool.getImportParameterList().setValue("SPOOL_REQUEST", spool);
+	    xbp_job_read_single_spool.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+//	    xbp_job_read_single_spool.getImportParameterList().setValue("RAW", "X");
+//	    xbp_job_read_single_spool.getImportParameterList().setValue("FIRST_PAGE", "");
+//	    xbp_job_read_single_spool.getImportParameterList().setValue("LAST_PAGE", "");
+	    
+	    xbp_job_read_single_spool.getExportParameterList().setActive("RETURN", true);
+	    
+	    xbp_job_read_single_spool.getTableParameterList().setActive("SPOOL_LIST", true);
+	    xbp_job_read_single_spool.getTableParameterList().setActive("SPOOL_LIST_PLAIN", true);
+	    
+	    try {
+	    	xbp_job_read_single_spool.execute(destination);
+	    }
+	    catch (AbapException exception) {
+	        System.out.println(exception.toString());
+	        
+	        return;
+	    }
+	    
+	    System.out.println("BAPI_XBP_JOB_READ_SINGLE_SPOOL finished:");
+	    
+	    JCoStructure bapiret = xbp_job_read_single_spool.getExportParameterList().getStructure("RETURN");
+	    
+		// Meldungstyp: S Success, E Error, W Warning, I Info, A Abort
+	    if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+	        throw new RuntimeException(bapiret.getString("MESSAGE"));
+	    }
+	    
+	    
+	    JCoTable spool_list = xbp_job_read_single_spool.getTableParameterList().getTable("SPOOL_LIST_PLAIN");
+	    
+	    for (int i = 0; i < spool_list.getNumRows(); i++) {
+	    	spool_list.setRow(i);
+	    	
+	    	System.out.println(spool_list.getString("LINE"));
+	    }
+	    
+	    System.out.println();
+	    System.out.println("Lines selected: " + spool_list.getNumRows());
+	    System.out.println();  
+	}
+
+	public static void bapi_xbp_job_header_modify(JCoDestination destination, String jobname, String jobcount) throws JCoException {
     	JCoFunction xbp_job_header_modify = destination.getRepository().getFunction("BAPI_XBP_JOB_HEADER_MODIFY");
     	
         if (xbp_job_header_modify == null)

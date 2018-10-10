@@ -31,6 +31,7 @@ import osgi.sap.service.provider.util.Util;
 		CommandProcessor.COMMAND_FUNCTION + ":String=search",
 		CommandProcessor.COMMAND_FUNCTION + ":String=read",
 		CommandProcessor.COMMAND_FUNCTION + ":String=definition",
+		CommandProcessor.COMMAND_FUNCTION + ":String=spool",
 		CommandProcessor.COMMAND_FUNCTION + ":String=copy",
 		CommandProcessor.COMMAND_FUNCTION + ":String=create",
 		CommandProcessor.COMMAND_FUNCTION + ":String=deschedule",
@@ -198,15 +199,24 @@ public class JobCommands {
     }
     
     @Descriptor("read job definition")
-    public void definition(@Descriptor("Jobname") String jobname, @Descriptor("Jobcount") String jobcount) throws IOException, JCoException {
+	public void definition(@Descriptor("Jobname") String jobname, @Descriptor("Jobcount") String jobcount) throws IOException, JCoException {
+		xmi.bapi_xmi_logon(destination);
+	
+		xbp.bapi_xbp_job_definition_get(destination, jobname, jobcount);
+	
+		xmi.bapi_xmi_logoff(destination);
+	}
+
+    @Descriptor("read job spool")
+    public void spool(@Descriptor("Spool") String spool) throws IOException, JCoException {
     	xmi.bapi_xmi_logon(destination);
 
-    	xbp.bapi_xbp_job_definition_get(destination, jobname, jobcount);
+    	xbp.bapi_xbp_job_read_single_spool(destination, spool);
 
     	xmi.bapi_xmi_logoff(destination);
     }
     
-    @Descriptor("copy abap job")
+	@Descriptor("copy abap job")
     public void copy(@Descriptor("Source Jobname") String source_jobname, @Descriptor("Source Jobcount") String source_jobcount, @Descriptor("Target Jobname") String target_jobname) throws IOException, JCoException {
         xmi.bapi_xmi_logon(destination);
 

@@ -322,18 +322,18 @@ public class EventHistory {
 //			Validator validator = schema.newValidator();
 //			
 //			validator.validate(new StreamSource(new File("C:\\Daten_Ungesichert\\c.berberich\\git\\osgi\\osgi.sap.test\\examples\\interc.xml")));
-
-		
+			
+			
 			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			
 //			load schema from bundle
-
+			
 //			String xsd;
-
+			
 			try {
 //				url = new URL("bundle:/plugin/osgi.sap.test/examples/empty.xml");
 //				InputStream inputStream = url.openConnection().getInputStream();
-
+				
 //				String path = "criteria_profile.dtd";
 				
 				InputStream inputStream = EventHistory.class.getResourceAsStream("/criteria_profile.dtd");
