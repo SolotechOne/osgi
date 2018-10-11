@@ -1,6 +1,10 @@
 package osgi.sap.service.provider.bapi.xbp;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoDestination;
@@ -683,10 +687,74 @@ public class xbp {
         System.out.println();  
 
     
+        // job:definition Z_ARC_REORG_ARTSTAT_700W0400_01 14014100
+        
         JCoTable spool_attr = xbp_job_definition_get.getTableParameterList().getTable("SPOOL_ATTR");
         
         for (int i = 0; i < spool_attr.getNumRows(); i++) {
         	spool_attr.setRow(i);
+        	
+        	System.out.printf("Nummer: %010d%n", Integer.parseInt(spool_attr.getString("SPOOLID")));
+        	System.out.printf("Titel: %s%n", spool_attr.getString("TITLE"));
+        	System.out.printf("Name: %s.%s.%s%n", spool_attr.getString("NAME"), spool_attr.getString("SUFFIX1"), spool_attr.getString("SUFFIX2"));
+        	System.out.printf("Benutzer: %s System: %s Mandant: %s%n", spool_attr.getString("OWNER"), "", spool_attr.getString("CLIENT"));
+        	
+        	String pattern = "yyyyMMddHHmmssSS";
+        	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, new Locale("de", "DE"));
+        	
+			try {
+				Date crtime = simpleDateFormat.parse(spool_attr.getString("CRTIME"));
+				
+	        	System.out.printf("Erzeugungsdatum: %tD Zeit: %1$tT%n", crtime);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				Date modtime = simpleDateFormat.parse(spool_attr.getString("MODTIME"));
+				
+				System.out.printf("Modifikationsdatum: %tD Zeit: %1$tT%n", modtime);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+        	
+        	System.out.printf("Seitenanzahl: %s%n", spool_attr.getString("SPOPAGES"));
+        	
+        	
+        	System.out.printf("%nSpool Informationen%n");
+        	System.out.printf("-------------------%n");
+        	System.out.printf("Ausgabegerät: %s%n", spool_attr.getString("DEVICE"));
+        	System.out.printf("Aufbereitung: %s Zeilen: %s Spalten: %s%n", spool_attr.getString("SPOFORMAT"), spool_attr.getString("LINES"), spool_attr.getString("COLUMNS"));
+        	System.out.printf("Dokumententyp: %s%n", spool_attr.getString("DOCTYP"));
+        	System.out.printf("Empfänger: %s%n", spool_attr.getString("RECEIVER"));
+        	System.out.printf("Abteilung: %s%n", spool_attr.getString("DIVISION"));
+
+			try {
+				Date dltime = simpleDateFormat.parse(spool_attr.getString("DLTIME"));
+				
+				System.out.printf("Löschdatum: %tD Zeit: %1$tT%n", dltime);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+        	
+
+        	System.out.printf("%nAusgabeinformationen%n");
+        	System.out.printf("--------------------%n");
+        	System.out.printf("Anzahl Exemplare pro Auftrag: %s%n", spool_attr.getString("COPIES"));
+        	System.out.printf("Priorität: %s%n", spool_attr.getString("PRIORITY"));
+
+
+        	System.out.printf("%nTemSe Informationen%n");
+        	System.out.printf("-------------------%n");
+        	System.out.printf("Objektname: %s%n", spool_attr.getString("TEMSENAME"));
+        	System.out.printf("Datentyp: %s%n", "");
+        	System.out.printf("Zeichensatz: %s%n", spool_attr.getString("CODEPAGE"));
+        	System.out.printf("Anzahl Teile: %s%n", spool_attr.getString("TMSPARTS"));
+        	
+//        	Double tmssize = Double.parseDouble(spool_attr.getString("TMSSIZE"));
+//        	System.out.printf("Größe in Bytes: %,f%n", tmssize);
+        	System.out.printf("Größe in Bytes: %s%n", spool_attr.getString("TMSSIZE"));
+
         	
         	System.out.println(spool_attr.getString("STEPNO") + " " + spool_attr.getString("SPOOLID")
         			+ " " + spool_attr.getString("CLIENT") + " " + spool_attr.getString("NAME")
