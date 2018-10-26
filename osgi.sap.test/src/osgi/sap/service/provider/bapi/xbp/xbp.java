@@ -646,6 +646,9 @@ public class xbp {
         xbp_job_definition_get.getExportParameterList().setActive("JOBLG_ATTR", true);
         xbp_job_definition_get.getExportParameterList().setActive("RECIPIENT", true);
         
+        xbp_job_definition_get.getTableParameterList().setActive("STEP_TBL", true);
+        xbp_job_definition_get.getTableParameterList().setActive("SPOOL_ATTR", true);
+        
         try {
         	xbp_job_definition_get.execute(destination);
         }
@@ -737,11 +740,20 @@ public class xbp {
 				e.printStackTrace();
 			}
         	
+			System.out.printf("Berechtigung: %s%n", spool_attr.getString("AUTHORITY"));
+			System.out.printf("Abgeschlossen, kein Anfügen mehr möglich: %s\tAnzahl Schreiber: %s%n", spool_attr.getString("FINAL"), spool_attr.getString("WRITER"));
+			System.out.printf("Löschen nach fehlerfreiem Ausdruck: %s%n", spool_attr.getString("DELAFTERPRINT"));
 
         	System.out.printf("%nAusgabeinformationen%n");
         	System.out.printf("--------------------%n");
         	System.out.printf("Anzahl Exemplare pro Auftrag: %s%n", spool_attr.getString("COPIES"));
         	System.out.printf("Priorität: %s%n", spool_attr.getString("PRIORITY"));
+        	System.out.printf("SAP Deckblatt: %s%n", spool_attr.getString("SAPCOVER"));
+        	System.out.printf("BS Deckblatt: %s%n", spool_attr.getString("OSCOVER"));
+        	System.out.printf("beauftragt: %s%n", spool_attr.getString("PJTOTAL"));
+        	System.out.printf("bearbeitet: %s\tdavon mit Problem: %s%n", spool_attr.getString("PJDONE"), spool_attr.getString("PJPROBLEM"));
+        	System.out.printf("\t\tdavon mit Fehler (kein Ausdruck): %s%n", spool_attr.getString("PJERROR"));
+        	System.out.printf("Ablagemodus: %s%n", "");
 
 
         	System.out.printf("%nTemSe Informationen%n");
@@ -750,11 +762,14 @@ public class xbp {
         	System.out.printf("Datentyp: %s%n", "");
         	System.out.printf("Zeichensatz: %s%n", spool_attr.getString("CODEPAGE"));
         	System.out.printf("Anzahl Teile: %s%n", spool_attr.getString("TMSPARTS"));
+        	System.out.printf("Satzformat: %s%n", "");
         	
 //        	Double tmssize = Double.parseDouble(spool_attr.getString("TMSSIZE"));
 //        	System.out.printf("Größe in Bytes: %,f%n", tmssize);
         	System.out.printf("Größe in Bytes: %s%n", spool_attr.getString("TMSSIZE"));
+        	System.out.printf("Speicherort: %s%n", spool_attr.getString("TEMSELOCAT"));
 
+            System.out.println();
         	
         	System.out.println(spool_attr.getString("STEPNO") + " " + spool_attr.getString("SPOOLID")
         			+ " " + spool_attr.getString("CLIENT") + " " + spool_attr.getString("NAME")
