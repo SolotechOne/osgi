@@ -14,71 +14,85 @@
  * under the License.
  * 
  */
- 
-package org.quartz.examples.example10;
+
+package osgi.quartz.scheduler.consumer.examples;
 
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
 import org.quartz.SchedulerMetaData;
 import org.quartz.impl.StdSchedulerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
+import org.osgi.framework.BundleContext;
 
-/**
- * This example will spawn a large number of jobs to run
- * 
- * @author James House, Bill Kratzer
- */
-public class PlugInExample {
+public class PlugInExample extends Thread {
+	private Logger logger = Logger.getLogger(PlugInExample.class);
 
-  public void run() throws Exception {
-    Logger log = LoggerFactory.getLogger(PlugInExample.class);
+	private BundleContext context;
 
-    // First we must get a reference to a scheduler
-    SchedulerFactory sf = new StdSchedulerFactory();
-    Scheduler sched = null;
-    try {
-      sched = sf.getScheduler();
-    } catch (NoClassDefFoundError e) {
-      log.error(" Unable to load a class - most likely you do not have jta.jar on the classpath. If not present in the examples/lib folder, please " +
-                "add it there for this sample to run.", e);
-      return;
-    }
+	public BundleContext getContext() {
+		return context;
+	}
+	
+	private Scheduler scheduler;
 
-    log.info("------- Initialization Complete -----------");
+	@SuppressWarnings("unused")
+	private volatile boolean active = true;
 
-    log.info("------- (Not Scheduling any Jobs - relying on XML definitions --");
+	public PlugInExample(BundleContext context) {
+		this.context=context;
+	}
+	
+	public void run() {
+		try {
+			StdSchedulerFactory factory = new StdSchedulerFactory();
 
-    log.info("------- Starting Scheduler ----------------");
+			try {
+				this.scheduler = factory.getScheduler();
+			} catch (NoClassDefFoundError e) {
+				this.logger.error(" Unable to load a class - most likely you do not have jta.jar on the classpath. If not present in the examples/lib folder, please " +
+						"add it there for this sample to run.", e);
+				return;
+			}
 
-    // start the schedule
-    sched.start();
+			this.logger.info("------- Initialization Complete -----------");
+			this.logger.info("------- (Not Scheduling any Jobs - relying on XML definitions --");
+			this.logger.info("------- Starting Scheduler ----------------");
 
-    log.info("------- Started Scheduler -----------------");
+			// Start up the scheduler (nothing can actually run until the scheduler has been started)
+			this.scheduler.start();
 
-    log.info("------- Waiting five minutes... -----------");
+			this.logger.info("------- Started Scheduler -----------------");
+			this.logger.info("------- Waiting five minutes... -----------");
 
-    // wait five minutes to give our jobs a chance to run
-    try {
-      Thread.sleep(300L * 1000L);
-    } catch (Exception e) {
-      //
-    }
+			// wait five minutes to give our jobs a chance to run
+			try {
+				Thread.sleep(300L * 1000L);
+			} catch (Exception e) {
+				//
+			}
+		} catch (SchedulerException exception) {
+			exception.printStackTrace();
+		}
+	}
 
-    // shut down the scheduler
-    log.info("------- Shutting Down ---------------------");
-    sched.shutdown(true);
-    log.info("------- Shutdown Complete -----------------");
+	public void stopThread() {
+		this.active = false;
 
-    SchedulerMetaData metaData = sched.getMetaData();
-    log.info("Executed " + metaData.getNumberOfJobsExecuted() + " jobs.");
-  }
+		// shut down the scheduler
+		this.logger.info("------- Shutting Down ---------------------");
 
-  public static void main(String[] args) throws Exception {
+		try {
+			this.scheduler.shutdown(true);
 
-    PlugInExample example = new PlugInExample();
-    example.run();
-  }
+			this.logger.info("------- Shutdown Complete -----------------");
 
+			// display some stats about the schedule that just ran
+			SchedulerMetaData metaData = this.scheduler.getMetaData();
+
+			this.logger.info("Executed " + metaData.getNumberOfJobsExecuted() + " jobs.");
+		} catch (SchedulerException exception) {
+			exception.printStackTrace();
+		}
+	}
 }

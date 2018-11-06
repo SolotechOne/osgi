@@ -849,6 +849,58 @@ public class xbp {
 	    System.out.println();  
 	}
 
+    public static void bapi_xbp_job_spoollist_read_20(JCoDestination destination, String spool) throws JCoException {
+		JCoFunction xbp_job_spoollist_read_20 = destination.getRepository().getFunction("BAPI_XBP_JOB_SPOOLLIST_READ_20");
+		
+	    if (xbp_job_spoollist_read_20 == null)
+	    	throw new RuntimeException("BAPI_XBP_JOB_SPOOLLIST_READ_20 not found in SAP.");
+	    
+	    xbp_job_spoollist_read_20.getImportParameterList().setValue("JOBNAME", "");
+	    xbp_job_spoollist_read_20.getImportParameterList().setValue("JOBCOUNT", "");
+	    xbp_job_spoollist_read_20.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+	    xbp_job_spoollist_read_20.getImportParameterList().setValue("STEP_NUMBER", "");
+	    xbp_job_spoollist_read_20.getImportParameterList().setValue("RAW", "");
+	    xbp_job_spoollist_read_20.getImportParameterList().setValue("PLAIN", "");
+	    xbp_job_spoollist_read_20.getImportParameterList().setValue("FIRST_PAGE", "");
+	    xbp_job_spoollist_read_20.getImportParameterList().setValue("LAST_PAGE", "");
+	    
+	    xbp_job_spoollist_read_20.getExportParameterList().setActive("RETURN", true);
+	    
+	    xbp_job_spoollist_read_20.getTableParameterList().setActive("SPOOL_LIST", true);
+	    xbp_job_spoollist_read_20.getTableParameterList().setActive("SPOOL_LIST_PLAIN", true);
+	    
+	    try {
+	    	xbp_job_spoollist_read_20.execute(destination);
+	    }
+	    catch (AbapException exception) {
+	        System.out.println(exception.toString());
+	        
+	        return;
+	    }
+	    
+	    System.out.println("BAPI_XBP_JOB_SPOOLLIST_READ_20 finished:");
+	    
+	    JCoStructure bapiret = xbp_job_spoollist_read_20.getExportParameterList().getStructure("RETURN");
+	    
+		// Meldungstyp: S Success, E Error, W Warning, I Info, A Abort
+	    if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+	        throw new RuntimeException(bapiret.getString("MESSAGE"));
+	    }
+	    
+	    
+	    JCoTable spool_list = xbp_job_spoollist_read_20.getTableParameterList().getTable("SPOOL_LIST_PLAIN");
+	    
+	    for (int i = 0; i < spool_list.getNumRows(); i++) {
+	    	spool_list.setRow(i);
+	    	
+	    	System.out.println(spool_list.getString("LINE"));
+	    }
+	    
+	    System.out.println();
+	    System.out.println("Lines selected: " + spool_list.getNumRows());
+	    System.out.println();  
+	}
+
 	public static void bapi_xbp_job_header_modify(JCoDestination destination, String jobname, String jobcount) throws JCoException {
     	JCoFunction xbp_job_header_modify = destination.getRepository().getFunction("BAPI_XBP_JOB_HEADER_MODIFY");
     	

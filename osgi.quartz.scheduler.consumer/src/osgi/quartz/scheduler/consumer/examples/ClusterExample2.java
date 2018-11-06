@@ -14,7 +14,7 @@
  * under the License.
  * 
  */
- 
+
 package org.quartz.examples.example15;
 
 import static org.quartz.DateBuilder.futureDate;
@@ -61,148 +61,148 @@ import org.slf4j.LoggerFactory;
  */
 public class ClusterExample {
 
-  private static Logger _log = LoggerFactory.getLogger(ClusterExample.class);
+	private static Logger _log = LoggerFactory.getLogger(ClusterExample.class);
 
-  public void run(boolean inClearJobs, boolean inScheduleJobs) throws Exception {
+	public void run(boolean inClearJobs, boolean inScheduleJobs) throws Exception {
 
-    // First we must get a reference to a scheduler
-    SchedulerFactory sf = new StdSchedulerFactory();
-    Scheduler sched = sf.getScheduler();
+		// First we must get a reference to a scheduler
+		SchedulerFactory sf = new StdSchedulerFactory();
+		Scheduler sched = sf.getScheduler();
 
-    if (inClearJobs) {
-      _log.warn("***** Deleting existing jobs/triggers *****");
-      sched.clear();
-    }
+		if (inClearJobs) {
+			_log.warn("***** Deleting existing jobs/triggers *****");
+			sched.clear();
+		}
 
-    _log.info("------- Initialization Complete -----------");
+		_log.info("------- Initialization Complete -----------");
 
-    if (inScheduleJobs) {
+		if (inScheduleJobs) {
 
-      _log.info("------- Scheduling Jobs ------------------");
+			_log.info("------- Scheduling Jobs ------------------");
 
-      String schedId = sched.getSchedulerInstanceId();
+			String schedId = sched.getSchedulerInstanceId();
 
-      int count = 1;
+			int count = 1;
 
-      JobDetail job = newJob(SimpleRecoveryJob.class).withIdentity("job_" + count, schedId) // put triggers in group
-                                                                                            // named after the cluster
-                                                                                            // node instance just to
-                                                                                            // distinguish (in logging)
-                                                                                            // what was scheduled from
-                                                                                            // where
-          .requestRecovery() // ask scheduler to re-execute this job if it was in progress when the scheduler went
-                             // down...
-          .build();
+			JobDetail job = newJob(SimpleRecoveryJob.class).withIdentity("job_" + count, schedId) // put triggers in group
+					// named after the cluster
+					// node instance just to
+					// distinguish (in logging)
+					// what was scheduled from
+					// where
+					.requestRecovery() // ask scheduler to re-execute this job if it was in progress when the scheduler went
+					// down...
+					.build();
 
-      SimpleTrigger trigger = newTrigger().withIdentity("triger_" + count, schedId)
-          .startAt(futureDate(1, IntervalUnit.SECOND))
-          .withSchedule(simpleSchedule().withRepeatCount(20).withIntervalInSeconds(5)).build();
+			SimpleTrigger trigger = newTrigger().withIdentity("triger_" + count, schedId)
+					.startAt(futureDate(1, IntervalUnit.SECOND))
+					.withSchedule(simpleSchedule().withRepeatCount(20).withIntervalInSeconds(5)).build();
 
-      _log.info(job.getKey() + " will run at: " + trigger.getNextFireTime() + " and repeat: "
-                + trigger.getRepeatCount() + " times, every " + trigger.getRepeatInterval() / 1000 + " seconds");
-      sched.scheduleJob(job, trigger);
+			_log.info(job.getKey() + " will run at: " + trigger.getNextFireTime() + " and repeat: "
+					+ trigger.getRepeatCount() + " times, every " + trigger.getRepeatInterval() / 1000 + " seconds");
+			sched.scheduleJob(job, trigger);
 
-      count++;
+			count++;
 
-      job = newJob(SimpleRecoveryJob.class).withIdentity("job_" + count, schedId) // put triggers in group named after
-                                                                                  // the cluster node instance just to
-                                                                                  // distinguish (in logging) what was
-                                                                                  // scheduled from where
-          .requestRecovery() // ask scheduler to re-execute this job if it was in progress when the scheduler went
-                             // down...
-          .build();
+			job = newJob(SimpleRecoveryJob.class).withIdentity("job_" + count, schedId) // put triggers in group named after
+					// the cluster node instance just to
+					// distinguish (in logging) what was
+					// scheduled from where
+					.requestRecovery() // ask scheduler to re-execute this job if it was in progress when the scheduler went
+					// down...
+					.build();
 
-      trigger = newTrigger().withIdentity("triger_" + count, schedId).startAt(futureDate(2, IntervalUnit.SECOND))
-          .withSchedule(simpleSchedule().withRepeatCount(20).withIntervalInSeconds(5)).build();
+			trigger = newTrigger().withIdentity("triger_" + count, schedId).startAt(futureDate(2, IntervalUnit.SECOND))
+					.withSchedule(simpleSchedule().withRepeatCount(20).withIntervalInSeconds(5)).build();
 
-      _log.info(job.getKey() + " will run at: " + trigger.getNextFireTime() + " and repeat: "
-                + trigger.getRepeatCount() + " times, every " + trigger.getRepeatInterval() / 1000 + " seconds");
-      sched.scheduleJob(job, trigger);
+			_log.info(job.getKey() + " will run at: " + trigger.getNextFireTime() + " and repeat: "
+					+ trigger.getRepeatCount() + " times, every " + trigger.getRepeatInterval() / 1000 + " seconds");
+			sched.scheduleJob(job, trigger);
 
-      count++;
+			count++;
 
-      job = newJob(SimpleRecoveryStatefulJob.class).withIdentity("job_" + count, schedId) // put triggers in group named
-                                                                                          // after the cluster node
-                                                                                          // instance just to
-                                                                                          // distinguish (in logging)
-                                                                                          // what was scheduled from
-                                                                                          // where
-          .requestRecovery() // ask scheduler to re-execute this job if it was in progress when the scheduler went
-                             // down...
-          .build();
+			job = newJob(SimpleRecoveryStatefulJob.class).withIdentity("job_" + count, schedId) // put triggers in group named
+					// after the cluster node
+					// instance just to
+					// distinguish (in logging)
+					// what was scheduled from
+					// where
+					.requestRecovery() // ask scheduler to re-execute this job if it was in progress when the scheduler went
+					// down...
+					.build();
 
-      trigger = newTrigger().withIdentity("triger_" + count, schedId).startAt(futureDate(1, IntervalUnit.SECOND))
-          .withSchedule(simpleSchedule().withRepeatCount(20).withIntervalInSeconds(3)).build();
+			trigger = newTrigger().withIdentity("triger_" + count, schedId).startAt(futureDate(1, IntervalUnit.SECOND))
+					.withSchedule(simpleSchedule().withRepeatCount(20).withIntervalInSeconds(3)).build();
 
-      _log.info(job.getKey() + " will run at: " + trigger.getNextFireTime() + " and repeat: "
-                + trigger.getRepeatCount() + " times, every " + trigger.getRepeatInterval() / 1000 + " seconds");
-      sched.scheduleJob(job, trigger);
+			_log.info(job.getKey() + " will run at: " + trigger.getNextFireTime() + " and repeat: "
+					+ trigger.getRepeatCount() + " times, every " + trigger.getRepeatInterval() / 1000 + " seconds");
+			sched.scheduleJob(job, trigger);
 
-      count++;
+			count++;
 
-      job = newJob(SimpleRecoveryJob.class).withIdentity("job_" + count, schedId) // put triggers in group named after
-                                                                                  // the cluster node instance just to
-                                                                                  // distinguish (in logging) what was
-                                                                                  // scheduled from where
-          .requestRecovery() // ask scheduler to re-execute this job if it was in progress when the scheduler went
-                             // down...
-          .build();
+			job = newJob(SimpleRecoveryJob.class).withIdentity("job_" + count, schedId) // put triggers in group named after
+					// the cluster node instance just to
+					// distinguish (in logging) what was
+					// scheduled from where
+					.requestRecovery() // ask scheduler to re-execute this job if it was in progress when the scheduler went
+					// down...
+					.build();
 
-      trigger = newTrigger().withIdentity("triger_" + count, schedId).startAt(futureDate(1, IntervalUnit.SECOND))
-          .withSchedule(simpleSchedule().withRepeatCount(20).withIntervalInSeconds(4)).build();
+			trigger = newTrigger().withIdentity("triger_" + count, schedId).startAt(futureDate(1, IntervalUnit.SECOND))
+					.withSchedule(simpleSchedule().withRepeatCount(20).withIntervalInSeconds(4)).build();
 
-      _log.info(job.getKey() + " will run at: " + trigger.getNextFireTime() + " & repeat: " + trigger.getRepeatCount()
-                + "/" + trigger.getRepeatInterval());
-      sched.scheduleJob(job, trigger);
+			_log.info(job.getKey() + " will run at: " + trigger.getNextFireTime() + " & repeat: " + trigger.getRepeatCount()
+			+ "/" + trigger.getRepeatInterval());
+			sched.scheduleJob(job, trigger);
 
-      count++;
+			count++;
 
-      job = newJob(SimpleRecoveryJob.class).withIdentity("job_" + count, schedId) // put triggers in group named after
-                                                                                  // the cluster node instance just to
-                                                                                  // distinguish (in logging) what was
-                                                                                  // scheduled from where
-          .requestRecovery() // ask scheduler to re-execute this job if it was in progress when the scheduler went
-                             // down...
-          .build();
+			job = newJob(SimpleRecoveryJob.class).withIdentity("job_" + count, schedId) // put triggers in group named after
+					// the cluster node instance just to
+					// distinguish (in logging) what was
+					// scheduled from where
+					.requestRecovery() // ask scheduler to re-execute this job if it was in progress when the scheduler went
+					// down...
+					.build();
 
-      trigger = newTrigger().withIdentity("triger_" + count, schedId).startAt(futureDate(1, IntervalUnit.SECOND))
-          .withSchedule(simpleSchedule().withRepeatCount(20).withIntervalInMilliseconds(4500L)).build();
+			trigger = newTrigger().withIdentity("triger_" + count, schedId).startAt(futureDate(1, IntervalUnit.SECOND))
+					.withSchedule(simpleSchedule().withRepeatCount(20).withIntervalInMilliseconds(4500L)).build();
 
-      _log.info(job.getKey() + " will run at: " + trigger.getNextFireTime() + " & repeat: " + trigger.getRepeatCount()
-                + "/" + trigger.getRepeatInterval());
-      sched.scheduleJob(job, trigger);
-    }
+			_log.info(job.getKey() + " will run at: " + trigger.getNextFireTime() + " & repeat: " + trigger.getRepeatCount()
+			+ "/" + trigger.getRepeatInterval());
+			sched.scheduleJob(job, trigger);
+		}
 
-    // jobs don't start firing until start() has been called...
-    _log.info("------- Starting Scheduler ---------------");
-    sched.start();
-    _log.info("------- Started Scheduler ----------------");
+		// jobs don't start firing until start() has been called...
+		_log.info("------- Starting Scheduler ---------------");
+		sched.start();
+		_log.info("------- Started Scheduler ----------------");
 
-    _log.info("------- Waiting for one hour... ----------");
-    try {
-      Thread.sleep(3600L * 1000L);
-    } catch (Exception e) {
-      //
-    }
+		_log.info("------- Waiting for one hour... ----------");
+		try {
+			Thread.sleep(3600L * 1000L);
+		} catch (Exception e) {
+			//
+		}
 
-    _log.info("------- Shutting Down --------------------");
-    sched.shutdown();
-    _log.info("------- Shutdown Complete ----------------");
-  }
+		_log.info("------- Shutting Down --------------------");
+		sched.shutdown();
+		_log.info("------- Shutdown Complete ----------------");
+	}
 
-  public static void main(String[] args) throws Exception {
-    boolean clearJobs = false;
-    boolean scheduleJobs = true;
+	public static void main(String[] args) throws Exception {
+		boolean clearJobs = false;
+		boolean scheduleJobs = true;
 
-    for (String arg : args) {
-      if (arg.equalsIgnoreCase("clearJobs")) {
-        clearJobs = true;
-      } else if (arg.equalsIgnoreCase("dontScheduleJobs")) {
-        scheduleJobs = false;
-      }
-    }
+		for (String arg : args) {
+			if (arg.equalsIgnoreCase("clearJobs")) {
+				clearJobs = true;
+			} else if (arg.equalsIgnoreCase("dontScheduleJobs")) {
+				scheduleJobs = false;
+			}
+		}
 
-    ClusterExample example = new ClusterExample();
-    example.run(clearJobs, scheduleJobs);
-  }
+		ClusterExample example = new ClusterExample();
+		example.run(clearJobs, scheduleJobs);
+	}
 }

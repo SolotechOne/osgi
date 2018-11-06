@@ -39,7 +39,7 @@ public class MsgJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         JobKey jobKey = context.getJobDetail().getKey();
         
-	    logger.info("SimpleJob1 says: " + jobKey + " executing at " + new Date());
+	    logger.info("MsgJob says: " + jobKey + " executing at " + new Date());
 	    
 	    
 //		if (messageservice != null)
