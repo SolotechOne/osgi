@@ -8,6 +8,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: com.sap.conn.jco,
  com.sap.conn.jco.ext,
  org.apache.felix.service.command;status=provisional;version="0.10.0",
+ org.apache.log4j;version="1.2.15",
  org.osgi.framework;version="1.8.0",
  org.osgi.service.component.annotations;version="1.3.0";resolution:=optional
 Bundle-ActivationPolicy: lazy

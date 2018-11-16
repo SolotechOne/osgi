@@ -31,7 +31,7 @@ public class EventCommands {
 
 	@Activate
 	void activate() throws JCoException {
-		destination = JCoDestinationManager.getDestination("RK1");
+		destination = JCoDestinationManager.getDestination("rk1");
 
 		JCoContext.begin(destination);
 	}

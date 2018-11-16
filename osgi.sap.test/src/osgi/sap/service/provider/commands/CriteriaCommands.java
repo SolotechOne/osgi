@@ -26,11 +26,11 @@ import com.sap.conn.jco.JCoException;
 import osgi.sap.service.provider.bapi.cm.cm;
 import osgi.sap.service.provider.bapi.cm.profile.EventHistory;
 import osgi.sap.service.provider.bapi.xmi.xmi;
-import osgi.sap.service.provider.criteria.profile.ObjectFactory;
 import osgi.sap.service.provider.criteria.profile.Criterion;
 import osgi.sap.service.provider.criteria.profile.Field;
 import osgi.sap.service.provider.criteria.profile.Item;
 import osgi.sap.service.provider.criteria.profile.Node;
+import osgi.sap.service.provider.criteria.profile.ObjectFactory;
 import osgi.sap.service.provider.criteria.profile.Profile;
 import osgi.sap.service.provider.criteria.profile.Root;
 
@@ -53,7 +53,7 @@ import osgi.sap.service.provider.criteria.profile.Root;
 		)
 public class CriteriaCommands {
 	private static JCoDestination destination;
-
+	
 	@Activate
 	void activate() throws JCoException {
 		//        System.out.println("criteria commands activated");
@@ -79,7 +79,7 @@ public class CriteriaCommands {
 
 		//        JCoContext.begin(destination);
 
-		destination = JCoDestinationManager.getDestination("RK1");
+		destination = JCoDestinationManager.getDestination("rk1");
 
 		JCoContext.begin(destination);
 	}

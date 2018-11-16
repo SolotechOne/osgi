@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
+import org.apache.log4j.Logger;
+
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoException;
@@ -15,11 +17,16 @@ import com.sap.conn.jco.JCoStructure;
 import com.sap.conn.jco.JCoTable;
 
 public class xbp {
+	private static Logger logger = Logger.getLogger(xbp.class);
+
     public static void bapi_xbp_new_func_check(JCoDestination destination, String interception, String child) throws JCoException {
     	JCoFunction xbp_new_func_check = destination.getRepository().getFunction("BAPI_XBP_NEW_FUNC_CHECK");
     	
-        if (xbp_new_func_check == null)
+        if (xbp_new_func_check == null) {
+        	logger.error("BAPI_XBP_NEW_FUNC_CHECK not found in SAP.");
+
         	throw new RuntimeException("BAPI_XBP_NEW_FUNC_CHECK not found in SAP.");
+        }
         
 //        'R' or 'r' or blank for reading the current status
 //        'S' or 's' for setting the status ON (as with XBP 2.0)
@@ -37,23 +44,30 @@ public class xbp {
         	xbp_new_func_check.execute(destination);
         }
         catch (AbapException exception) {
-            System.out.println(exception.toString());
+        	logger.error(exception.toString(), exception.getCause());
+//            System.out.println(exception.toString());
             
             return;
         }
-        
-        System.out.println("BAPI_XBP_NEW_FUNC_CHECK finished:");
+
+        logger.info("BAPI_XBP_NEW_FUNC_CHECK finished:");
+//        System.out.println("BAPI_XBP_NEW_FUNC_CHECK finished:");
         
         JCoStructure bapiret = xbp_new_func_check.getExportParameterList().getStructure("RETURN");
         
         if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+        	logger.error(bapiret.getString("MESSAGE"));
+        	
             throw new RuntimeException(bapiret.getString("MESSAGE"));
         }
         
-        System.out.println();
-        System.out.println(" Interception: " + xbp_new_func_check.getExportParameterList().getString("INTERCEPTION"));
-        System.out.println(" Parent/Child: " + xbp_new_func_check.getExportParameterList().getString("PARENTCHILD"));
-        System.out.println();
+        logger.debug(" Interception: " + xbp_new_func_check.getExportParameterList().getString("INTERCEPTION"));
+        logger.debug(" Parent/Child: " + xbp_new_func_check.getExportParameterList().getString("PARENTCHILD"));
+        
+//        System.out.println();
+//        System.out.println(" Interception: " + xbp_new_func_check.getExportParameterList().getString("INTERCEPTION"));
+//        System.out.println(" Parent/Child: " + xbp_new_func_check.getExportParameterList().getString("PARENTCHILD"));
+//        System.out.println();
     }
     
     public static void bapi_xbp_modify_criteria_table(JCoDestination destination) throws JCoException {

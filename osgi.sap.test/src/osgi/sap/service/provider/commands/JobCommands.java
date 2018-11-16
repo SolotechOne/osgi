@@ -56,7 +56,7 @@ public class JobCommands {
 
 	@Activate
 	void activate() throws JCoException {
-		destination = JCoDestinationManager.getDestination("RK1");
+		destination = JCoDestinationManager.getDestination("rk1");
 
 		JCoContext.begin(destination);
 	}
