@@ -161,7 +161,7 @@ public class cm {
         System.out.println("Criteria types selected: " + profiles.getNumRows());
 //        System.out.println();
     }
-
+    
     public static void bapi_cm_profile_create(JCoDestination destination, String xml) throws JCoException {
     	JCoFunction cm_profiles_activate = destination.getRepository().getFunction("BAPI_CM_PROFILE_CREATE");
     	

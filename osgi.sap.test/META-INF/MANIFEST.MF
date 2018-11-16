@@ -5,11 +5,14 @@ Bundle-SymbolicName: osgi.sap.service.provider
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: osgi.sap.test
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: org.apache.felix.service.command;status=provisional;version="0.10.0",
-  org.osgi.service.component.annotations;version="1.3.0";resolution:=optional,
- com.sap.conn.jco,
- com.sap.conn.jco.ext
+Import-Package: com.sap.conn.jco,
+ com.sap.conn.jco.ext,
+ org.apache.felix.service.command;status=provisional;version="0.10.0",
+ org.osgi.framework;version="1.8.0",
+ org.osgi.service.component.annotations;version="1.3.0";resolution:=optional
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/osgi.sap.service.provider.commands.CriteriaCommands.xml,
  OSGI-INF/osgi.sap.service.provider.commands.EventCommands.xml,
- OSGI-INF/osgi.sap.service.provider.commands.JobCommands.xml
+ OSGI-INF/osgi.sap.service.provider.commands.JobCommands.xml,
+ OSGI-INF/osgi.sap.service.provider.commands.SaraCommands.xml
+Bundle-Activator: Activator

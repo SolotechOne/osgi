@@ -909,14 +909,14 @@ public class xbp {
         
         JCoStructure job_header = xbp_job_header_modify.getImportParameterList().getStructure("JOB_HEADER");
         
-//        job_header.setValue("SDLSTRTDT", "20180922");
-//        job_header.setValue("SDLSTRTTM", "100000");
+        job_header.setValue("SDLSTRTDT", "20181115");
+        job_header.setValue("SDLSTRTTM", "113800");
 //        job_header.setValue("LASTSTRTDT", "");
 //        job_header.setValue("LASTSTRTTM", "");
 //        job_header.setValue("PREDJOB", "");
 //        job_header.setValue("PREDJOBCNT", "");
 //        job_header.setValue("CHECKSTAT", "");
-        job_header.setValue("EVENTID", "SAP_ARCHIVING_DELETE_FINISHED");
+//        job_header.setValue("EVENTID", "SAP_ARCHIVING_DELETE_FINISHED");
 //        job_header.setValue("EVENTPARM", "");
 //        job_header.setValue("PRDMINS", "");
 //        job_header.setValue("PRDHOURS", "");
@@ -953,7 +953,7 @@ public class xbp {
         xbp_job_header_modify.getImportParameterList().setValue("JOBNAME", jobname);
         xbp_job_header_modify.getImportParameterList().setValue("JOB_HEADER", job_header);
         xbp_job_header_modify.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
-        xbp_job_header_modify.getImportParameterList().setValue("DONT_RELEASE", "X");
+//        xbp_job_header_modify.getImportParameterList().setValue("DONT_RELEASE", "X");
         xbp_job_header_modify.getImportParameterList().setValue("MASK", mask);
 //        xbp_job_header_modify.getImportParameterList().setValue("JOBCLASS", "");
 //        xbp_job_header_modify.getImportParameterList().setValue("RECIPIENT", "");
@@ -1033,8 +1033,8 @@ public class xbp {
         xbp_job_start_asap.getImportParameterList().setValue("JOBNAME", jobname);
         xbp_job_start_asap.getImportParameterList().setValue("JOBCOUNT", jobcount);
         xbp_job_start_asap.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
-//        xbp_job_start_immediately.getImportParameterList().setValue("TARGET_SERVER", "");
-//        xbp_job_start_immediately.getImportParameterList().setValue("TARGET_GROUP", "");
+//        xbp_job_start_asap.getImportParameterList().setValue("TARGET_SERVER", "");
+//        xbp_job_start_asap.getImportParameterList().setValue("TARGET_GROUP", "");
         
         xbp_job_start_asap.getExportParameterList().setActive("RETURN", true);
         
@@ -1345,7 +1345,7 @@ public class xbp {
 //        2. 'NG' – return only those intercepted jobs that do NOT have general confirmation.
 //        3. 'NS' – return only those intercepted jobs that were NOT confirmed as intercepted.
 //        4. 'NC' – return only those intercepted jobs that do NOT have any confirmation.
-        xbp_get_intercepted_jobs.getImportParameterList().setValue("SELECTION", "NS");
+        xbp_get_intercepted_jobs.getImportParameterList().setValue("SELECTION", "AL");
         
 //        xbp_get_intercepted_jobs.getImportParameterList().setValue("CLIENT", "");
         xbp_get_intercepted_jobs.getImportParameterList().setValue("MORE_INFO", "X");
