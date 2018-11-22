@@ -13,6 +13,13 @@ import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoField;
 import com.sap.conn.jco.JCoFunction;
+import com.sap.conn.jco.JCoFunctionTemplate;
+import com.sap.conn.jco.JCoListMetaData;
+import com.sap.conn.jco.JCoMetaData;
+import com.sap.conn.jco.JCoParameterList;
+import com.sap.conn.jco.JCoRecordField;
+import com.sap.conn.jco.JCoRecordFieldIterator;
+import com.sap.conn.jco.JCoRecordMetaData;
 import com.sap.conn.jco.JCoStructure;
 import com.sap.conn.jco.JCoTable;
 
@@ -1621,6 +1628,7 @@ public class xbp {
         System.out.println();
     }
     
+    // statistics Z_AK_AKTIONSVERARBEITUNG_ZWS_01 '0000440E'
     public static void bapi_xbp_btc_statistic_get(JCoDestination destination, String jobname, String jobcount) throws JCoException {
     	JCoFunction xbp_btc_statistic_get = destination.getRepository().getFunction("BAPI_XBP_BTC_STATISTIC_GET");
     	
@@ -1669,12 +1677,19 @@ public class xbp {
         }
         
         
-        JCoTable statistic_details = xbp_btc_statistic_get.getExportParameterList().getTable("T_STATDATA");
+        JCoTable t_statdata = xbp_btc_statistic_get.getExportParameterList().getTable("T_STATDATA");
         
-        table(statistic_details);
+        print_JCoTable(t_statdata);
         
-        
-        System.out.println();
+//        Iterator<JCoField> iterator = t_statdata.iterator();
+//        
+//        while ( iterator.hasNext() ) {
+//			JCoField field = iterator.next();
+//			
+//			System.out.println( "    field: " + field.getName() + " " + field.getTypeAsString() + " (" + field.getType() + ") = " + field.getValue() );
+//		}        
+//        
+//        System.out.println();
     }
     
     public static void bapi_xbp_get_curr_bp_resources(JCoDestination destination) throws JCoException {
@@ -1705,7 +1720,7 @@ public class xbp {
         }
         
         System.out.println();
-
+        
         JCoTable resource_info = xbp_get_curr_bp_resources.getTableParameterList().getTable("RESOURCE_INFO");
         
         for (int i = 0; i < resource_info.getNumRows(); i++) {
@@ -1719,6 +1734,103 @@ public class xbp {
         System.out.println();
     }
     
+    public static void print_function_template(JCoDestination destination, String bapi) throws JCoException {
+    	JCoFunctionTemplate template = destination.getRepository().getFunctionTemplate(bapi);
+    	
+        if (template == null)
+        	throw new RuntimeException(bapi + " not found in SAP.");
+        
+    	
+        JCoListMetaData metadata = template.getImportParameterList();
+        System.out.println(metadata.getName());
+        
+        
+    	JCoFunction function = template.getFunction();
+    	
+        JCoParameterList imports = function.getImportParameterList();
+        
+        Iterator<JCoField> i_imports = imports.iterator();
+        
+        while ( i_imports.hasNext() ) {
+        	JCoField i_field = i_imports.next();
+        	
+        	System.out.println("  " + i_field.getName() + " " + i_field.getTypeAsString() + "(" + i_field.getLength() + ") " + i_field.getDescription());
+        	
+        	switch ( i_field.getType()) {
+        	case JCoRecordMetaData.TYPE_TABLE:
+        		JCoTable table = i_field.getTable();
+        		
+        		Iterator<JCoField> i_table = table.iterator();
+        		
+        		while ( i_table.hasNext() ) {
+                	JCoField t_field = i_table.next();
+                	
+                	System.out.println("    " + t_field.getName() + " " + t_field.getTypeAsString() + "(" + t_field.getLength() + ") " + t_field.getDescription());
+        		}
+        		
+        		break;
+        	default:
+        		break;
+        	}
+        }
+
+        
+        
+        JCoListMetaData e_metadata = template.getExportParameterList();
+        System.out.println(e_metadata.getName());
+        
+        
+        JCoParameterList exports = function.getExportParameterList();
+        
+        Iterator<JCoField> i_exports = exports.iterator();
+        
+        while ( i_exports.hasNext() ) {
+        	JCoField e_field = i_exports.next();
+        	
+        	System.out.println("  " + e_field.getName() + " " + e_field.getTypeAsString() + "(" + e_field.getLength() + ") " + e_field.getDescription());
+        	
+        	switch ( e_field.getType()) {
+        	case JCoRecordMetaData.TYPE_TABLE:
+        		JCoTable table = e_field.getTable();
+        		
+        		Iterator<JCoField> i_table = table.iterator();
+        		
+        		while ( i_table.hasNext() ) {
+                	JCoField t_field = i_table.next();
+                	
+                	System.out.println("    " + t_field.getName() + " " + t_field.getTypeAsString() + "(" + t_field.getType() + ") " + t_field.getDescription());
+
+                	switch ( e_field.getType()) {
+                	case JCoRecordMetaData.TYPE_TABLE:
+//                		JCoTable table2 = t_field.getTable();
+
+//                		JCoMetaData meta = table2.getMetaData();
+//                		
+//                		for ( int i=0; i<meta.getFieldCount(); i++ ) {
+//                			System.out.println(">      " + meta.getName(i) + " " + meta.getTypeAsString(i) + "(" + meta.getLength(i) + ") " + meta.getDescription(i));
+//                		}
+
+//                		Iterator<JCoField> iter_table = table2.iterator();
+//                		
+//                		while ( iter_table.hasNext() ) {
+//                        	JCoField t_field2 = iter_table.next();
+//                        	
+//                        	System.out.println("    " + t_field2.getName() + " " + t_field2.getTypeAsString() + "(" + t_field2.getType() + ") " + t_field2.getDescription());
+//                		}
+//                		
+                		break;
+                	default:
+                		break;
+                	}
+        		}
+        		
+        		break;
+        	default:
+        		break;
+        	}
+        }
+    }
+
     public static void bapi_template(JCoDestination destination, String bapi) throws JCoException {
     	JCoFunction function = destination.getRepository().getFunction(bapi);
     	
@@ -1730,21 +1842,23 @@ public class xbp {
         
         for ( Iterator<JCoField> iterator = function.getImportParameterList().iterator(); iterator.hasNext(); ) {
         	JCoField field = iterator.next();
-
+        	
         	System.out.println( "I " + field.getName() + " " + field.getTypeAsString() + " (" + field.getType() + ")");
         	
         	switch (field.getType()) {
-        	case 0:
+        	case JCoRecordMetaData.TYPE_CHAR:
         		break;
-        	case 99:
+        	case JCoRecordMetaData.TYPE_TABLE:
         		JCoTable table = field.getTable();
         		
-                for ( Iterator<JCoField> t_iterator = table.iterator(); t_iterator.hasNext(); )  {
-                	JCoField t_field = t_iterator.next();
-
-                	System.out.println( "  " + t_field.getName() + " " + t_field.getTypeAsString() + " (" + t_field.getType() + ")");
-                }
-                	
+        		print_JCoTableMetaData(table);
+        		
+//                for ( Iterator<JCoField> t_iterator = table.iterator(); t_iterator.hasNext(); )  {
+//                	JCoField t_field = t_iterator.next();
+//
+//                	System.out.println( "  " + t_field.getName() + " " + t_field.getTypeAsString() + " (" + t_field.getType() + ")");
+//                }
+                
         		break;
         	default:
         		break;
@@ -1757,60 +1871,99 @@ public class xbp {
         
         for ( Iterator<JCoField> exp_iterator = function.getExportParameterList().iterator(); exp_iterator.hasNext(); ) {
         	JCoField exp_field = exp_iterator.next();
-
+        	
         	System.out.println( "E " + exp_field.getName() + " " + exp_field.getTypeAsString() + " (" + exp_field.getType() + ")");
         	
         	switch (exp_field.getType()) {
-        	case 0:		// char
+        	case JCoRecordMetaData.TYPE_CHAR:
         		break;
-        	case 9:		// int
+        	case JCoRecordMetaData.TYPE_INT:
         		break;
-        	case 17:	// structure
+        	case JCoRecordMetaData.TYPE_STRUCTURE:
         		break;
-        	case 99:	// table
+        	case JCoRecordMetaData.TYPE_TABLE:
         		JCoTable table = exp_field.getTable();
         		
-                table(table);
+        		print_JCoTableMetaData(table);
+        		
+//                Iterator<JCoField> iterator = table.iterator();
+//                
+//                while ( iterator.hasNext() ) {
+//        			JCoField field = iterator.next();
+//        			
+//        			System.out.println( "    field: " + field.getName() + " " + field.getTypeAsString() + " (" + field.getType() + ") = " + field.getValue() );
+//        		}        
+
+//                table(table);
                 
         		break;
         	default:
         		break;
         	}
-        	
         }
         
         System.out.println();
 //        System.out.println("tables");
 //        System.out.println();
         
-        for ( Iterator<JCoField> tab_iterator = function.getTableParameterList().iterator(); tab_iterator.hasNext(); ) {
-        	JCoField tab_field = tab_iterator.next();
+        JCoParameterList list = function.getTableParameterList();
+        
+        if ( ! (list == null) ) {
+            Iterator<JCoField> tab_iterator = list.iterator();
 
-        	System.out.println( "T " + tab_field.getName() + " " + tab_field.getTypeAsString() + " " + tab_field.getTable().getMetaData().getName() + " (" + tab_field.getType() + ")");
+            while( tab_iterator.hasNext() ) {
+        		JCoField tab_field = tab_iterator.next();
+
+        		System.out.println( "T " + tab_field.getName() + " " + tab_field.getTypeAsString() + " " + tab_field.getTable().getMetaData().getName() + " (" + tab_field.getType() + ")");
         	
-        	table(tab_field.getTable());
+        		switch (tab_field.getType()) {
+        		case JCoRecordMetaData.TYPE_CHAR:
+        			break;
+        		case JCoRecordMetaData.TYPE_TABLE:
+        			JCoTable table = tab_field.getTable();
+        			
+        			print_JCoTable(table);
+        			
+        			break;
+        		default:
+        			break;
+        		}
+            }
         	
-//        	switch (exp_field.getType()) {
-//        	case 0:
-//        		break;
-//        	case 99:
-//        		JCoTable table = exp_field.getTable();
-//        		
-//                table(table);
-//                
-//        		break;
-//        	default:
-//        		break;
+//        	for ( Iterator<JCoField> tab_iterator = function.getTableParameterList().iterator(); tab_iterator.hasNext(); ) {
+//        		JCoField tab_field = tab_iterator.next();
+//
+//        		System.out.println( "T " + tab_field.getName() + " " + tab_field.getTypeAsString() + " " + tab_field.getTable().getMetaData().getName() + " (" + tab_field.getType() + ")");
+//
+//        		//        	table(tab_field.getTable());
+//
+//        		switch (tab_field.getType()) {
+//        		case 0:
+//        			break;
+//        		case 99:
+//        			//        		JCoTable table = tab_field.getTable();
+//
+//        			JCoTable t_statdata = function.getExportParameterList().getTable("T_STATDATA");
+//
+//        			Iterator<JCoField> iterator = t_statdata.iterator();
+//
+//        			while ( iterator.hasNext() ) {
+//        				JCoField field = iterator.next();
+//
+//        				System.out.println( "    field: " + field.getName() + " " + field.getTypeAsString() + " (" + field.getType() + ") = " + field.getValue() );
+//        			}        
+//
+//        			break;
+//        		default:
+//        			break;
+//        		}
 //        	}
-        	
         }
 
-        
 //        System.out.println("vor");
 //        JCoTable joblist = bapi_function.getTableParameterList().getTable("I_T_JOBLIST");
 //        System.out.println("nach");
 
-        
 //        joblist.appendRow();
 //        joblist.setValue("JOBNAME", jobname);
 //
@@ -1842,28 +1995,80 @@ public class xbp {
         System.out.println();
     }
     
-    private static void table(JCoTable table) {
-//    	System.out.println("structure of table " + table.getMetaData().getName());
+    private static int padding = 0;
+
+	private static String spacing = "  ";
+
+	private static void print_JCoTableMetaData(JCoTable table) {
+//    	JCoRecordMetaData meta_data = table.getRecordMetaData();
     	
-        for ( Iterator<JCoField> t_iterator = table.iterator(); t_iterator.hasNext(); )  {
-        	JCoField t_field = t_iterator.next();
-        	
-        	System.out.println( "  " + t_field.getName() + " " + t_field.getTypeAsString() + " (" + t_field.getType() + ")");
-        	
-        	switch (t_field.getType()) {
-//        	case 0:
-//        		System.out.println( t_field.getString() );
-//        		
-//        		break;
-        	case 99:
-        		JCoTable t_table = t_field.getTable();
-        		
-                table(t_table);
-                
-        		break;
-        	default:
-        		break;
-        	}
-        }
+		JCoRecordFieldIterator iterator = table.getRecordFieldIterator();
+		
+		while ( iterator.hasNextField() ) {
+			JCoRecordField record = iterator.nextRecordField();
+			print_JCoField(record);
+			
+			switch (record.getType()) {
+			case JCoRecordMetaData.TYPE_STRUCTURE:
+				print_JCoStructure(record.getStructure());
+				
+				break;
+			case JCoRecordMetaData.TYPE_TABLE:
+				print_JCoTableMetaData(record.getTable());
+				
+				break;
+			default:
+				break;
+			}
+		}
+    }
+    
+    private static void print_JCoTable(JCoTable table) {
+    	padding++;
+    	
+    	if (table.isEmpty() || (0 == table.getNumRows())) {
+    		print_JCoTableMetaData(table);
+    	}
+    	else {
+    		for ( Iterator<JCoField> iterator = table.iterator(); iterator.hasNext(); )  {
+    			JCoField field = iterator.next();
+    			print_JCoField(field);
+
+    			switch (field.getType()) {
+    			case JCoRecordMetaData.TYPE_STRUCTURE:
+    				print_JCoStructure(field.getStructure());
+
+    				break;
+    			case JCoRecordMetaData.TYPE_TABLE:
+    				print_JCoTable(field.getTable());
+
+    				break;
+    			default:
+    				break;
+    			}
+    		}
+    	}
+    	
+    	padding--;
+    }
+    
+    private static void print_JCoStructure(JCoStructure structure) {
+		padding++;
+		
+		for ( Iterator<JCoField> iterator = structure.iterator(); iterator.hasNext(); ) {
+			JCoField field = iterator.next();
+
+			print_JCoField(field);
+		}
+    	
+    	padding--;
+    }
+
+    private static void print_JCoField(JCoField field) {
+    	for( int i = 0; i < padding; ++i) {
+    		System.out.print(spacing);
+    	}
+
+    	System.out.println(field.getName() + " " + field.getTypeAsString() + "(" + field.getLength() + ") " + field.getDescription());
     }
 }

@@ -351,7 +351,9 @@ public class JobCommands {
 		try {
 			xmi.bapi_xmi_logon(destination);
 
-			xbp.bapi_template(destination, bapi);
+//			xbp.bapi_template(destination, bapi);
+			
+			xbp.print_function_template(destination, bapi);
 		} finally {
 			xmi.bapi_xmi_logoff(destination);
 		}
