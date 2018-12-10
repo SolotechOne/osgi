@@ -45,7 +45,7 @@ public class SaraCommands {
 	}
 
 	@Descriptor("enqueue intercepted jobs")
-	public void enqueue(@Descriptor("number of active jobs") int maxjobs) throws IOException, JCoException {
+	public void enqueue(@Descriptor("Jobname") String jobname, @Descriptor("number of active jobs") int maxjobs) throws IOException, JCoException {
 		//        xmi.bapi_xmi_logon(destination);
 
 		Thread t = new Thread(){
@@ -60,40 +60,55 @@ public class SaraCommands {
 
 					xmi.bapi_xmi_logon(destination);
 
-					output = get_vbrk_jobs(destination);
+					output = get_vbrk_jobs(destination, jobname);
 
 					ListIterator<BPICPINFO> iterator = output.listIterator(0);
 
 					//	                do {
-						//	                	System.out.println(iterator.next());
+					//	                	System.out.println(iterator.next());
 					//	                } while(iterator.hasNext());
 
 					while (!isInterrupted()) {
 						//	        			System.out.println("Und er läuft und er läuft und er läuft");
 
-						int count = get_vbrk_active(destination, "ARV_SD_VBRK_DEL*");
+						int count = get_vbrk_active(destination, jobname);
 						//	        			System.out.println("jobs active " + count + "/" + maxjobs);
 
-						if(count < maxjobs & iterator.hasNext()){
+						if(count < maxjobs & iterator.hasNext()) {
 							for(int i = count; i < maxjobs; i++) {
-								BPICPINFO row = iterator.next();
+								if(iterator.hasNext()) {
+									BPICPINFO row = iterator.next();
 
-								System.out.println("starting job " + row.getJobname() + " " + row.getJobcount());
+									System.out.println("starting job " + row.getJobname() + " " + row.getJobcount());
 
-								start_job(destination, row.getJobname(), row.getJobcount());
+									start_job(destination, row.getJobname(), row.getJobcount());
+								}
 							}
 						}
+						else {
+							interrupt();
+						}
 
+//						Thread.sleep(1000);
+						
 						try {
-							System.out.println("waiting 60 seconds...");
-							Thread.sleep(60000);
+//							System.out.println("waiting 10 seconds...");
+							Thread.sleep(1000);
 						} catch (InterruptedException e) {
 							interrupt();
+
 							System.out.println("Unterbrechung in sleep()");
 						}
 					}
 
-					//	        		System.out.println("Das Ende naht");
+					System.out.println("Das Ende naht");
+
+
+					try {
+						join();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 
 					xmi.bapi_xmi_logoff(destination);
 
@@ -106,13 +121,13 @@ public class SaraCommands {
 
 		t.start();
 
-		try {
-			Thread.sleep(86400000);	// 24h
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		t.interrupt();
+//		try {
+//			Thread.sleep(86400000);	// 24h
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+//
+//		t.interrupt();
 
 		//        ArrayList<BPICPINFO> output = get_vbrk_jobs(destination);
 		//        
@@ -147,7 +162,7 @@ public class SaraCommands {
 		//        xmi.bapi_xmi_logoff(destination);
 	}
 
-	public static ArrayList<BPICPINFO> get_vbrk_jobs(JCoDestination destination) throws JCoException {
+	public static ArrayList<BPICPINFO> get_vbrk_jobs(JCoDestination destination, String jobname) throws JCoException {
 		ArrayList<BPICPINFO> output = new ArrayList<BPICPINFO>();
 
 		JCoFunction xbp_get_intercepted_jobs = destination.getRepository().getFunction("BAPI_XBP_GET_INTERCEPTED_JOBS");
@@ -191,13 +206,15 @@ public class SaraCommands {
 		for (int i = 0; i < jobinfo.getNumRows(); i++) {
 			jobinfo.setRow(i);
 
-			BPICPINFO row = new BPICPINFO(jobinfo.getString("JOBNAME"), jobinfo.getString("JOBCOUNT"), jobinfo.getString("ICPDATE"), jobinfo.getString("ICPTIME"));
-			//        	row.setJobname(jobinfo.getString("JOBNAME"));
-			//        	row.setJobcount(jobinfo.getString("JOBCOUNT"));
-			//        	row.setIcpdate(jobinfo.getString("ICPDATE"));
-			//        	row.setIcptime(jobinfo.getString("ICPTIME"));
+			if ( jobinfo.getString("JOBNAME").startsWith(jobname)) {
+				BPICPINFO row = new BPICPINFO(jobinfo.getString("JOBNAME"), jobinfo.getString("JOBCOUNT"), jobinfo.getString("ICPDATE"), jobinfo.getString("ICPTIME"));
+				//        	row.setJobname(jobinfo.getString("JOBNAME"));
+				//        	row.setJobcount(jobinfo.getString("JOBCOUNT"));
+				//        	row.setIcpdate(jobinfo.getString("ICPDATE"));
+				//        	row.setIcptime(jobinfo.getString("ICPTIME"));
 
-			output.add(row);
+				output.add(row);
+			}
 
 			//        	System.out.println(jobinfo.getString("JOBCOUNT") + " " + jobinfo.getString("JOBNAME"));
 		}
@@ -289,7 +306,9 @@ public class SaraCommands {
 			//	    		+ "|" + bapiret.getString("FIELD") + "|" + bapiret.getString("SYSTEM")
 			//        	);
 
-			throw new RuntimeException(bapiret.getString("MESSAGE"));
+//			throw new RuntimeException(bapiret.getString("MESSAGE"));
+			
+			return 0;
 		}
 
 
