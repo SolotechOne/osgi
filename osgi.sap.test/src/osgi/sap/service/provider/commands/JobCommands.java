@@ -318,7 +318,7 @@ public class JobCommands {
 		try {
 			xmi.bapi_xmi_logon(destination);
 
-			xbp.bapi_xbp_job_start_immediately(destination, jobname, jobcount);
+			xbp.bapi_xbp_job_start_asap(destination, jobname, jobcount);
 		} finally {
 			xmi.bapi_xmi_logoff(destination);
 		}

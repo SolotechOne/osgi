@@ -15,13 +15,14 @@ import com.sap.conn.jco.JCoField;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoFunctionTemplate;
 import com.sap.conn.jco.JCoListMetaData;
-import com.sap.conn.jco.JCoMetaData;
 import com.sap.conn.jco.JCoParameterList;
 import com.sap.conn.jco.JCoRecordField;
 import com.sap.conn.jco.JCoRecordFieldIterator;
 import com.sap.conn.jco.JCoRecordMetaData;
 import com.sap.conn.jco.JCoStructure;
 import com.sap.conn.jco.JCoTable;
+
+import osgi.sap.service.provider.commands.JobStatus;
 
 public class xbp {
 	private static Logger logger = Logger.getLogger(xbp.class);
@@ -1079,7 +1080,7 @@ public class xbp {
         System.out.println();
     }
     
-    public static void bapi_xbp_job_status_get(JCoDestination destination, String jobname, String jobcount) throws JCoException {
+    public static JobStatus bapi_xbp_job_status_get(JCoDestination destination, String jobname, String jobcount) throws JCoException {
     	JCoFunction xbp_job_status_get = destination.getRepository().getFunction("BAPI_XBP_JOB_STATUS_GET");
     	
         if (xbp_job_status_get == null)
@@ -1112,9 +1113,7 @@ public class xbp {
         	xbp_job_status_get.execute(destination);
         }
         catch (AbapException exception) {
-            System.out.println(exception.toString());
-            
-            return;
+            throw new RuntimeException(exception.toString());
         }
         
         System.out.println("BAPI_XBP_JOB_STATUS_GET finished:");
@@ -1137,6 +1136,25 @@ public class xbp {
         System.out.println();
         System.out.println("job " + jobname + " state: " + xbp_job_status_get.getExportParameterList().getString("STATUS") + " children: " + xbp_job_status_get.getExportParameterList().getString("HAS_CHILD"));
         System.out.println();
+        
+        switch( xbp_job_status_get.getExportParameterList().getString("STATUS") ) {
+        case "R":
+        	return JobStatus.R;
+        case "I":
+        	return JobStatus.I;
+        case "Y":
+        	return JobStatus.Y;
+        case "P":
+        	return JobStatus.P;
+        case "S":
+        	return JobStatus.S;
+        case "A":
+        	return JobStatus.A;
+        case "F":
+        	return JobStatus.F;
+        default:
+        	return JobStatus.X;
+        }
     }
     
     public static void bapi_xbp_job_delete(JCoDestination destination, String jobname, String jobcount) throws JCoException {

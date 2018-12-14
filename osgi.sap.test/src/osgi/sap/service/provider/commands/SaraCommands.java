@@ -2,7 +2,22 @@ package osgi.sap.service.provider.commands;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
+import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.felix.service.command.CommandProcessor;
 import org.apache.felix.service.command.Descriptor;
@@ -46,6 +61,77 @@ public class SaraCommands {
 
 	@Descriptor("enqueue intercepted jobs")
 	public void enqueue(@Descriptor("Jobname") String jobname, @Descriptor("number of active jobs") int maxjobs) throws IOException, JCoException {
+//		ExecutorService executor = Executors.newFixedThreadPool(maxjobs);
+		
+//		ExecutorService executor = new ThreadPoolExecutor(1, maxjobs, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+	
+		
+		//RejectedExecutionHandler implementation
+        RejectedExecutionHandlerImpl rejectionHandler = new RejectedExecutionHandlerImpl();
+        //Get the ThreadFactory implementation to use
+        ThreadFactory threadFactory = Executors.defaultThreadFactory();
+        //creating the ThreadPoolExecutor
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 4, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(maxjobs), threadFactory, rejectionHandler);
+        //start the monitoring thread
+        MonitorThread monitor = new MonitorThread(executor, 3);
+        Thread monitorThread = new Thread(monitor);
+        monitorThread.start();
+        
+        
+		ArrayList<BPICPINFO> output;
+		
+		output = get_intercepted_jobs(destination, jobname);
+		
+		ListIterator<BPICPINFO> iterator = output.listIterator();
+		
+		List<Callable<String>> tasks = new LinkedList<Callable<String>>();
+		
+		List<Future<String>> futures;
+		
+		while(iterator.hasNext()) {
+			BPICPINFO row = iterator.next();
+			
+			ExecuteABAPJob job = new ExecuteABAPJob(destination, row.getJobname(), row.getJobcount());
+			
+			tasks.add(job);
+			
+//			executor.submit(job);
+		}
+		
+		try {
+//			futures = executor.invokeAll(tasks, 5, TimeUnit.SECONDS);
+			futures = executor.invokeAll(tasks);
+			
+			for(Future<String> future : futures){
+	            String ret = future.get(100, TimeUnit.MILLISECONDS);
+	            
+	            if (future.isDone())
+	                System.out.println(ret + " (done=true)");
+	            else
+	                System.out.println(ret + " (done=false)");
+	        }
+		} catch (InterruptedException exception) {
+			exception.printStackTrace();
+		} catch (ExecutionException exception) {
+			exception.printStackTrace();
+		} catch (TimeoutException exception) {
+			exception.printStackTrace();
+		}
+		
+		executor.shutdown();
+		monitor.shutdown();
+		
+		try {
+			if (!executor.awaitTermination(800, TimeUnit.MILLISECONDS)) {
+				executor.shutdownNow();
+			} 
+		} catch (InterruptedException e) {
+			executor.shutdownNow();
+		}
+	}
+	
+	@Descriptor("enqueue intercepted jobs")
+	public void sic_enqueue(@Descriptor("Jobname") String jobname, @Descriptor("number of active jobs") int maxjobs) throws IOException, JCoException {
 		//        xmi.bapi_xmi_logon(destination);
 
 		Thread t = new Thread(){
@@ -60,7 +146,7 @@ public class SaraCommands {
 
 					xmi.bapi_xmi_logon(destination);
 
-					output = get_vbrk_jobs(destination, jobname);
+					output = get_intercepted_jobs(destination, jobname);
 
 					ListIterator<BPICPINFO> iterator = output.listIterator(0);
 
@@ -162,7 +248,9 @@ public class SaraCommands {
 		//        xmi.bapi_xmi_logoff(destination);
 	}
 
-	public static ArrayList<BPICPINFO> get_vbrk_jobs(JCoDestination destination, String jobname) throws JCoException {
+	public static ArrayList<BPICPINFO> get_intercepted_jobs(JCoDestination destination, String jobname) throws JCoException {
+		xmi.bapi_xmi_logon(destination);
+		
 		ArrayList<BPICPINFO> output = new ArrayList<BPICPINFO>();
 
 		JCoFunction xbp_get_intercepted_jobs = destination.getRepository().getFunction("BAPI_XBP_GET_INTERCEPTED_JOBS");
@@ -236,6 +324,8 @@ public class SaraCommands {
 		//        System.out.println();
 		//        System.out.println("Jobs selected: " + jobinfo2.getNumRows());
 		//        System.out.println();
+
+		xmi.bapi_xmi_logoff(destination);
 
 		return output;
 	}
@@ -373,5 +463,175 @@ public class SaraCommands {
 		}
 
 		//        System.out.println();
+	}
+	
+    public static JobStatus get_job_status(JCoDestination destination, String jobname, String jobcount) throws JCoException {
+//    	xmi.bapi_xmi_logon(destination);
+    	
+    	JCoFunction xbp_job_status_get = destination.getRepository().getFunction("BAPI_XBP_JOB_STATUS_GET");
+    	
+        if (xbp_job_status_get == null)
+        	throw new RuntimeException("BAPI_XBP_JOB_STATUS_GET not found in SAP.");
+        
+        xbp_job_status_get.getImportParameterList().setValue("JOBNAME", jobname);
+        xbp_job_status_get.getImportParameterList().setValue("JOBCOUNT", jobcount);
+        xbp_job_status_get.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+        
+//        STATUS is the status of a job with the following possible values:
+//        'R' - active
+//        'I' - intercepted
+//        'Y' - ready
+//        'P' - scheduled
+//        'S' - released
+//        'A' - cancelled
+//        'F' - finished
+//        'X' - actual status cannot be determined
+        xbp_job_status_get.getExportParameterList().setActive("STATUS", true);
+        xbp_job_status_get.getExportParameterList().setActive("RETURN", true);
+        
+//        HAS_CHILD Specifies whether a job is a child, a parent, both, or neither.
+//        'P' – job is parent/has children   
+//        'C' – job is child
+//        'B' – ('both') job is parent and child
+//        ' ' - (blank) job is neither parent nor child
+        xbp_job_status_get.getExportParameterList().setActive("HAS_CHILD", true);
+        
+        try {
+        	xbp_job_status_get.execute(destination);
+        }
+        catch (AbapException exception) {
+            throw new RuntimeException(exception.toString());
+        }
+        
+//        System.out.println("BAPI_XBP_JOB_STATUS_GET finished:");
+        
+        JCoStructure bapiret = xbp_job_status_get.getExportParameterList().getStructure("RETURN");
+
+//    	System.out.println(bapiret.getString("TYPE") + "|" + bapiret.getString("ID")
+//    		+ "|" + bapiret.getString("NUMBER") + "|" + bapiret.getString("MESSAGE")
+//    		+ "|" + bapiret.getString("LOG_NO") + "|" + bapiret.getString("LOG_MSG_NO")
+//    		+ "|" + bapiret.getString("MESSAGE_V1") + "|" + bapiret.getString("MESSAGE_V2")
+//    		+ "|" + bapiret.getString("MESSAGE_V3") + "|" + bapiret.getString("MESSAGE_V4")
+//    		+ "|" + bapiret.getString("PARAMETER") + "|" + bapiret.getString("ROW")
+//    		+ "|" + bapiret.getString("FIELD") + "|" + bapiret.getString("SYSTEM")
+//    	);
+        
+        if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+            throw new RuntimeException(bapiret.getString("MESSAGE"));
+        }
+        
+//        System.out.println();
+//        System.out.println("job " + jobname + " state: " + xbp_job_status_get.getExportParameterList().getString("STATUS") + " children: " + xbp_job_status_get.getExportParameterList().getString("HAS_CHILD"));
+//        System.out.println();
+        
+//        xmi.bapi_xmi_logoff(destination);
+        
+        switch( xbp_job_status_get.getExportParameterList().getString("STATUS") ) {
+        case "R":
+        	return JobStatus.R;
+        case "I":
+        	return JobStatus.I;
+        case "Y":
+        	return JobStatus.Y;
+        case "P":
+        	return JobStatus.P;
+        case "S":
+        	return JobStatus.S;
+        case "A":
+        	return JobStatus.A;
+        case "F":
+        	return JobStatus.F;
+        default:
+        	return JobStatus.X;
+        }
+    }
+}
+
+class ExecuteABAPJob implements Callable<String> {
+	private JCoDestination destination;
+	private String jobname;
+	private String jobcount;
+	
+	ExecuteABAPJob(JCoDestination destination, String jobname, String jobcount) {
+		this.destination = destination;
+		this.jobname = jobname;
+		this.jobcount = jobcount;
+	}
+	
+//	@Override
+//	public void run() {
+//		Random rand = new Random();
+//		
+//		int sleep = rand.nextInt(10000);
+//		
+//		try {
+//			System.out.println("executing job " + jobname + " " + jobcount + " in thread " + Thread.currentThread() + " sleeping for " + sleep + " sec");
+//			
+//			Thread.sleep(sleep);
+//		} catch (InterruptedException exception) {
+//			exception.printStackTrace();
+//		}
+//	}
+
+	@Override
+	public String call() throws Exception {
+		long start = new Date().getTime();
+		
+		Random rand = new Random();
+		
+		int sleep = rand.nextInt(10000);
+		
+		JobStatus status = null;
+		
+		try {
+			System.out.println("executing job " + jobname + ":" + jobcount + " in thread " + Thread.currentThread() + " sleeping for " + sleep + " sec");
+			
+//			synchronized (destination) {
+				JCoContext.begin(destination);
+				xmi.bapi_xmi_logon(destination);
+				
+				SaraCommands.start_job(destination, jobname, jobcount);
+				
+//				JobStatus status = SaraCommands.get_job_status(destination, jobname, jobcount);
+				
+				while (status != JobStatus.F & status != JobStatus.A) {
+//					switch (status) {
+//					case
+//					R:
+//						System.out.println(jobname + " " + jobcount + " " + status);
+//					default:
+//						break;
+//					}
+					
+					Thread.sleep(100);
+					
+//					long running = new Date().getTime();
+//					System.out.print("job " + jobname + ":" + jobcount + " running for " + (running-start) + " msec\r");
+					
+					JobStatus new_status = SaraCommands.get_job_status(destination, jobname, jobcount);
+					
+					if (status != new_status) {
+						System.out.println("status of job " + jobname + ":" + jobcount + " changed from " + status + " to " + new_status);
+						
+						status = new_status;
+					}
+				}
+				
+				xmi.bapi_xmi_logoff(destination);
+				JCoContext.end(destination);
+//			}
+			
+//			Thread.sleep(sleep);
+		} catch (InterruptedException exception) {
+			exception.printStackTrace();
+		}
+
+//		System.out.println("job " + jobname + " " + jobcount + " in thread " + Thread.currentThread() + " (" + sleep + ") stopped");
+		
+		long stop = new Date().getTime();
+		
+		System.out.println("job " + jobname + ":" + jobcount + " ended with status: " + status + " in " + (stop-start) + " msec");
+		
+		return "job " + jobname + ":" + jobcount + " ended with status: " + status + " in " + (stop-start) + " msec";
 	}
 }
