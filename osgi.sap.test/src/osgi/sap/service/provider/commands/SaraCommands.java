@@ -604,8 +604,6 @@ class ExecuteABAPJob implements Callable<String> {
 //						break;
 //					}
 					
-					Thread.sleep(100);
-					
 //					long running = new Date().getTime();
 //					System.out.print("job " + jobname + ":" + jobcount + " running for " + (running-start) + " msec\r");
 					
@@ -616,6 +614,8 @@ class ExecuteABAPJob implements Callable<String> {
 						
 						status = new_status;
 					}
+					
+					Thread.sleep(100);
 				}
 				
 				xmi.bapi_xmi_logoff(destination);
