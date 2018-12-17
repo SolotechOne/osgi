@@ -71,9 +71,9 @@ public class SaraCommands {
         //Get the ThreadFactory implementation to use
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
         //creating the ThreadPoolExecutor
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 4, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(maxjobs), threadFactory, rejectionHandler);
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(maxjobs, maxjobs, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), threadFactory, rejectionHandler);
         //start the monitoring thread
-        MonitorThread monitor = new MonitorThread(executor, 3);
+        MonitorThread monitor = new MonitorThread(executor, 100);
         Thread monitorThread = new Thread(monitor);
         monitorThread.start();
         
@@ -119,7 +119,6 @@ public class SaraCommands {
 		}
 		
 		executor.shutdown();
-		monitor.shutdown();
 		
 		try {
 			if (!executor.awaitTermination(800, TimeUnit.MILLISECONDS)) {
@@ -128,6 +127,8 @@ public class SaraCommands {
 		} catch (InterruptedException e) {
 			executor.shutdownNow();
 		}
+
+		monitor.shutdown();
 	}
 	
 	@Descriptor("enqueue intercepted jobs")
@@ -584,7 +585,7 @@ class ExecuteABAPJob implements Callable<String> {
 		JobStatus status = null;
 		
 		try {
-			System.out.println("executing job " + jobname + ":" + jobcount + " in thread " + Thread.currentThread() + " sleeping for " + sleep + " sec");
+			System.out.println("executing job " + jobname + ":" + jobcount + " in thread " + Thread.currentThread());	//  + " sleeping for " + sleep + " sec"
 			
 //			synchronized (destination) {
 				JCoContext.begin(destination);
