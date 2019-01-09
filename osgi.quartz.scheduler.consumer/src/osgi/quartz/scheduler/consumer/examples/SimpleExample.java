@@ -47,7 +47,7 @@ public class SimpleExample extends Thread {
 			this.logger.info(helloworldjob.getKey() + " will run at: " + nextStartTime);
 
 
-			// computer a time that is on the next round minute
+			// compute a time that is on the next round minute
 			Date runTime = evenMinuteDate(new Date());
 			// Trigger the job to run on the next round minute
 			Trigger roundMinute = newTrigger().withIdentity("trigger.2", "group.1").startAt(runTime).forJob(helloworldjob).build();

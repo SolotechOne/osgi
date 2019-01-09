@@ -1466,7 +1466,7 @@ public class xbp {
             return;
         }
         
-        System.out.println("BAPI_XBP_SPECIAL_CONFIRM_JOB finished:");
+//        System.out.println("BAPI_XBP_SPECIAL_CONFIRM_JOB finished:");
         
         JCoStructure bapiret = xbp_special_confirm_job.getExportParameterList().getStructure("RETURN");
         
@@ -1474,7 +1474,7 @@ public class xbp {
             throw new RuntimeException(bapiret.getString("MESSAGE"));
         }
         
-        System.out.println();
+//        System.out.println();
     }
     
     public static void bapi_xbp_event_raise(JCoDestination destination, String eventid, String eventparm) throws JCoException {

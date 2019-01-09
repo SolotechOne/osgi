@@ -35,12 +35,14 @@ import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoStructure;
 import com.sap.conn.jco.JCoTable;
 
+import osgi.sap.service.provider.bapi.xbp.xbp;
 import osgi.sap.service.provider.bapi.xmi.xmi;
 
 @Component(
 		property = {
 				CommandProcessor.COMMAND_SCOPE + ":String=sara",
-				CommandProcessor.COMMAND_FUNCTION + ":String=enqueue"
+				CommandProcessor.COMMAND_FUNCTION + ":String=enqueue",
+				CommandProcessor.COMMAND_FUNCTION + ":String=inter"
 		},
 		service = SaraCommands.class
 		)
@@ -59,12 +61,39 @@ public class SaraCommands {
 		JCoContext.end(destination);
 	}
 
+	@Descriptor("get intercepted jobs")
+	public ArrayList<BPICPINFO> inter(@Descriptor("Jobname") String jobname) throws IOException, JCoException {
+		ArrayList<BPICPINFO> output;
+		
+		output = get_inter_jobs(destination, jobname);
+		
+		ListIterator<BPICPINFO> iterator = output.listIterator();
+		
+		System.out.println(output.size());
+		
+		while(iterator.hasNext()) {
+			BPICPINFO row = iterator.next();
+			
+			try {
+				xmi.bapi_xmi_logon(destination);
+
+				String jobcount = String.format("%08d", Integer.parseInt(row.getJobcount()));
+
+				xbp.bapi_xbp_special_confirm_job(destination, jobname, jobcount);
+			} finally {
+				xmi.bapi_xmi_logoff(destination);
+			}
+		}
+		
+		return output;
+	}
+	
 	@Descriptor("enqueue intercepted jobs")
 	public void enqueue(@Descriptor("Jobname") String jobname, @Descriptor("number of active jobs") int maxjobs) throws IOException, JCoException {
 //		ExecutorService executor = Executors.newFixedThreadPool(maxjobs);
 		
 //		ExecutorService executor = new ThreadPoolExecutor(1, maxjobs, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
-	
+
 		
 		//RejectedExecutionHandler implementation
         RejectedExecutionHandlerImpl rejectionHandler = new RejectedExecutionHandlerImpl();
@@ -247,6 +276,88 @@ public class SaraCommands {
 		//        }
 		//        
 		//        xmi.bapi_xmi_logoff(destination);
+	}
+
+	public static ArrayList<BPICPINFO> get_inter_jobs(JCoDestination destination, String jobname) throws JCoException {
+		xmi.bapi_xmi_logon(destination);
+		
+		ArrayList<BPICPINFO> output = new ArrayList<BPICPINFO>();
+
+		JCoFunction xbp_get_intercepted_jobs = destination.getRepository().getFunction("BAPI_XBP_GET_INTERCEPTED_JOBS");
+
+		if (xbp_get_intercepted_jobs == null)
+			throw new RuntimeException("BAPI_XBP_GET_INTERCEPTED_JOBS not found in SAP.");
+
+		xbp_get_intercepted_jobs.getImportParameterList().setValue("EXTERNAL_USER_NAME", "AUDIT");
+
+		//        1. 'AL' (default) – return all intercepted jobs regardless what confirmation they have.
+		//        2. 'NG' – return only those intercepted jobs that do NOT have general confirmation.
+		//        3. 'NS' – return only those intercepted jobs that were NOT confirmed as intercepted.
+		//        4. 'NC' – return only those intercepted jobs that do NOT have any confirmation.
+		xbp_get_intercepted_jobs.getImportParameterList().setValue("SELECTION", "NC");
+
+		//        xbp_get_intercepted_jobs.getImportParameterList().setValue("CLIENT", "");
+		//        xbp_get_intercepted_jobs.getImportParameterList().setValue("MORE_INFO", "X");
+
+		xbp_get_intercepted_jobs.getExportParameterList().setActive("RETURN", true);
+
+		try {
+			xbp_get_intercepted_jobs.execute(destination);
+		}
+		catch (AbapException exception) {
+			System.out.println(exception.toString());
+
+			return output;
+		}
+
+		//        System.out.println("BAPI_XBP_GET_INTERCEPTED_JOBS finished:");
+
+		JCoStructure bapiret = xbp_get_intercepted_jobs.getExportParameterList().getStructure("RETURN");
+
+		if (! (bapiret.getString("TYPE").equals("") || bapiret.getString("TYPE").equals("S") || bapiret.getString("TYPE").equals("W")) ) {
+			throw new RuntimeException(bapiret.getString("MESSAGE"));
+		}
+
+
+		JCoTable jobinfo = xbp_get_intercepted_jobs.getTableParameterList().getTable("JOBINFO");
+
+		for (int i = 0; i < jobinfo.getNumRows(); i++) {
+			jobinfo.setRow(i);
+
+			if ( jobinfo.getString("JOBNAME").startsWith(jobname)) {
+				BPICPINFO row = new BPICPINFO(jobinfo.getString("JOBNAME"), jobinfo.getString("JOBCOUNT"), jobinfo.getString("ICPDATE"), jobinfo.getString("ICPTIME"));
+				//        	row.setJobname(jobinfo.getString("JOBNAME"));
+				//        	row.setJobcount(jobinfo.getString("JOBCOUNT"));
+				//        	row.setIcpdate(jobinfo.getString("ICPDATE"));
+				//        	row.setIcptime(jobinfo.getString("ICPTIME"));
+
+				output.add(row);
+			}
+
+			//        	System.out.println(jobinfo.getString("JOBCOUNT") + " " + jobinfo.getString("JOBNAME"));
+		}
+
+
+		//        System.out.println();
+
+
+		//        JCoTable jobinfo2 = xbp_get_intercepted_jobs.getTableParameterList().getTable("JOBINFO2");
+		//        
+		//        for (int i = 0; i < jobinfo2.getNumRows(); i++) {
+		//        	jobinfo2.setRow(i);
+		//        	
+		//        	System.out.println(jobinfo2.getString("JOBCOUNT") + " " + jobinfo2.getString("JOBNAME")
+		//        			+ " " + jobinfo2.getString("ICPDATE") + " " + jobinfo2.getString("ICPTIME")
+		//        			+ " " + jobinfo2.getString("SDLUNAME"));
+		//        }
+
+		//        System.out.println();
+		//        System.out.println("Jobs selected: " + jobinfo2.getNumRows());
+		//        System.out.println();
+
+		xmi.bapi_xmi_logoff(destination);
+
+		return output;
 	}
 
 	public static ArrayList<BPICPINFO> get_intercepted_jobs(JCoDestination destination, String jobname) throws JCoException {
