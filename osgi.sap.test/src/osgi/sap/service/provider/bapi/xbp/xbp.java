@@ -1400,7 +1400,7 @@ public class xbp {
             return;
         }
         
-        System.out.println("BAPI_XBP_GET_INTERCEPTED_JOBS finished:");
+//        System.out.println("BAPI_XBP_GET_INTERCEPTED_JOBS finished:");
         
         JCoStructure bapiret = xbp_get_intercepted_jobs.getExportParameterList().getStructure("RETURN");
         
@@ -1418,7 +1418,7 @@ public class xbp {
 //        }
         
         
-        System.out.println();
+//        System.out.println();
         
         
         JCoTable jobinfo2 = xbp_get_intercepted_jobs.getTableParameterList().getTable("JOBINFO2");
